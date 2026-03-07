@@ -1,62 +1,67 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <title>MUE.SÉUM - Guide</title>
+    <title>MUE.SÉUM - Explorer</title>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
-        body { margin:0; padding:0; }
-        #map { height: 100vh; width: 100vw; }
-        #search-container { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); z-index: 1000; width: 85%; }
-        #search-input { width: 100%; padding: 12px; border-radius: 25px; border: 2px solid #e91e63; box-shadow: 0 4px 10px rgba(0,0,0,0.2); font-size: 16px; }
+        body { margin:0; padding:0; font-family: -apple-system, sans-serif; background: #000; color: white; }
+        #map { height: 100vh; width: 100vw; display: none; position: fixed; top: 0; left: 0; }
+        .explorer-container { padding: 15px; }
+        .search-bar { background: #1c1c1e; padding: 12px; border-radius: 12px; margin-bottom: 20px; color: #8e8e93; border: 1px solid #333; }
+        .card { background: #1c1c1e; border-radius: 16px; overflow: hidden; margin-bottom: 25px; border: 1px solid #333; }
+        .card img { width: 100%; height: 220px; object-fit: cover; }
+        .card-content { padding: 15px; }
+        .btn-map { background: #97f097; color: #000; padding: 10px 24px; border-radius: 20px; font-weight: bold; border: none; float: right; cursor: pointer; }
+        #back-btn { position: absolute; top: 20px; left: 20px; z-index: 2000; background: white; color: black; width: 40px; height: 40px; border-radius: 50%; display: none; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div id="search-container">
-    <input type="text" id="search-input" placeholder="Chercher une ville (Châtelet, Bruxelles...)">
+<div id="back-btn" onclick="location.reload()">✕</div>
+
+<div id="catalog" class="explorer-container">
+    <div class="search-bar">🔍 Rechercher des parcours...</div>
+    <h2>À proximité</h2>
+    <div class="card">
+        <img src="unnamed.jpg">
+        <div class="card-content">
+            <div style="font-size: 19px; font-weight: bold;">Circuit P.A. Paulus</div>
+            <div style="color: #8e8e93; font-size: 14px; margin-bottom: 10px;">Châtelet • 2,1 km</div>
+            <button class="btn-map" onclick="showMap()">🗺️ Carte</button>
+        </div>
+    </div>
 </div>
 
 <div id="map"></div>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    // Initialisation de la carte sur Châtelet
-    var map = L.map('map').setView([50.4022, 4.5268], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap MUE.SÉUM'
-    }).addTo(map);
+    var map;
+    function showMap() {
+        document.getElementById('catalog').style.display = 'none';
+        document.getElementById('map').style.display = 'block';
+        document.getElementById('back-btn').style.display = 'flex';
+        
+        // Initialisation de la carte sur Châtelet
+        map = L.map('map', {zoomControl: false}).setView([50.4022, 4.5268], 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        
+        // ACTIVATION DU GPS EN DIRECT
+        map.locate({setView: true, maxZoom: 16, watch: true});
 
-    // Activer le GPS (Point bleu)
-    map.locate({setView: true, maxZoom: 16, watch: true});
-    map.on('locationfound', function(e) {
-        L.marker(e.latlng).addTo(map).bindPopup("Vous êtes ici").openPopup();
-    });
+        // Message si on trouve l'utilisateur
+        function onLocationFound(e) {
+            var radius = e.accuracy / 2;
+            L.marker(e.latlng).addTo(map).bindPopup("Vous êtes ici").openPopup();
+            L.circle(e.latlng, radius).addTo(map);
+        }
+        map.on('locationfound', onLocationFound);
 
-    // Tes points de test (On en mettra d'autres après)
-    var points = [
-        { name: "MUE.SÉUM - Châtelet", city: "chatelet", lat: 50.4022, lng: 4.5268 },
-        { name: "MUE.SÉUM - Bruxelles", city: "bruxelles", lat: 50.8503, lng: 4.3517 }
-    ];
-
-    var markers = [];
-    points.forEach(function(p) {
-        var m = L.marker([p.lat, p.lng]).addTo(map).bindPopup("<b>"+p.name+"</b><br><button style='background:#e91e63;color:white;border:none;padding:10px;margin-top:5px;border-radius:5px;'>Lancer l'expérience RA</button>");
-        m.city = p.city;
-        markers.push(m);
-    });
-
-    // Le moteur de recherche
-    document.getElementById('search-input').addEventListener('input', function(e) {
-        var val = e.target.value.toLowerCase();
-        markers.forEach(function(m) {
-            if (m.city.includes(val) && val !== "") {
-                map.setView(m.getLatLng(), 15);
-                m.openPopup();
-            }
-        });
-    });
+        // Marqueur du point de départ Paulus
+        L.marker([50.4022, 4.5268]).addTo(map).bindPopup("<b>Départ Paulus</b>");
+    }
 </script>
 </body>
 </html>
