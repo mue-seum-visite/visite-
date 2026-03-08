@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <title>MUE.SÉUM - Explorer</title>
+    <title>MUE.SÉUM - Châtelet</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -9,12 +9,12 @@
         body { margin:0; padding:0; font-family: -apple-system, sans-serif; background: #000; color: white; }
         #map { height: 100vh; width: 100vw; display: none; position: fixed; top: 0; left: 0; }
         .explorer-container { padding: 15px; }
-        .search-bar { background: #1c1c1e; padding: 12px; border-radius: 12px; margin-bottom: 20px; color: #8e8e93; border: 1px solid #333; }
-        .card { background: #1c1c1e; border-radius: 16px; overflow: hidden; margin-bottom: 25px; border: 1px solid #333; }
+        .card { background: #1c1c1e; border-radius: 16px; overflow: hidden; border: 1px solid #333; margin-top: 20px; }
         .card img { width: 100%; height: 220px; object-fit: cover; }
         .card-content { padding: 15px; }
-        .btn-map { background: #97f097; color: #000; padding: 10px 24px; border-radius: 20px; font-weight: bold; border: none; float: right; cursor: pointer; }
+        .btn-map { background: #97f097; color: #000; padding: 12px 24px; border-radius: 20px; font-weight: bold; border: none; float: right; cursor: pointer; }
         #back-btn { position: absolute; top: 20px; left: 20px; z-index: 2000; background: white; color: black; width: 40px; height: 40px; border-radius: 50%; display: none; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; }
+        .ra-btn { background: #ff4b81; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; width: 100%; margin-top: 10px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -22,14 +22,13 @@
 <div id="back-btn" onclick="location.reload()">✕</div>
 
 <div id="catalog" class="explorer-container">
-    <div class="search-bar">🔍 Rechercher des parcours...</div>
-    <h2>À proximité</h2>
+    <h2 style="margin-top: 10px;">Circuit Paulus</h2>
     <div class="card">
         <img src="unnamed.jpg">
         <div class="card-content">
-            <div style="font-size: 19px; font-weight: bold;">Circuit P.A. Paulus</div>
-            <div style="color: #8e8e93; font-size: 14px; margin-bottom: 10px;">Châtelet • 2,1 km</div>
-            <button class="btn-map" onclick="showMap()">🗺️ Carte</button>
+            <div style="font-size: 19px; font-weight: bold;">Le Cœur de Châtelet</div>
+            <div style="color: #8e8e93; font-size: 14px; margin-bottom: 15px;">Boucle de 2,1 km • 5 points RA</div>
+            <button class="btn-map" onclick="showMap()">🗺️ Démarrer la balade</button>
         </div>
     </div>
 </div>
@@ -44,23 +43,38 @@
         document.getElementById('map').style.display = 'block';
         document.getElementById('back-btn').style.display = 'flex';
         
-        // Initialisation de la carte sur Châtelet
-        map = L.map('map', {zoomControl: false}).setView([50.4022, 4.5268], 15);
+        map = L.map('map', {zoomControl: false}).setView([50.4025, 4.5275], 16);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
         
-        // ACTIVATION DU GPS EN DIRECT
-        map.locate({setView: true, maxZoom: 16, watch: true});
+        map.locate({setView: true, maxZoom: 17, watch: true});
 
-        // Message si on trouve l'utilisateur
-        function onLocationFound(e) {
-            var radius = e.accuracy / 2;
-            L.marker(e.latlng).addTo(map).bindPopup("Vous êtes ici").openPopup();
-            L.circle(e.latlng, radius).addTo(map);
-        }
-        map.on('locationfound', onLocationFound);
+        // TRACÉ BLEU (L'itinéraire de ta photo)
+        var routePoints = [
+            [50.4022, 4.5268], // A: Hôtel de Ville
+            [50.4038, 4.5305], // B: Rue des Gravelles
+            [50.4050, 4.5325], // C: Allée de la Sambre
+            [50.4010, 4.5345], // D: Rue de la Montagne
+            [50.4022, 4.5268]  // E: Retour Hôtel de Ville
+        ];
+        L.polyline(routePoints, {color: '#007aff', weight: 5, opacity: 0.8}).addTo(map);
 
-        // Marqueur du point de départ Paulus
-        L.marker([50.4022, 4.5268]).addTo(map).bindPopup("<b>Départ Paulus</b>");
+        // MARQUEURS DES ÉTAPES
+        var steps = [
+            {pos: [50.4022, 4.5268], title: "A: Hôtel de Ville", desc: "Départ du circuit."},
+            {pos: [50.4038, 4.5305], title: "B: Rue des Gravelles", desc: "L'art ouvrier."},
+            {pos: [50.4050, 4.5325], title: "C: Bord de Sambre", desc: "Paysage industriel."},
+            {pos: [50.4010, 4.5345], title: "D: Rue de la Montagne", desc: "Vue sur la vallée."},
+            {pos: [50.4022, 4.5268], title: "E: Arrivée", desc: "Fin du parcours."}
+        ];
+
+        steps.forEach(function(s) {
+            L.marker(s.pos).addTo(map)
+                .bindPopup("<b>"+s.title+"</b><br>"+s.desc+"<br><button class='ra-btn' onclick='openRA()'>📸 VOIR EN RA</button>");
+        });
+    }
+
+    function openRA() {
+        alert("Caméra RA : Recherche de l'œuvre Pierre Paulus en cours...");
     }
 </script>
 </body>
