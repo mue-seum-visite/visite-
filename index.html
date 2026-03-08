@@ -1,56 +1,63 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <title>MUE.SÉUM - Expérience Finale</title>
+    <title>MUE.SÉUM - Circuit Pierre Paulus</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        body { margin:0; padding:0; font-family: -apple-system, sans-serif; background: #000; color: white; }
+        body { margin:0; padding:0; font-family: 'Segoe UI', sans-serif; background: #000; color: white; }
         #map { height: 100vh; width: 100vw; display: none; position: fixed; top: 0; left: 0; }
-        .explorer-container { padding: 15px; }
-        .card { background: #1c1c1e; border-radius: 16px; overflow: hidden; border: 1px solid #333; margin-top: 20px; }
-        .card img { width: 100%; height: 220px; object-fit: cover; }
-        .card-content { padding: 15px; }
-        .btn-map { background: #97f097; color: #000; padding: 12px 24px; border-radius: 20px; font-weight: bold; border: none; float: right; cursor: pointer; }
-        #back-btn { position: absolute; top: 20px; left: 20px; z-index: 2000; background: white; color: black; width: 40px; height: 40px; border-radius: 50%; display: none; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; }
         
-        /* Interface RA */
-        #ra-ui { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 3000; background: black; }
+        /* PAGE D'ACCUEIL */
+        .explorer-container { padding: 30px 20px; text-align: center; background: linear-gradient(180deg, #000 0%, #1a1a1a 100%); min-height: 100vh; }
+        .card { background: #1c1c1e; border-radius: 25px; overflow: hidden; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .card img { width: 100%; height: 300px; object-fit: cover; }
+        .btn-start { background: #97f097; color: #000; padding: 18px 40px; border-radius: 40px; font-weight: bold; border: none; margin: 25px 0; cursor: pointer; font-size: 18px; letter-spacing: 1px; }
+        
+        /* INTERFACE RA */
+        #ra-ui { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 3000; }
         video { width: 100%; height: 100%; object-fit: cover; }
-        .close-ra { position:absolute; top:20px; right:20px; background:white; color:black; padding:10px; border-radius:50%; font-weight:bold; cursor: pointer; z-index: 3001; }
+        .close-ra { position:absolute; top:30px; right:20px; background:rgba(255,255,255,0.8); color:black; width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; z-index: 3001; }
         
-        /* TON OEUVRE FLOTTANTE */
+        /* LE COQ DÉTOURÉ ET FLOTTANT */
         #floating-art { 
-            position: absolute; 
-            top: 45%; 
-            left: 50%; 
-            transform: translate(-50%, -50%); 
-            width: 80%; 
-            max-width: 400px;
-            border: 5px solid white;
-            box-shadow: 0 0 20px rgba(255,255,255,0.5);
-            pointer-events: none; 
-            animation: float 4s ease-in-out infinite; 
+            position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); 
+            width: 85%; max-width: 450px; pointer-events: none; 
+            /* Filtre pour supprimer le fond jaune et garder le rouge */
+            filter: contrast(1.2) brightness(1.1);
+            mix-blend-mode: multiply; /* Magie : rend le blanc/jaune transparent sur la vidéo */
+            animation: float-animation 5s ease-in-out infinite; 
         }
-        @keyframes float { 
-            0% { transform: translate(-50%, -50%) rotate(0deg) translateY(0px); } 
-            50% { transform: translate(-50%, -50%) rotate(1deg) translateY(-20px); } 
-            100% { transform: translate(-50%, -50%) rotate(0deg) translateY(0px); } 
+
+        /* LA SIGNATURE ¶P */
+        #signature {
+            position: absolute; bottom: 32%; right: 18%;
+            font-size: 35px; font-family: 'Times New Roman', serif; font-weight: bold; color: #cc0000;
+            opacity: 0; animation: appear-signature 2s ease-out 2s forwards;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
         }
+
+        @keyframes float-animation { 
+            0%, 100% { transform: translate(-50%, -50%) translateY(0px) rotate(0deg); } 
+            50% { transform: translate(-50%, -50%) translateY(-25px) rotate(1deg); } 
+        }
+        @keyframes appear-signature { from { opacity: 0; } to { opacity: 0.9; } }
     </style>
 </head>
 <body>
 
-<div id="back-btn" onclick="location.reload()">✕</div>
+<div id="back-btn" style="display:none; position:fixed; top:20px; left:20px; z-index:4000; background:white; color:black; padding:10px 15px; border-radius:20px; font-weight:bold;" onclick="location.reload()">⬅ Retour</div>
 
 <div id="catalog" class="explorer-container">
-    <h2 style="margin-top: 10px;">Circuit Paulus</h2>
+    <h1 style="font-size: 40px; margin-bottom: 5px; color:#97f097">MUE.SÉUM</h1>
+    <p style="color: #8e8e93; margin-bottom: 30px;">L'art s'invite dans la rue</p>
+    
     <div class="card">
-        <img src="unnamed.jpg">
-        <div class="card-content">
-            <div style="font-size: 19px; font-weight: bold;">Le Cœur de Châtelet</div>
-            <button class="btn-map" onclick="showMap()">🗺️ Aller au point Vert</button>
+        <img src="IMG_4536.jpg"> <div style="padding:20px">
+            <h2 style="margin:0">Circuit Pierre Paulus</h2>
+            <p style="color:#8e8e93; font-size: 14px;">Parcours artistique au cœur de Châtelet</p>
+            <button class="btn-start" onclick="showMap()">DÉMARRER LA BALADE</button>
         </div>
     </div>
 </div>
@@ -61,10 +68,12 @@
     <div class="close-ra" onclick="closeRA()">✕</div>
     <video id="video" autoplay playsinline></video>
     
-    <img id="floating-art" src="https://mue-seum-visite.github.io/visite-/unnamed.jpg" id="target-img">
+    <img id="floating-art" src="IMG_4536.jpg">
     
+    <div id="signature">¶P</div>
+
     <div style="position:absolute; bottom:40px; width:100%; text-align:center;">
-        <span style="background:rgba(0,0,0,0.8); color:white; padding:12px 20px; border-radius:25px; font-size: 14px;">✨ L'œuvre de Paulus apparaît devant vous</span>
+        <span style="background:rgba(0,0,0,0.7); color:white; padding:12px 25px; border-radius:30px; font-size: 14px; border: 1px solid #97f097;">📸 Prenez un selfie avec le Coq !</span>
     </div>
 </div>
 
@@ -74,25 +83,34 @@
     function showMap() {
         document.getElementById('catalog').style.display = 'none';
         document.getElementById('map').style.display = 'block';
-        document.getElementById('back-btn').style.display = 'flex';
+        document.getElementById('back-btn').style.display = 'block';
         
-        map = L.map('map').setView([50.4022, 4.5268], 16);
+        // On centre sur ton point vert
+        map = L.map('map', {zoomControl: false}).setView([50.4022, 4.5268], 16);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        
+        // LE POINT VERT UNIQUE
+        var greenIcon = L.circleMarker([50.4022, 4.5268], {
+            radius: 12, color: '#97f097', fillColor: '#97f097', fillOpacity: 1
+        }).addTo(map);
 
-        L.circleMarker([50.4022, 4.5268], {radius: 15, color: '#2ecc71', fillColor: '#2ecc71', fillOpacity: 1}).addTo(map)
-            .bindPopup("<b>POINT D'INTÉRÊT</b><br><button style='background:#ff4b81; color:white; border:none; padding:10px; border-radius:8px; margin-top:10px; cursor:pointer;' onclick='openRA()'>📸 VOIR L'ŒUVRE ICI</button>")
-            .openPopup();
+        greenIcon.bindPopup(`
+            <div style="text-align:center">
+                <b style="font-size:16px">Étape 1</b><br>Le Coq Hardi<br>
+                <button onclick="openRA()" style="background:#ff4b81; color:white; border:none; padding:12px; border-radius:10px; margin-top:10px; font-weight:bold; cursor:pointer">📸 ACTIVER LA RA</button>
+            </div>
+        `).openPopup();
     }
 
     async function openRA() {
-        // Pour le test, on utilise l'image que tu as déjà sur ton github (unnamed.jpg) 
-        // ou on peut mettre l'URL directe de ton image Grok si elle est publique.
         document.getElementById('ra-ui').style.display = 'block';
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+                video: { facingMode: "environment" } 
+            });
             document.getElementById('video').srcObject = stream;
         } catch (err) {
-            alert("Caméra non disponible");
+            alert("Erreur : La caméra doit être autorisée pour la RA.");
         }
     }
 
