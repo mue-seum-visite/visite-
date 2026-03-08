@@ -15,6 +15,9 @@
         .btn-map { background: #97f097; color: #000; padding: 12px 24px; border-radius: 20px; font-weight: bold; border: none; float: right; cursor: pointer; }
         #back-btn { position: absolute; top: 20px; left: 20px; z-index: 2000; background: white; color: black; width: 40px; height: 40px; border-radius: 50%; display: none; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; }
         .ra-btn { background: #ff4b81; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; width: 100%; margin-top: 10px; cursor: pointer; }
+        
+        /* Style pour le marqueur Départ */
+        .start-icon { background-color: #2ecc71; border: 2px solid white; border-radius: 50%; }
     </style>
 </head>
 <body>
@@ -27,7 +30,7 @@
         <img src="unnamed.jpg">
         <div class="card-content">
             <div style="font-size: 19px; font-weight: bold;">Le Cœur de Châtelet</div>
-            <div style="color: #8e8e93; font-size: 14px; margin-bottom: 15px;">Boucle de 2,1 km • 5 points RA</div>
+            <div style="color: #8e8e93; font-size: 14px; margin-bottom: 15px;">Boucle interactive • Suivi GPS</div>
             <button class="btn-map" onclick="showMap()">🗺️ Démarrer la balade</button>
         </div>
     </div>
@@ -43,28 +46,37 @@
         document.getElementById('map').style.display = 'block';
         document.getElementById('back-btn').style.display = 'flex';
         
-        map = L.map('map', {zoomControl: false}).setView([50.4025, 4.5275], 16);
+        // On crée la carte sans forcer la vue tout de suite
+        map = L.map('map', {zoomControl: true}); 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
         
-        map.locate({setView: true, maxZoom: 17, watch: true});
-
-        // TRACÉ BLEU (L'itinéraire de ta photo)
+        // TRACÉ BLEU ÉPAIS (Ton itinéraire)
         var routePoints = [
-            [50.4022, 4.5268], // A: Hôtel de Ville
-            [50.4038, 4.5305], // B: Rue des Gravelles
-            [50.4050, 4.5325], // C: Allée de la Sambre
-            [50.4010, 4.5345], // D: Rue de la Montagne
-            [50.4022, 4.5268]  // E: Retour Hôtel de Ville
+            [50.4022, 4.5268], // A: Départ
+            [50.4038, 4.5305], // B
+            [50.4050, 4.5325], // C
+            [50.4010, 4.5345], // D
+            [50.4022, 4.5268]  // E: Retour
         ];
-        L.polyline(routePoints, {color: '#007aff', weight: 5, opacity: 0.8}).addTo(map);
+        var polyline = L.polyline(routePoints, {color: '#007aff', weight: 8, opacity: 0.7}).addTo(map);
 
-        // MARQUEURS DES ÉTAPES
+        // MARQUEUR DÉPART SPÉCIAL (Vert)
+        L.circleMarker([50.4022, 4.5268], {radius: 12, color: '#2ecc71', fillColor: '#2ecc71', fillOpacity: 1}).addTo(map)
+            .bindPopup("<b>POINT DE DÉPART</b><br>Hôtel de Ville");
+
+        // GÉOLOCALISATION : On cherche l'utilisateur
+        map.locate({setView: true, maxZoom: 16, watch: true});
+
+        map.on('locationfound', function(e) {
+            // On ajoute ton point bleu
+            L.circle(e.latlng, {radius: e.accuracy/2, color: '#3498db'}).addTo(map);
+            L.marker(e.latlng).addTo(map).bindPopup("Vous êtes ici").openPopup();
+        });
+
+        // Les étapes RA
         var steps = [
-            {pos: [50.4022, 4.5268], title: "A: Hôtel de Ville", desc: "Départ du circuit."},
-            {pos: [50.4038, 4.5305], title: "B: Rue des Gravelles", desc: "L'art ouvrier."},
-            {pos: [50.4050, 4.5325], title: "C: Bord de Sambre", desc: "Paysage industriel."},
-            {pos: [50.4010, 4.5345], title: "D: Rue de la Montagne", desc: "Vue sur la vallée."},
-            {pos: [50.4022, 4.5268], title: "E: Arrivée", desc: "Fin du parcours."}
+            {pos: [50.4038, 4.5305], title: "Étape B", desc: "Regardez le bâtiment à droite."},
+            {pos: [50.4050, 4.5325], title: "Étape C", desc: "L'art au bord de l'eau."}
         ];
 
         steps.forEach(function(s) {
@@ -74,7 +86,7 @@
     }
 
     function openRA() {
-        alert("Caméra RA : Recherche de l'œuvre Pierre Paulus en cours...");
+        alert("Caméra RA : Analyse de l'environnement...");
     }
 </script>
 </body>
