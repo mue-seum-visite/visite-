@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <title>MUE.SÉUM - Châtelet</title>
+    <title>MUE.SÉUM - Expérience Finale</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -14,10 +14,30 @@
         .card-content { padding: 15px; }
         .btn-map { background: #97f097; color: #000; padding: 12px 24px; border-radius: 20px; font-weight: bold; border: none; float: right; cursor: pointer; }
         #back-btn { position: absolute; top: 20px; left: 20px; z-index: 2000; background: white; color: black; width: 40px; height: 40px; border-radius: 50%; display: none; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; }
-        .ra-btn { background: #ff4b81; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; width: 100%; margin-top: 10px; cursor: pointer; }
         
-        /* Style pour le marqueur Départ */
-        .start-icon { background-color: #2ecc71; border: 2px solid white; border-radius: 50%; }
+        /* Interface RA */
+        #ra-ui { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 3000; background: black; }
+        video { width: 100%; height: 100%; object-fit: cover; }
+        .close-ra { position:absolute; top:20px; right:20px; background:white; color:black; padding:10px; border-radius:50%; font-weight:bold; cursor: pointer; z-index: 3001; }
+        
+        /* TON OEUVRE FLOTTANTE */
+        #floating-art { 
+            position: absolute; 
+            top: 45%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            width: 80%; 
+            max-width: 400px;
+            border: 5px solid white;
+            box-shadow: 0 0 20px rgba(255,255,255,0.5);
+            pointer-events: none; 
+            animation: float 4s ease-in-out infinite; 
+        }
+        @keyframes float { 
+            0% { transform: translate(-50%, -50%) rotate(0deg) translateY(0px); } 
+            50% { transform: translate(-50%, -50%) rotate(1deg) translateY(-20px); } 
+            100% { transform: translate(-50%, -50%) rotate(0deg) translateY(0px); } 
+        }
     </style>
 </head>
 <body>
@@ -30,13 +50,23 @@
         <img src="unnamed.jpg">
         <div class="card-content">
             <div style="font-size: 19px; font-weight: bold;">Le Cœur de Châtelet</div>
-            <div style="color: #8e8e93; font-size: 14px; margin-bottom: 15px;">Boucle interactive • Suivi GPS</div>
-            <button class="btn-map" onclick="showMap()">🗺️ Démarrer la balade</button>
+            <button class="btn-map" onclick="showMap()">🗺️ Aller au point Vert</button>
         </div>
     </div>
 </div>
 
 <div id="map"></div>
+
+<div id="ra-ui">
+    <div class="close-ra" onclick="closeRA()">✕</div>
+    <video id="video" autoplay playsinline></video>
+    
+    <img id="floating-art" src="https://mue-seum-visite.github.io/visite-/unnamed.jpg" id="target-img">
+    
+    <div style="position:absolute; bottom:40px; width:100%; text-align:center;">
+        <span style="background:rgba(0,0,0,0.8); color:white; padding:12px 20px; border-radius:25px; font-size: 14px;">✨ L'œuvre de Paulus apparaît devant vous</span>
+    </div>
+</div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
@@ -46,47 +76,32 @@
         document.getElementById('map').style.display = 'block';
         document.getElementById('back-btn').style.display = 'flex';
         
-        // On crée la carte sans forcer la vue tout de suite
-        map = L.map('map', {zoomControl: true}); 
+        map = L.map('map').setView([50.4022, 4.5268], 16);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-        
-        // TRACÉ BLEU ÉPAIS (Ton itinéraire)
-        var routePoints = [
-            [50.4022, 4.5268], // A: Départ
-            [50.4038, 4.5305], // B
-            [50.4050, 4.5325], // C
-            [50.4010, 4.5345], // D
-            [50.4022, 4.5268]  // E: Retour
-        ];
-        var polyline = L.polyline(routePoints, {color: '#007aff', weight: 8, opacity: 0.7}).addTo(map);
 
-        // MARQUEUR DÉPART SPÉCIAL (Vert)
-        L.circleMarker([50.4022, 4.5268], {radius: 12, color: '#2ecc71', fillColor: '#2ecc71', fillOpacity: 1}).addTo(map)
-            .bindPopup("<b>POINT DE DÉPART</b><br>Hôtel de Ville");
-
-        // GÉOLOCALISATION : On cherche l'utilisateur
-        map.locate({setView: true, maxZoom: 16, watch: true});
-
-        map.on('locationfound', function(e) {
-            // On ajoute ton point bleu
-            L.circle(e.latlng, {radius: e.accuracy/2, color: '#3498db'}).addTo(map);
-            L.marker(e.latlng).addTo(map).bindPopup("Vous êtes ici").openPopup();
-        });
-
-        // Les étapes RA
-        var steps = [
-            {pos: [50.4038, 4.5305], title: "Étape B", desc: "Regardez le bâtiment à droite."},
-            {pos: [50.4050, 4.5325], title: "Étape C", desc: "L'art au bord de l'eau."}
-        ];
-
-        steps.forEach(function(s) {
-            L.marker(s.pos).addTo(map)
-                .bindPopup("<b>"+s.title+"</b><br>"+s.desc+"<br><button class='ra-btn' onclick='openRA()'>📸 VOIR EN RA</button>");
-        });
+        L.circleMarker([50.4022, 4.5268], {radius: 15, color: '#2ecc71', fillColor: '#2ecc71', fillOpacity: 1}).addTo(map)
+            .bindPopup("<b>POINT D'INTÉRÊT</b><br><button style='background:#ff4b81; color:white; border:none; padding:10px; border-radius:8px; margin-top:10px; cursor:pointer;' onclick='openRA()'>📸 VOIR L'ŒUVRE ICI</button>")
+            .openPopup();
     }
 
-    function openRA() {
-        alert("Caméra RA : Analyse de l'environnement...");
+    async function openRA() {
+        // Pour le test, on utilise l'image que tu as déjà sur ton github (unnamed.jpg) 
+        // ou on peut mettre l'URL directe de ton image Grok si elle est publique.
+        document.getElementById('ra-ui').style.display = 'block';
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+            document.getElementById('video').srcObject = stream;
+        } catch (err) {
+            alert("Caméra non disponible");
+        }
+    }
+
+    function closeRA() {
+        const video = document.getElementById('video');
+        if (video.srcObject) {
+            video.srcObject.getTracks().forEach(track => track.stop());
+        }
+        document.getElementById('ra-ui').style.display = 'none';
     }
 </script>
 </body>
