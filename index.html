@@ -13,11 +13,13 @@
         .card { background: #1c1c1e; border-radius: 25px; overflow: hidden; border: 1px solid #333; }
         .card img { width: 100%; height: 300px; object-fit: cover; }
         .btn-start { background: #97f097; color: #000; padding: 18px 40px; border-radius: 40px; font-weight: bold; border: none; margin: 25px 0; cursor: pointer; font-size: 18px; }
-        #ra-ui { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 3000; }
+        #ra-ui { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 3000; background: #000; }
         video { width: 100%; height: 100%; object-fit: cover; }
         .close-ra { position:absolute; top:30px; right:20px; background:rgba(255,255,255,0.8); color:black; width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; z-index: 3001; }
         #floating-art { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); width: 85%; max-width: 450px; mix-blend-mode: multiply; filter: contrast(1.2); animation: float-animation 5s ease-in-out infinite; }
+        #signature { position: absolute; bottom: 32%; right: 18%; font-size: 35px; font-weight: bold; color: #cc0000; opacity: 0; animation: appear-signature 2s ease-out 2s forwards; }
         @keyframes float-animation { 0%, 100% { transform: translate(-50%, -50%) translateY(0px); } 50% { transform: translate(-50%, -50%) translateY(-25px); } }
+        @keyframes appear-signature { from { opacity: 0; } to { opacity: 0.9; } }
     </style>
 </head>
 <body>
@@ -29,7 +31,7 @@
         <img src="IMG_4536.jpg"> 
         <div style="padding:20px">
             <h2>Circuit Pierre Paulus</h2>
-            <p style="color:#8e8e93">Circuit en 5 étapes le long de la Sambre</p>
+            <p style="color:#8e8e93">Découvrez les 5 étapes à Châtelet</p>
             <button class="btn-start" onclick="showMap()">DÉMARRER LA BALADE</button>
         </div>
     </div>
@@ -41,6 +43,7 @@
     <div class="close-ra" onclick="closeRA()">✕</div>
     <video id="video" autoplay playsinline></video>
     <img id="floating-art" src="IMG_4536.jpg">
+    <div id="signature">¶P</div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -50,28 +53,40 @@
         document.getElementById('catalog').style.display = 'none';
         document.getElementById('map').style.display = 'block';
         
-        map = L.map('map').setView([50.4060, 4.5230], 16);
+        // On centre la vue sur le centre de Châtelet
+        map = L.map('map').setView([50.4035, 4.5275], 16);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-        // Tes 5 points GPS réels
-        var steps = [
-            [50.40423, 4.52366], // P1: Pont
-            [50.40690, 4.52486], // P2: Passerelle
-            [50.40732, 4.52198], // P3: Rive Gauche Sud
-            [50.40872, 4.52061], // P4: Rive Gauche Nord
-            [50.40475, 4.52233], // P5: Retour Rive Gauche
-            [50.40423, 4.52366]  // Retour final P1
+        // LE TRACÉ "INTELLIGENT" (suit les rues et le pont)
+        var itineraireComplet = [
+            [50.4022, 4.5268], // Point 1: Hôtel de Ville
+            [50.4033, 4.5267], // Angle Rue des Gravelles
+            [50.4042, 4.5265], // Point 2: Bord de Sambre
+            [50.4045, 4.5285], // On longe le Quai du Rivage
+            [50.4048, 4.5295], // Point 3: Quai (avant la passerelle)
+            [50.4049, 4.5306], // Entrée de la passerelle
+            [50.4043, 4.5312], // Sortie de la passerelle
+            [50.4032, 4.5318], // Point 4: Rue Paulus
+            [50.4020, 4.5305], // Rue de l'Enseignement
+            [50.4010, 4.5280]  // Point 5: Église / Retour
         ];
 
-        // Le tracé bleu qui suit les berges et les ponts
-        L.polyline(steps, {color: '#3498db', weight: 5, opacity: 0.8, lineJoin: 'round'}).addTo(map);
+        // On dessine la ligne bleue qui suit les rues
+        L.polyline(itineraireComplet, {color: '#3498db', weight: 5, opacity: 0.8}).addTo(map);
 
-        steps.forEach((pos, i) => {
-            if(i < 5) { // On ne met pas de marqueur double sur le point de retour
-                L.circleMarker(pos, {radius: 12, color: '#97f097', fillColor: '#97f097', fillOpacity: 1})
-                .addTo(map)
-                .bindPopup(`<b>Étape ${i+1}</b><br><button onclick="openRA()" style="background:#ff4b81; color:white; border:none; padding:10px; border-radius:8px; margin-top:10px;">📸 VOIR L'ART</button>`);
-            }
+        // On place les marqueurs uniquement sur les 5 étapes clés
+        var pointsEtapes = [
+            {pos: itineraireComplet[0], nom: "Hôtel de Ville"},
+            {pos: itineraireComplet[2], nom: "Bords de Sambre"},
+            {pos: itineraireComplet[4], nom: "Quai du Rivage"},
+            {pos: itineraireComplet[7], nom: "Rue Pierre Paulus"},
+            {pos: itineraireComplet[9], nom: "Place de l'Église"}
+        ];
+
+        pointsEtapes.forEach((etape, i) => {
+            L.circleMarker(etape.pos, {radius: 12, color: '#97f097', fillColor: '#97f097', fillOpacity: 1})
+            .addTo(map)
+            .bindPopup(`<b>Étape ${i+1} : ${etape.nom}</b><br><button onclick="openRA()" style="background:#ff4b81; color:white; border:none; padding:10px; border-radius:8px; margin-top:10px; cursor:pointer;">📸 VOIR L'ART</button>`);
         });
     }
 
