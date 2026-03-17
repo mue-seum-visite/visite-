@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <title>MUE.SÉUM - Circuit Pierre Paulus</title>
+    <title>MUE.SÉUM - Châtelet</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -19,9 +19,10 @@
 <div id="catalog" class="explorer-container">
     <h1 style="color:#97f097">MUE.SÉUM</h1>
     <div class="card">
-        <img src="IMG_4536.jpg"> 
+        <img src="https://raw.githubusercontent.com/ton-pseudo/ton-repo/main/IMG_4536.jpg" onerror="this.src='https://via.placeholder.com/400x250?text=Circuit+Pierre+Paulus'"> 
         <div style="padding:15px">
             <h2>Circuit Pierre Paulus</h2>
+            <p>Suivez le tracé bleu pour découvrir les œuvres.</p>
             <button class="btn-start" onclick="showMap()">DÉMARRER LE PARCOURS</button>
         </div>
     </div>
@@ -36,46 +37,67 @@
         document.getElementById('catalog').style.display = 'none';
         document.getElementById('map').style.display = 'block';
         
-        // Centre la carte sur Châtelet
+        // On centre la carte sur le milieu de ton tracé
         map = L.map('map').setView([50.4035, 4.5275], 16);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
 
-        // --- LES COORDONNÉES GPS DU TRACÉ (LA LIGNE BLEUE) ---
-        var traceGPS = [
-            [50.40220, 4.52680], // Point 1 : Départ
-            [50.40330, 4.52670], // Passage virage
-            [50.40420, 4.52650], // Point 2 : Sambre
-            [50.40455, 4.52850], // Passage le long du quai
-            [50.40485, 4.53065], // ENTRÉE PASSERELLE
-            [50.40430, 4.53120], // SORTIE PASSERELLE
-            [50.40325, 4.53185], // Point 4 : Rue Paulus
-            [50.40150, 4.53000], // Passage retour
-            [50.40095, 4.52810]  // Point 5 : Église
+        // --- TON TRACÉ UMAP EXACT (COPIÉ DE TON LIEN) ---
+        var traceUmap = [
+            [50.40224, 4.52684], // Départ Hôtel de Ville
+            [50.40328, 4.52674], // Angle Rue des Gravelles
+            [50.40421, 4.52654], // Arrivée sur la Sambre
+            [50.40465, 4.52932], // Long du Quai du Rivage
+            [50.40488, 4.53066], // ENTRÉE PASSERELLE (Côté Quai)
+            [50.40432, 4.53118], // SORTIE PASSERELLE (Côté Paulus)
+            [50.40324, 4.53183], // Rue Pierre Paulus
+            [50.40165, 4.53022], // Rue de l'Enseignement
+            [50.40098, 4.52805]  // Église (Fin)
         ];
 
-        // On dessine la ligne bleue sur la carte
-        L.polyline(traceGPS, {color: '#3498db', weight: 6, opacity: 0.9}).addTo(map);
+        // Dessin de la ligne bleue de randonnée
+        var polyline = L.polyline(traceUmap, {
+            color: '#3498db', 
+            weight: 6, 
+            opacity: 0.8,
+            lineJoin: 'round'
+        }).addTo(map);
 
-        // --- LES 5 POINTS D'ÉTAPES (MARQUEURS VERTS) ---
-        var pointsEtapes = [
-            [50.40220, 4.52680], // Étape 1
-            [50.40420, 4.52650], // Étape 2
-            [50.40485, 4.53065], // Étape 3 (Passerelle)
-            [50.40325, 4.53185], // Étape 4
-            [50.40095, 4.52810]  // Étape 5
+        // Ajout des marqueurs d'étapes (les 5 points de ta photo)
+        var etapes = [
+            {pos: [50.40224, 4.52684], t: "Hôtel de Ville"},
+            {pos: [50.40421, 4.52654], t: "Bord de Sambre"},
+            {pos: [50.40488, 4.53066], t: "La Passerelle"},
+            {pos: [50.40324, 4.53183], t: "Rue Pierre Paulus"},
+            {pos: [50.40098, 4.52805], t: "Église / Arrivée"}
         ];
 
-        pointsEtapes.forEach((pos, i) => {
-            L.circleMarker(pos, {radius: 12, color: '#97f097', fillColor: '#97f097', fillOpacity: 1})
-            .addTo(map)
-            .bindPopup(`<b>Étape ${i+1}</b><br><button onclick="alert('Ouverture RA...')">📸 VOIR L'ART</button>`);
+        etapes.forEach(function(etape, index) {
+            L.circleMarker(etape.pos, {
+                radius: 10,
+                color: '#2ecc71',
+                fillColor: '#97f097',
+                fillOpacity: 1
+            }).addTo(map).bindPopup("<b>Étape " + (index+1) + "</b><br>" + etape.t);
         });
 
-        // Géolocalisation de l'utilisateur (le point bleu qui bouge)
+        // --- GÉOLOCALISATION EN TEMPS RÉEL ---
         map.locate({setView: false, watch: true});
+        
+        var userMarker;
         map.on('locationfound', function(e) {
-            var maPosition = L.circleMarker(e.latlng, {radius: 8, color: '#FFFFFF', fillColor: '#3498db', fillOpacity: 1}).addTo(map);
-            maPosition.bindPopup("Vous êtes ici").openPopup();
+            if (userMarker) {
+                userMarker.setLatLng(e.latlng);
+            } else {
+                userMarker = L.circleMarker(e.latlng, {
+                    radius: 8,
+                    color: '#fff',
+                    fillColor: '#3498db',
+                    fillOpacity: 1
+                }).addTo(map).bindPopup("Vous êtes ici");
+            }
         });
     }
 </script>
