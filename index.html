@@ -6,45 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        body { margin:0; padding:0; font-family: 'Segoe UI', sans-serif; background: #000; color: white; }
-        #map { height: 100vh; width: 100vw; display: none; position: fixed; top: 0; left: 0; }
-        .explorer-container { padding: 30px 20px; text-align: center; background: #000; min-height: 100vh; }
-        .search-bar { background: #1c1c1e; padding: 12px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #333; color: #8e8e93; text-align: left; }
-        .card { background: #1c1c1e; border-radius: 25px; overflow: hidden; border: 1px solid #333; }
-        .card img { width: 100%; height: 300px; object-fit: cover; }
-        .btn-start { background: #97f097; color: #000; padding: 18px 40px; border-radius: 40px; font-weight: bold; border: none; margin: 25px 0; cursor: pointer; font-size: 18px; }
-        #ra-ui { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 3000; }
-        video { width: 100%; height: 100%; object-fit: cover; }
-        .close-ra { position:absolute; top:30px; right:20px; background:rgba(255,255,255,0.8); color:black; width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; z-index: 3001; }
-        #floating-art { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); width: 85%; max-width: 450px; mix-blend-mode: multiply; filter: contrast(1.2); animation: float-animation 5s ease-in-out infinite; }
-        #signature { position: absolute; bottom: 32%; right: 18%; font-size: 35px; font-weight: bold; color: #cc0000; opacity: 0; animation: appear-signature 2s ease-out 2s forwards; }
-        @keyframes float-animation { 0%, 100% { transform: translate(-50%, -50%) translateY(0px); } 50% { transform: translate(-50%, -50%) translateY(-25px); } }
-        @keyframes appear-signature { from { opacity: 0; } to { opacity: 0.9; } }
+        body { margin:0; padding:0; font-family: sans-serif; background: #000; color: white; }
+        #map { height: 100vh; width: 100vw; display: none; }
+        .explorer-container { padding: 30px 20px; text-align: center; }
+        .card { background: #1c1c1e; border-radius: 20px; overflow: hidden; border: 1px solid #333; margin-top: 20px; }
+        .card img { width: 100%; height: 250px; object-fit: cover; }
+        .btn-start { background: #97f097; color: #000; padding: 15px 30px; border-radius: 30px; font-weight: bold; border: none; margin: 20px 0; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div id="catalog" class="explorer-container">
-    <div class="search-bar">🔍 Rechercher un circuit...</div>
     <h1 style="color:#97f097">MUE.SÉUM</h1>
     <div class="card">
         <img src="IMG_4536.jpg"> 
-        <div style="padding:20px">
+        <div style="padding:15px">
             <h2>Circuit Pierre Paulus</h2>
-            <p style="color:#8e8e93">Découvrez les 5 étapes à Châtelet</p>
-            <button class="btn-start" onclick="showMap()">DÉMARRER LA BALADE</button>
+            <button class="btn-start" onclick="showMap()">DÉMARRER LE PARCOURS</button>
         </div>
     </div>
 </div>
 
 <div id="map"></div>
-
-<div id="ra-ui">
-    <div class="close-ra" onclick="closeRA()">✕</div>
-    <video id="video" autoplay playsinline></video>
-    <img id="floating-art" src="IMG_4536.jpg">
-    <div id="signature">¶P</div>
-</div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
@@ -53,51 +36,47 @@
         document.getElementById('catalog').style.display = 'none';
         document.getElementById('map').style.display = 'block';
         
+        // Centre la carte sur Châtelet
         map = L.map('map').setView([50.4035, 4.5275], 16);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-        // LE TRACÉ "CHIRURGICAL" (recopié de ton uMap)
-        var itineraire = [
-            [50.4022, 4.5268], // Étape 1 : Hôtel de Ville
-            [50.4033, 4.5266], // Tournant Rue des Gravelles
-            [50.4042, 4.5265], // Étape 2 : Rue de la Station (Bord Sambre)
-            [50.4045, 4.5285], // On longe le Quai du Rivage
-            [50.4048, 4.5295], // Étape 3 : Quai (avant le pont)
-            [50.4049, 4.5305], // ENTRÉE DE LA PASSERELLE
-            [50.4045, 4.5308], // MILIEU DE LA PASSERELLE
-            [50.4042, 4.5311], // SORTIE DE LA PASSERELLE
-            [50.4032, 4.5318], // Étape 4 : Rue Pierre Paulus
-            [50.4020, 4.5305], // Rue de l'Enseignement
-            [50.4010, 4.5280]  // Étape 5 : Place de l'Église
+        // --- LES COORDONNÉES GPS DU TRACÉ (LA LIGNE BLEUE) ---
+        var traceGPS = [
+            [50.40220, 4.52680], // Point 1 : Départ
+            [50.40330, 4.52670], // Passage virage
+            [50.40420, 4.52650], // Point 2 : Sambre
+            [50.40455, 4.52850], // Passage le long du quai
+            [50.40485, 4.53065], // ENTRÉE PASSERELLE
+            [50.40430, 4.53120], // SORTIE PASSERELLE
+            [50.40325, 4.53185], // Point 4 : Rue Paulus
+            [50.40150, 4.53000], // Passage retour
+            [50.40095, 4.52810]  // Point 5 : Église
         ];
 
-        // Ligne bleue qui suit maintenant les rues et le pont
-        L.polyline(itineraire, {color: '#3498db', weight: 5, opacity: 0.8}).addTo(map);
+        // On dessine la ligne bleue sur la carte
+        L.polyline(traceGPS, {color: '#3498db', weight: 6, opacity: 0.9}).addTo(map);
 
-        // On place les marqueurs uniquement sur tes 5 points d'intérêt
-        var etapes = [
-            {pos: itineraire[0], nom: "Hôtel de Ville"},
-            {pos: itineraire[2], nom: "Rue de la Station"},
-            {pos: itineraire[4], nom: "Quai du Rivage"},
-            {pos: itineraire[8], nom: "Rue Pierre Paulus"},
-            {pos: itineraire[10], nom: "Place de l'Église"}
+        // --- LES 5 POINTS D'ÉTAPES (MARQUEURS VERTS) ---
+        var pointsEtapes = [
+            [50.40220, 4.52680], // Étape 1
+            [50.40420, 4.52650], // Étape 2
+            [50.40485, 4.53065], // Étape 3 (Passerelle)
+            [50.40325, 4.53185], // Étape 4
+            [50.40095, 4.52810]  // Étape 5
         ];
 
-        etapes.forEach((pt, i) => {
-            L.circleMarker(pt.pos, {radius: 12, color: '#97f097', fillColor: '#97f097', fillOpacity: 1})
+        pointsEtapes.forEach((pos, i) => {
+            L.circleMarker(pos, {radius: 12, color: '#97f097', fillColor: '#97f097', fillOpacity: 1})
             .addTo(map)
-            .bindPopup(`<b>Étape ${i+1} : ${pt.nom}</b><br><button onclick="openRA()" style="background:#ff4b81; color:white; border:none; padding:8px; border-radius:5px; margin-top:5px; cursor:pointer;">📸 VOIR L'ART</button>`);
+            .bindPopup(`<b>Étape ${i+1}</b><br><button onclick="alert('Ouverture RA...')">📸 VOIR L'ART</button>`);
         });
-    }
 
-    async function openRA() {
-        document.getElementById('ra-ui').style.display = 'block';
-        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
-        document.getElementById('video').srcObject = stream;
-    }
-
-    function closeRA() {
-        location.reload();
+        // Géolocalisation de l'utilisateur (le point bleu qui bouge)
+        map.locate({setView: false, watch: true});
+        map.on('locationfound', function(e) {
+            var maPosition = L.circleMarker(e.latlng, {radius: 8, color: '#FFFFFF', fillColor: '#3498db', fillOpacity: 1}).addTo(map);
+            maPosition.bindPopup("Vous êtes ici").openPopup();
+        });
     }
 </script>
 </body>
