@@ -13,7 +13,7 @@
         .card { background: #1c1c1e; border-radius: 25px; overflow: hidden; border: 1px solid #333; }
         .card img { width: 100%; height: 300px; object-fit: cover; }
         .btn-start { background: #97f097; color: #000; padding: 18px 40px; border-radius: 40px; font-weight: bold; border: none; margin: 25px 0; cursor: pointer; font-size: 18px; }
-        #ra-ui { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 3000; background: #000; }
+        #ra-ui { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 3000; }
         video { width: 100%; height: 100%; object-fit: cover; }
         .close-ra { position:absolute; top:30px; right:20px; background:rgba(255,255,255,0.8); color:black; width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; z-index: 3001; }
         #floating-art { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); width: 85%; max-width: 450px; mix-blend-mode: multiply; filter: contrast(1.2); animation: float-animation 5s ease-in-out infinite; }
@@ -53,40 +53,40 @@
         document.getElementById('catalog').style.display = 'none';
         document.getElementById('map').style.display = 'block';
         
-        // On centre la vue sur le centre de Châtelet
         map = L.map('map').setView([50.4035, 4.5275], 16);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-        // LE TRACÉ "INTELLIGENT" (suit les rues et le pont)
-        var itineraireComplet = [
-            [50.4022, 4.5268], // Point 1: Hôtel de Ville
-            [50.4033, 4.5267], // Angle Rue des Gravelles
-            [50.4042, 4.5265], // Point 2: Bord de Sambre
+        // LE TRACÉ "CHIRURGICAL" (recopié de ton uMap)
+        var itineraire = [
+            [50.4022, 4.5268], // Étape 1 : Hôtel de Ville
+            [50.4033, 4.5266], // Tournant Rue des Gravelles
+            [50.4042, 4.5265], // Étape 2 : Rue de la Station (Bord Sambre)
             [50.4045, 4.5285], // On longe le Quai du Rivage
-            [50.4048, 4.5295], // Point 3: Quai (avant la passerelle)
-            [50.4049, 4.5306], // Entrée de la passerelle
-            [50.4043, 4.5312], // Sortie de la passerelle
-            [50.4032, 4.5318], // Point 4: Rue Paulus
+            [50.4048, 4.5295], // Étape 3 : Quai (avant le pont)
+            [50.4049, 4.5305], // ENTRÉE DE LA PASSERELLE
+            [50.4045, 4.5308], // MILIEU DE LA PASSERELLE
+            [50.4042, 4.5311], // SORTIE DE LA PASSERELLE
+            [50.4032, 4.5318], // Étape 4 : Rue Pierre Paulus
             [50.4020, 4.5305], // Rue de l'Enseignement
-            [50.4010, 4.5280]  // Point 5: Église / Retour
+            [50.4010, 4.5280]  // Étape 5 : Place de l'Église
         ];
 
-        // On dessine la ligne bleue qui suit les rues
-        L.polyline(itineraireComplet, {color: '#3498db', weight: 5, opacity: 0.8}).addTo(map);
+        // Ligne bleue qui suit maintenant les rues et le pont
+        L.polyline(itineraire, {color: '#3498db', weight: 5, opacity: 0.8}).addTo(map);
 
-        // On place les marqueurs uniquement sur les 5 étapes clés
-        var pointsEtapes = [
-            {pos: itineraireComplet[0], nom: "Hôtel de Ville"},
-            {pos: itineraireComplet[2], nom: "Bords de Sambre"},
-            {pos: itineraireComplet[4], nom: "Quai du Rivage"},
-            {pos: itineraireComplet[7], nom: "Rue Pierre Paulus"},
-            {pos: itineraireComplet[9], nom: "Place de l'Église"}
+        // On place les marqueurs uniquement sur tes 5 points d'intérêt
+        var etapes = [
+            {pos: itineraire[0], nom: "Hôtel de Ville"},
+            {pos: itineraire[2], nom: "Rue de la Station"},
+            {pos: itineraire[4], nom: "Quai du Rivage"},
+            {pos: itineraire[8], nom: "Rue Pierre Paulus"},
+            {pos: itineraire[10], nom: "Place de l'Église"}
         ];
 
-        pointsEtapes.forEach((etape, i) => {
-            L.circleMarker(etape.pos, {radius: 12, color: '#97f097', fillColor: '#97f097', fillOpacity: 1})
+        etapes.forEach((pt, i) => {
+            L.circleMarker(pt.pos, {radius: 12, color: '#97f097', fillColor: '#97f097', fillOpacity: 1})
             .addTo(map)
-            .bindPopup(`<b>Étape ${i+1} : ${etape.nom}</b><br><button onclick="openRA()" style="background:#ff4b81; color:white; border:none; padding:10px; border-radius:8px; margin-top:10px; cursor:pointer;">📸 VOIR L'ART</button>`);
+            .bindPopup(`<b>Étape ${i+1} : ${pt.nom}</b><br><button onclick="openRA()" style="background:#ff4b81; color:white; border:none; padding:8px; border-radius:5px; margin-top:5px; cursor:pointer;">📸 VOIR L'ART</button>`);
         });
     }
 
