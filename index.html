@@ -1,30 +1,23 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <title>MUE.SÉUM - Châtelet</title>
+    <title>MUE.SÉUM - Circuit Officiel</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        body { margin:0; padding:0; font-family: sans-serif; background: #000; color: white; }
+        body { margin:0; padding:0; background: #000; color: white; font-family: sans-serif; }
         #map { height: 100vh; width: 100vw; display: none; }
-        .explorer-container { padding: 30px 20px; text-align: center; }
-        .card { background: #1c1c1e; border-radius: 20px; overflow: hidden; border: 1px solid #333; margin-top: 20px; }
-        .card img { width: 100%; height: 250px; object-fit: cover; }
-        .btn-start { background: #97f097; color: #000; padding: 15px 30px; border-radius: 30px; font-weight: bold; border: none; margin: 20px 0; cursor: pointer; }
+        .explorer-container { padding: 30px; text-align: center; }
+        .btn-start { background: #97f097; color: #000; padding: 15px 30px; border-radius: 30px; font-weight: bold; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div id="catalog" class="explorer-container">
     <h1 style="color:#97f097">MUE.SÉUM</h1>
-    <div class="card">
-        <img src="IMG_4536.jpg"> 
-        <div style="padding:15px">
-            <h2>Circuit Pierre Paulus</h2>
-            <button class="btn-start" onclick="showMap()">DÉMARRER LE PARCOURS</button>
-        </div>
-    </div>
+    <p>Données GPS extraites avec succès.</p>
+    <button class="btn-start" onclick="showMap()">LANCER LE CIRCUIT</button>
 </div>
 
 <div id="map"></div>
@@ -36,66 +29,38 @@
         document.getElementById('catalog').style.display = 'none';
         document.getElementById('map').style.display = 'block';
         
-        // Centre de la carte
-        map = L.map('map').setView([50.4035, 4.5275], 16);
+        // On centre sur tes coordonnées
+        map = L.map('map').setView([50.406, 4.523], 15);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-        // --- TRACÉ GPS PUR (EXTRAIT DE UMAP) ---
-        // Le 1er et le 10ème point sont identiques pour boucler le circuit
-        var circuitGps = [
-            [50.40224, 4.52684], 
-            [50.40328, 4.52674], 
-            [50.40421, 4.52654], 
-            [50.40465, 4.52932], 
-            [50.40488, 4.53066], 
-            [50.40432, 4.53118], 
-            [50.40324, 4.53183], 
-            [50.40165, 4.53022], 
-            [50.40098, 4.52805], 
-            [50.40224, 4.52684]  
+        // --- TES COORDONNÉES GPS EXTRAITES ET CORRIGÉES ---
+        var circuitOfficiel = [
+            [50.4044627, 4.5230877], // Hôtel de Ville
+            [50.4046263, 4.5221912], // Rue de la Montagne
+            [50.4069696, 4.5217572], // Rue des Gravelles
+            [50.4082915, 4.5205504], // Allée de la Sambre
+            [50.408729, 4.523975],   // Point de passage Pont
+            [50.4067226, 4.5250463], // Rue Paulus
+            [50.4044627, 4.5230877]  // Retour Départ (Boucle)
         ];
 
-        // Dessin de la ligne bleue (Le tracé de rando)
-        L.polyline(circuitGps, {
-            color: '#3498db', 
-            weight: 6, 
-            opacity: 0.9,
-            lineJoin: 'round'
-        }).addTo(map);
+        // Tracé de la ligne bleue
+        L.polyline(circuitOfficiel, {color: '#3498db', weight: 5, opacity: 0.8}).addTo(map);
 
-        // --- LES 5 POINTS DE VUE (MARQUEURS) ---
-        var pointsEtapes = [
-            [50.40224, 4.52684],
-            [50.40421, 4.52654],
-            [50.40488, 4.53066],
-            [50.40324, 4.53183],
-            [50.40098, 4.52805]
-        ];
-
-        pointsEtapes.forEach((pos, i) => {
-            L.circleMarker(pos, {
-                radius: 10, 
-                color: '#97f097', 
-                fillColor: '#97f097', 
-                fillOpacity: 1
-            }).addTo(map).bindPopup("<b>Étape " + (i+1) + "</b><br><button onclick='openRA()'>VOIR L'ŒUVRE</button>");
+        // Ajout des points d'intérêt
+        circuitOfficiel.forEach((pos, i) => {
+            if(i < circuitOfficiel.length - 1) { // Ne pas doubler le marqueur sur le point de retour
+                L.circleMarker(pos, {radius: 8, color: '#97f097', fillColor: '#97f097', fillOpacity: 1})
+                .addTo(map)
+                .bindPopup("Étape " + (i+1));
+            }
         });
 
-        // --- GÉOLOCALISATION GPS ---
+        // Géolocalisation réelle
         map.locate({setView: false, watch: true});
         map.on('locationfound', function(e) {
-            L.circleMarker(e.latlng, {
-                radius: 7, 
-                color: '#fff', 
-                fillColor: '#3498db', 
-                fillOpacity: 1
-            }).addTo(map);
+            L.circleMarker(e.latlng, {radius: 6, color: '#fff', fillColor: '#3498db', fillOpacity: 1}).addTo(map);
         });
-    }
-
-    function openRA() {
-        alert("Lancement de la Réalité Augmentée...");
-        // Ici on ajoutera ton lien vers la caméra RA plus tard
     }
 </script>
 </body>
