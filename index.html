@@ -19,10 +19,9 @@
 <div id="catalog" class="explorer-container">
     <h1 style="color:#97f097">MUE.SÉUM</h1>
     <div class="card">
-        <img src="https://raw.githubusercontent.com/ton-pseudo/ton-repo/main/IMG_4536.jpg" onerror="this.src='https://via.placeholder.com/400x250?text=Circuit+Pierre+Paulus'"> 
+        <img src="IMG_4536.jpg"> 
         <div style="padding:15px">
             <h2>Circuit Pierre Paulus</h2>
-            <p>Suivez le tracé bleu pour découvrir les œuvres.</p>
             <button class="btn-start" onclick="showMap()">DÉMARRER LE PARCOURS</button>
         </div>
     </div>
@@ -37,68 +36,66 @@
         document.getElementById('catalog').style.display = 'none';
         document.getElementById('map').style.display = 'block';
         
-        // On centre la carte sur le milieu de ton tracé
+        // Centre de la carte
         map = L.map('map').setView([50.4035, 4.5275], 16);
-        
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap'
-        }).addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-        // --- TON TRACÉ UMAP EXACT (COPIÉ DE TON LIEN) ---
-        var traceUmap = [
-            [50.40224, 4.52684], // Départ Hôtel de Ville
-            [50.40328, 4.52674], // Angle Rue des Gravelles
-            [50.40421, 4.52654], // Arrivée sur la Sambre
-            [50.40465, 4.52932], // Long du Quai du Rivage
-            [50.40488, 4.53066], // ENTRÉE PASSERELLE (Côté Quai)
-            [50.40432, 4.53118], // SORTIE PASSERELLE (Côté Paulus)
-            [50.40324, 4.53183], // Rue Pierre Paulus
-            [50.40165, 4.53022], // Rue de l'Enseignement
-            [50.40098, 4.52805]  // Église (Fin)
+        // --- TRACÉ GPS PUR (EXTRAIT DE UMAP) ---
+        // Le 1er et le 10ème point sont identiques pour boucler le circuit
+        var circuitGps = [
+            [50.40224, 4.52684], 
+            [50.40328, 4.52674], 
+            [50.40421, 4.52654], 
+            [50.40465, 4.52932], 
+            [50.40488, 4.53066], 
+            [50.40432, 4.53118], 
+            [50.40324, 4.53183], 
+            [50.40165, 4.53022], 
+            [50.40098, 4.52805], 
+            [50.40224, 4.52684]  
         ];
 
-        // Dessin de la ligne bleue de randonnée
-        var polyline = L.polyline(traceUmap, {
+        // Dessin de la ligne bleue (Le tracé de rando)
+        L.polyline(circuitGps, {
             color: '#3498db', 
             weight: 6, 
-            opacity: 0.8,
+            opacity: 0.9,
             lineJoin: 'round'
         }).addTo(map);
 
-        // Ajout des marqueurs d'étapes (les 5 points de ta photo)
-        var etapes = [
-            {pos: [50.40224, 4.52684], t: "Hôtel de Ville"},
-            {pos: [50.40421, 4.52654], t: "Bord de Sambre"},
-            {pos: [50.40488, 4.53066], t: "La Passerelle"},
-            {pos: [50.40324, 4.53183], t: "Rue Pierre Paulus"},
-            {pos: [50.40098, 4.52805], t: "Église / Arrivée"}
+        // --- LES 5 POINTS DE VUE (MARQUEURS) ---
+        var pointsEtapes = [
+            [50.40224, 4.52684],
+            [50.40421, 4.52654],
+            [50.40488, 4.53066],
+            [50.40324, 4.53183],
+            [50.40098, 4.52805]
         ];
 
-        etapes.forEach(function(etape, index) {
-            L.circleMarker(etape.pos, {
-                radius: 10,
-                color: '#2ecc71',
-                fillColor: '#97f097',
+        pointsEtapes.forEach((pos, i) => {
+            L.circleMarker(pos, {
+                radius: 10, 
+                color: '#97f097', 
+                fillColor: '#97f097', 
                 fillOpacity: 1
-            }).addTo(map).bindPopup("<b>Étape " + (index+1) + "</b><br>" + etape.t);
+            }).addTo(map).bindPopup("<b>Étape " + (i+1) + "</b><br><button onclick='openRA()'>VOIR L'ŒUVRE</button>");
         });
 
-        // --- GÉOLOCALISATION EN TEMPS RÉEL ---
+        // --- GÉOLOCALISATION GPS ---
         map.locate({setView: false, watch: true});
-        
-        var userMarker;
         map.on('locationfound', function(e) {
-            if (userMarker) {
-                userMarker.setLatLng(e.latlng);
-            } else {
-                userMarker = L.circleMarker(e.latlng, {
-                    radius: 8,
-                    color: '#fff',
-                    fillColor: '#3498db',
-                    fillOpacity: 1
-                }).addTo(map).bindPopup("Vous êtes ici");
-            }
+            L.circleMarker(e.latlng, {
+                radius: 7, 
+                color: '#fff', 
+                fillColor: '#3498db', 
+                fillOpacity: 1
+            }).addTo(map);
         });
+    }
+
+    function openRA() {
+        alert("Lancement de la Réalité Augmentée...");
+        // Ici on ajoutera ton lien vers la caméra RA plus tard
     }
 </script>
 </body>
