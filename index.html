@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <title>MUE.SÉUM - Circuit Officiel</title>
+    <title>MUE.SÉUM - Tracé Réel</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -16,8 +16,8 @@
 
 <div id="catalog" class="explorer-container">
     <h1 style="color:#97f097">MUE.SÉUM</h1>
-    <p>Données GPS extraites avec succès.</p>
-    <button class="btn-start" onclick="showMap()">LANCER LE CIRCUIT</button>
+    <p>Le tracé suit désormais les rues et la passerelle.</p>
+    <button class="btn-start" onclick="showMap()">DÉMARRER LE PARCOURS</button>
 </div>
 
 <div id="map"></div>
@@ -29,34 +29,46 @@
         document.getElementById('catalog').style.display = 'none';
         document.getElementById('map').style.display = 'block';
         
-        // On centre sur tes coordonnées
-        map = L.map('map').setView([50.406, 4.523], 15);
+        map = L.map('map').setView([50.4045, 4.5265], 16);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-        // --- TES COORDONNÉES GPS EXTRAITES ET CORRIGÉES ---
-        var circuitOfficiel = [
-            [50.4044627, 4.5230877], // Hôtel de Ville
-            [50.4046263, 4.5221912], // Rue de la Montagne
-            [50.4069696, 4.5217572], // Rue des Gravelles
-            [50.4082915, 4.5205504], // Allée de la Sambre
-            [50.408729, 4.523975],   // Point de passage Pont
-            [50.4067226, 4.5250463], // Rue Paulus
-            [50.4044627, 4.5230877]  // Retour Départ (Boucle)
+        // --- TRACÉ CORRIGÉ : IL SUIT LES RUES (PAS DE PLONGÉE DANS LA SAMBRE) ---
+        var cheminDesRues = [
+            [50.40446, 4.52308], // 1. Hôtel de Ville
+            [50.40455, 4.52220], // Rue de la Montagne
+            [50.40697, 4.52175], // 2. Rue des Gravelles
+            [50.40800, 4.52150], // Virage vers Allée de la Sambre
+            [50.40829, 4.52055], // 3. Allée de la Sambre
+            [50.40850, 4.52100], // Retour sur le quai
+            [50.40870, 4.52380], // ENTRÉE PASSERELLE (Côté nord)
+            [50.40830, 4.52420], // SORTIE PASSERELLE (Côté sud)
+            [50.40672, 4.52504], // 4. Rue Paulus
+            [50.40500, 4.52450], // Rue vers l'Hôtel de Ville
+            [50.40446, 4.52308]  // 5. Retour départ
         ];
 
-        // Tracé de la ligne bleue
-        L.polyline(circuitOfficiel, {color: '#3498db', weight: 5, opacity: 0.8}).addTo(map);
+        // Dessin de la ligne bleue
+        L.polyline(cheminDesRues, {
+            color: '#3498db', 
+            weight: 6, 
+            opacity: 0.9,
+            lineJoin: 'round'
+        }).addTo(map);
 
-        // Ajout des points d'intérêt
-        circuitOfficiel.forEach((pos, i) => {
-            if(i < circuitOfficiel.length - 1) { // Ne pas doubler le marqueur sur le point de retour
-                L.circleMarker(pos, {radius: 8, color: '#97f097', fillColor: '#97f097', fillOpacity: 1})
-                .addTo(map)
-                .bindPopup("Étape " + (i+1));
-            }
+        // --- LES MARQUEURS (TES TABLEAUX) ---
+        var etapes = [
+            [50.40446, 4.52308],
+            [50.40697, 4.52175],
+            [50.40829, 4.52055],
+            [50.40672, 4.52504]
+        ];
+
+        etapes.forEach((pos, i) => {
+            L.circleMarker(pos, {radius: 10, color: '#97f097', fillColor: '#97f097', fillOpacity: 1})
+            .addTo(map)
+            .bindPopup("<b>Tableau " + (i+1) + "</b>");
         });
 
-        // Géolocalisation réelle
         map.locate({setView: false, watch: true});
         map.on('locationfound', function(e) {
             L.circleMarker(e.latlng, {radius: 6, color: '#fff', fillColor: '#3498db', fillOpacity: 1}).addTo(map);
