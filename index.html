@@ -34,7 +34,17 @@
         /* CARTE */
         #map { height: 100vh; width: 100vw; display: none; background: #000; }
 
-        /* EFFET COQ QUI BOUGE */
+        /* ÉTIQUETTES ÉTAPES */
+        .label-etape {
+            background: #97f097;
+            border: 2px solid #000;
+            border-radius: 5px;
+            color: #000;
+            font-weight: bold;
+            padding: 2px 5px;
+            font-size: 12px;
+        }
+
         .coq-anim {
             animation: coqVivant 4s infinite alternate ease-in-out;
             border-radius: 12px;
@@ -93,40 +103,41 @@
                 map = L.map('map').setView([50.407, 4.522], 15);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-                // --- LE TRACÉ (66 points) ---
                 var tracéCoord = [[50.404741, 4.523157], [50.405149, 4.524318], [50.406281, 4.526237], [50.406285, 4.526244], [50.406281, 4.526237], [50.406527, 4.525638], [50.40675, 4.524963], [50.407117, 4.523852], [50.407121, 4.52384], [50.40651, 4.523013], [50.406527, 4.522986], [50.40651, 4.523013], [50.406253, 4.522654], [50.406273, 4.522619], [50.406561, 4.522122], [50.406818, 4.521565], [50.406844, 4.521597], [50.408204, 4.523373], [50.408211, 4.523476], [50.408316, 4.523511], [50.408329, 4.523462], [50.408397, 4.523215], [50.408706, 4.522609], [50.408829, 4.522243], [50.408878, 4.521914], [50.408884, 4.521877], [50.408931, 4.521716], [50.40911, 4.521411], [50.409056, 4.521322], [50.409005, 4.521185], [50.409005, 4.520713], [50.408992, 4.520701], [50.408489, 4.520219], [50.408478, 4.52023], [50.408331, 4.520392], [50.408489, 4.520219], [50.408426, 4.520155], [50.407981, 4.519698], [50.40787, 4.51956], [50.407497, 4.518906], [50.407466, 4.518854], [50.407497, 4.518906], [50.407638, 4.518756], [50.407609, 4.518662], [50.406828, 4.519497], [50.406764, 4.519673], [50.406718, 4.519621], [50.406686, 4.519678], [50.406674, 4.51978], [50.40666, 4.51985], [50.406623, 4.519893], [50.406429, 4.520017], [50.406276, 4.52026], [50.406085, 4.520515], [50.405674, 4.521287], [50.405666, 4.521309], [50.405674, 4.521287], [50.405556, 4.521186], [50.405525, 4.521213], [50.405391, 4.52133], [50.404547, 4.521566], [50.404543, 4.521558], [50.40463, 4.522231], [50.404637, 4.522513], [50.404603, 4.522819], [50.404492, 4.523032]];
                 L.polyline(tracéCoord, {color: '#3498db', weight: 6, opacity: 0.8}).addTo(map);
 
-                // DONNÉES DES POINTS
                 var pointsCulturels = [
-                    {
-                        latlng: [50.4044627, 4.5230877], 
-                        titre: "Hôtel de Ville - Le Coq",
-                        img: "IMG_4536.jpg",
-                        isCoq: true
-                    },
-                    {latlng: [50.4069696, 4.5217572], titre: "Rue des Gravelles"},
-                    {latlng: [50.4082915, 4.5205504], titre: "Allée de la Sambre"},
-                    {latlng: [50.4046263, 4.5221912], titre: "Rue de la Montagne"},
-                    {latlng: [50.4067226, 4.5250463], titre: "Rue Paulus"}
+                    { latlng: [50.4044627, 4.5230877], titre: "Hôtel de Ville - Le Coq", img: "IMG_4536.jpg", isCoq: true },
+                    { latlng: [50.4069696, 4.5217572], titre: "Rue des Gravelles" },
+                    { latlng: [50.4082915, 4.5205504], titre: "Allée de la Sambre" },
+                    { latlng: [50.4046263, 4.5221912], titre: "Rue de la Montagne" },
+                    { latlng: [50.4067226, 4.5250463], titre: "Rue Paulus" }
                 ];
 
                 pointsCulturels.forEach((pt, index) => {
                     let content = `<div style="color:black; text-align:center;"><b>${pt.titre}</b><br>`;
-                    
                     if(pt.isCoq) {
                         content += `<img src="${pt.img}" class="coq-anim">`;
                         content += `<p style="font-size:12px;">Le coq de Paulus semble s'animer !</p>`;
-                        // MODIFICATION ICI : On redirige vers la page RA
                         content += `<button class="btn-selfie" onclick="window.location.href='coq-ar.html'">📸 Mode Selfie RA</button>`;
                     } else {
                         content += `Étape ${index+1}`;
                     }
                     content += `</div>`;
 
-                    L.circleMarker(pt.latlng, {
-                        radius: 10, color: '#97f097', fillColor: '#97f097', fillOpacity: 1
-                    }).addTo(map).bindPopup(content);
+                    var marker = L.circleMarker(pt.latlng, {
+                        radius: 12, color: '#000', weight: 2, fillColor: '#97f097', fillOpacity: 1
+                    }).addTo(map);
+
+                    // AJOUT DE L'ÉTIQUETTE FIXE
+                    marker.bindTooltip("Étape " + (index+1), { 
+                        permanent: true, 
+                        direction: 'top', 
+                        className: 'label-etape',
+                        offset: [0, -10]
+                    });
+
+                    marker.bindPopup(content);
                 });
 
                 map.locate({setView: false, watch: true});
