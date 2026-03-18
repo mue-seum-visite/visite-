@@ -1,7 +1,8 @@
+
 <!DOCTYPE html>
 <html>
 <head>
-    <title>MUE.SÉUM - Selfie Pierre Paulus</title>
+    <title>MUE.SÉUM - Selfie 3D Immédiat</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
@@ -13,19 +14,19 @@
         }
         .btn-retour {
             background: #97f097; color: black; border: 2px solid black;
-            padding: 15px 30px; border-radius: 50px; font-weight: bold;
-            text-decoration: none; font-family: sans-serif; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            padding: 12px 25px; border-radius: 50px; font-weight: bold;
+            text-decoration: none; font-family: sans-serif;
         }
         #instructions {
-            position: fixed; top: 20px; width: 100%; text-align: center;
+            position: fixed; top: 10px; width: 100%; text-align: center;
             color: white; font-family: sans-serif; z-index: 1000;
-            background: rgba(0,0,0,0.6); padding: 10px 0; font-size: 14px;
+            background: rgba(0,0,0,0.5); padding: 8px 0; font-size: 14px;
         }
     </style>
 </head>
 <body style="margin: 0; overflow: hidden;">
 
-    <div id="instructions">Cadrez votre visage et faites une capture d'écran !</div>
+    <div id="instructions">Le coq de Paulus est avec vous ! 📸</div>
 
     <div class="ui-overlay">
         <a href="index.html" class="btn-retour">⬅ Revenir à la Carte</a>
@@ -38,9 +39,9 @@
         </a-assets>
 
         <a-plane src="#coq-img" 
-                 position="0 1.5 -1" 
-                 width="1.2" height="1.6" 
-                 material="transparent: true; opacity: 0.5; shader: flat; side: double;">
+                 position="0 1.5 -0.1" 
+                 width="0.15" height="0.2" 
+                 material="transparent: true; opacity: 0.4; shader: flat; side: double;">
         </a-plane>
 
         <a-entity camera></a-entity>
