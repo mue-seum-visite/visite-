@@ -6,94 +6,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        body { margin:0; padding:0; background: #000; color: white; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; overflow-x: hidden; }
+        body { margin:0; padding:0; background: #000; color: white; font-family: -apple-system, sans-serif; overflow-x: hidden; }
         
-        /* BARRE DE RECHERCHE & FILTRES */
+        /* DESIGN CATALOGUE */
         .search-container { padding: 20px 15px 10px; background: #000; position: sticky; top: 0; z-index: 3000; }
-        .search-bar {
-            background: #1c1c1e; border-radius: 12px; padding: 12px 15px;
-            display: flex; align-items: center; color: #8e8e93; border: 1px solid #333; font-size: 0.95em;
-        }
-        .filters { display: flex; gap: 10px; padding: 10px 15px 20px; overflow-x: auto; scrollbar-width: none; }
-        .filter-btn {
-            background: #1c1c1e; border: 1px solid #333; color: white;
-            padding: 8px 16px; border-radius: 20px; white-space: nowrap; font-size: 0.85em;
-        }
+        .search-bar { background: #1c1c1e; border-radius: 12px; padding: 12px 15px; color: #8e8e93; border: 1px solid #333; font-size: 0.95em; }
+        .filters { display: flex; gap: 10px; padding: 10px 15px 20px; overflow-x: auto; }
+        .filter-btn { background: #1c1c1e; border: 1px solid #333; color: white; padding: 8px 16px; border-radius: 20px; white-space: nowrap; font-size: 0.85em; }
 
-        /* CATALOGUE : TA CARTE DE RANDONNÉE */
         #ui-explorer { transition: opacity 0.8s ease; }
-        .explorer-content { padding: 0 15px; }
-        .rando-card {
-            background: #1c1c1e; border-radius: 24px; overflow: hidden;
-            margin-bottom: 25px; border: 1px solid #333;
-        }
-        .rando-image {
-            width: 100%; height: 220px;
-            background: url('unnamed (1).jpg') center center / cover no-repeat;
-            position: relative;
-        }
+        .rando-card { background: #1c1c1e; border-radius: 24px; overflow: hidden; margin: 0 15px 25px; border: 1px solid #333; }
+        .rando-image { width: 100%; height: 220px; background: url('unnamed (1).jpg') center center / cover no-repeat; }
         .rando-info { padding: 20px; }
-        .rando-title { font-size: 1.3em; font-weight: 700; margin: 0; color: white; }
-        .rando-sub { color: #8e8e93; font-size: 0.9em; margin-top: 4px; }
+        .rando-title { font-size: 1.3em; font-weight: 700; margin: 0; }
         .rando-stats { display: flex; gap: 15px; margin-top: 12px; color: #97f097; font-size: 0.85em; font-weight: 600; }
+        .btn-demarrer { width: 100%; background: #97f097; color: #000; border: none; padding: 16px; border-radius: 14px; font-weight: 800; margin-top: 20px; cursor: pointer; text-transform: uppercase; }
 
-        .btn-demarrer {
-            width: 100%; background: #97f097; color: #000; border: none;
-            padding: 16px; border-radius: 14px; font-weight: 800;
-            margin-top: 20px; cursor: pointer; font-size: 1em; text-transform: uppercase;
-        }
-
-        /* TRANSITION AQUARELLE */
+        /* NOUVEL EFFET AQUARELLE ANIMÉ */
         #transition-aquarelle {
             position: fixed; top:0; left:0; width: 100%; height: 100%; z-index: 4000;
-            display: none; background: #000; transition: opacity 1s ease-in-out;
+            display: none; background: #000; overflow: hidden;
         }
         .gsm-bg {
             position: absolute; width: 100%; height: 100%;
-            background: url('unnamed 2.jpg') center center / contain no-repeat;
-            filter: contrast(1.1) saturate(1.3);
+            background: url('unnamed 2.jpg') center center / cover no-repeat;
+            filter: contrast(1.1) saturate(1.2);
+            /* L'animation qui donne vie à l'image */
+            animation: aquaZoom 5s ease-out forwards;
+        }
+        @keyframes aquaZoom {
+            0% { transform: scale(1.1); filter: blur(5px) contrast(1.1); opacity: 0; }
+            20% { opacity: 1; filter: blur(0px) contrast(1.1); }
+            100% { transform: scale(1.02); opacity: 1; }
         }
 
-        /* LA CARTE FINALE */
         #map { height: 100vh; width: 100vw; display: none; background: #000; }
     </style>
 </head>
 <body>
 
     <div id="ui-explorer">
-        <div class="search-container">
-            <div class="search-bar">🔍 Rechercher "Châtelet"...</div>
-        </div>
-
+        <div class="search-container"><div class="search-bar">🔍 Rechercher "Châtelet"...</div></div>
         <div class="filters">
             <div class="filter-btn" style="border-color: #97f097; color: #97f097;">📍 À proximité</div>
             <div class="filter-btn">🎨 Culturel</div>
-            <div class="filter-btn">🌳 Nature</div>
         </div>
-
-        <div class="explorer-content">
-            <div class="rando-card">
-                <div class="rando-image"></div>
-                <div class="rando-info">
-                    <p class="rando-title">Circuit Pierre Paulus</p>
-                    <p class="rando-sub">Châtelet • Province de Hainaut</p>
-                    <div class="rando-stats">
-                        <span>★ 4.9</span>
-                        <span>• 4,5 km</span>
-                        <span>• 1h 15min</span>
-                    </div>
-                    <button class="btn-demarrer" onclick="lancerParcours()">Démarrer la balade</button>
-                </div>
+        <div class="rando-card">
+            <div class="rando-image"></div>
+            <div class="rando-info">
+                <p class="rando-title">Circuit Pierre Paulus</p>
+                <div class="rando-stats"><span>★ 4.9</span><span>• 4,5 km</span><span>• 1h 15</span></div>
+                <button class="btn-demarrer" onclick="lancerParcours()">Démarrer la balade</button>
             </div>
-            
-            <p style="text-align: center; color: #444; font-size: 0.8em; margin-top: 20px;">MUE.SÉUM — Plus de parcours prochainement</p>
         </div>
     </div>
 
-    <div id="transition-aquarelle">
-        <div class="gsm-bg"></div>
-    </div>
-
+    <div id="transition-aquarelle"><div class="gsm-bg"></div></div>
     <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -106,66 +74,39 @@
                 document.getElementById('ui-explorer').style.display = 'none';
                 document.getElementById('transition-aquarelle').style.display = 'block';
                 
+                // On laisse l'image respirer 3.5 secondes au lieu de 2.5
                 setTimeout(() => {
+                    document.getElementById('transition-aquarelle').style.transition = "opacity 1.5s ease-in-out";
                     document.getElementById('transition-aquarelle').style.opacity = '0';
                     setTimeout(() => {
                         document.getElementById('transition-aquarelle').style.display = 'none';
                         document.getElementById('map').style.display = 'block';
                         initMap(); 
-                    }, 1000);
-                }, 2500); 
+                    }, 1500);
+                }, 3500); 
             }, 800);
         }
 
         function initMap() {
-            // Re-centrage sur le départ
             map = L.map('map').setView([50.407, 4.522], 16);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-            // --- TON TRACÉ PRÉCIEUX (LES 66 POINTS) ---
-            var tracéCalculé = [
-                [50.404741, 4.523157], [50.405149, 4.524318], [50.406281, 4.526237], [50.406285, 4.526244],
-                [50.406281, 4.526237], [50.406527, 4.525638], [50.40675, 4.524963], [50.407117, 4.523852],
-                [50.407121, 4.52384], [50.40651, 4.523013], [50.406527, 4.522986], [50.40651, 4.523013],
-                [50.406253, 4.522654], [50.406273, 4.522619], [50.406561, 4.522122], [50.406818, 4.521565],
-                [50.406844, 4.521597], [50.408204, 4.523373], [50.408211, 4.523476], [50.408316, 4.523511],
-                [50.408329, 4.523462], [50.408397, 4.523215], [50.408706, 4.522609], [50.408829, 4.522243],
-                [50.408878, 4.521914], [50.408884, 4.521877], [50.408931, 4.521716], [50.40911, 4.521411],
-                [50.409056, 4.521322], [50.409005, 4.521185], [50.409005, 4.520713], [50.408992, 4.520701],
-                [50.408489, 4.520219], [50.408478, 4.52023], [50.408331, 4.520392], [50.408489, 4.520219],
-                [50.408426, 4.520155], [50.407981, 4.519698], [50.40787, 4.51956], [50.407497, 4.518906],
-                [50.407466, 4.518854], [50.407497, 4.518906], [50.407638, 4.518756], [50.407609, 4.518662],
-                [50.406828, 4.519497], [50.406764, 4.519673], [50.406718, 4.519621], [50.406686, 4.519678],
-                [50.406674, 4.51978], [50.40666, 4.51985], [50.406623, 4.519893], [50.406429, 4.520017],
-                [50.406276, 4.52026], [50.406085, 4.520515], [50.405674, 4.521287], [50.405666, 4.521309],
-                [50.405674, 4.521287], [50.405556, 4.521186], [50.405525, 4.521213], [50.405391, 4.52133],
-                [50.404547, 4.521566], [50.404543, 4.521558], [50.40463, 4.522231], [50.404637, 4.522513],
-                [50.404603, 4.522819], [50.404492, 4.523032]
-            ];
-
-            // La ligne bleue royal
+            var tracéCalculé = [[50.404741, 4.523157], [50.405149, 4.524318], [50.406281, 4.526237], [50.406285, 4.526244], [50.406281, 4.526237], [50.406527, 4.525638], [50.40675, 4.524963], [50.407117, 4.523852], [50.407121, 4.52384], [50.40651, 4.523013], [50.406527, 4.522986], [50.40651, 4.523013], [50.406253, 4.522654], [50.406273, 4.522619], [50.406561, 4.522122], [50.406818, 4.521565], [50.406844, 4.521597], [50.408204, 4.523373], [50.408211, 4.523476], [50.408316, 4.523511], [50.408329, 4.523462], [50.408397, 4.523215], [50.408706, 4.522609], [50.408829, 4.522243], [50.408878, 4.521914], [50.408884, 4.521877], [50.408931, 4.521716], [50.40911, 4.521411], [50.409056, 4.521322], [50.409005, 4.521185], [50.409005, 4.520713], [50.408992, 4.520701], [50.408489, 4.520219], [50.408478, 4.52023], [50.408331, 4.520392], [50.408489, 4.520219], [50.408426, 4.520155], [50.407981, 4.519698], [50.40787, 4.51956], [50.407497, 4.518906], [50.407466, 4.518854], [50.407497, 4.518906], [50.407638, 4.518756], [50.407609, 4.518662], [50.406828, 4.519497], [50.406764, 4.519673], [50.406718, 4.519621], [50.406686, 4.519678], [50.406674, 4.51978], [50.40666, 4.51985], [50.406623, 4.519893], [50.406429, 4.520017], [50.406276, 4.52026], [50.406085, 4.520515], [50.405674, 4.521287], [50.405666, 4.521309], [50.405674, 4.521287], [50.405556, 4.521186], [50.405525, 4.521213], [50.405391, 4.52133], [50.404547, 4.521566], [50.404543, 4.521558], [50.40463, 4.522231], [50.404637, 4.522513], [50.404603, 4.522819], [50.404492, 4.523032]];
             L.polyline(tracéCalculé, {color: '#3498db', weight: 6, opacity: 0.85}).addTo(map);
 
-            // --- TES 5 POINTS D'INTÉRÊT ---
-            var pointsTableaux = [
-                {coord: [50.4044627, 4.5230877], name: "Hôtel de Ville"},
-                {coord: [50.4069696, 4.5217572], name: "Rue des Gravelles"},
-                {coord: [50.4082915, 4.5205504], name: "Allée de la Sambre"},
-                {coord: [50.4046263, 4.5221912], name: "Rue de la Montagne"},
-                {coord: [50.4067226, 4.5250463], name: "Rue Paulus"}
+            var pts = [
+                {c: [50.4044627, 4.5230877], n: "Hôtel de Ville"},
+                {c: [50.4069696, 4.5217572], n: "Rue des Gravelles"},
+                {c: [50.4082915, 4.5205504], n: "Allée de la Sambre"},
+                {c: [50.4046263, 4.5221912], n: "Rue de la Montagne"},
+                {c: [50.4067226, 4.5250463], n: "Rue Paulus"}
             ];
-
-            pointsTableaux.forEach((p, index) => {
-                L.circleMarker(p.coord, {radius: 10, color: '#97f097', fillColor: '#97f097', fillOpacity: 1})
-                .addTo(map)
-                .bindPopup("<b>" + p.name + "</b><br>Tableau n°" + (index+1));
+            pts.forEach((p, i) => {
+                L.circleMarker(p.c, {radius: 10, color: '#97f097', fillColor: '#97f097', fillOpacity: 1})
+                .addTo(map).bindPopup("<b>" + p.n + "</b><br>Tableau n°" + (i+1));
             });
-
-            // Géolocalisation
             map.locate({setView: false, watch: true});
-            map.on('locationfound', function(e) {
-                L.circleMarker(e.latlng, {radius: 7, color: '#fff', fillColor: '#3498db', fillOpacity: 1}).addTo(map);
-            });
+            map.on('locationfound', function(e) { L.circleMarker(e.latlng, {radius: 7, color: '#fff', fillColor: '#3498db', fillOpacity: 1}).addTo(map); });
         }
     </script>
 </body>
