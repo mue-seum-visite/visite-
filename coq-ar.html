@@ -6,41 +6,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     <style>
-        body { margin: 0; background-color: #97f097; font-family: sans-serif; }
+        body { margin: 0; background-color: #97f097; font-family: sans-serif; overflow: hidden; }
         
         #instructions {
-            position: fixed; top: 0; width: 100%; text-align: center;
-            color: black; z-index: 1000; background: white;
-            padding: 15px 0; font-weight: bold; border-bottom: 2px solid black;
+            position: fixed; 
+            top: 20px; /* On le laisse bien en haut */
+            width: 90%; 
+            left: 5%;
+            text-align: center;
+            color: black; 
+            z-index: 2000; /* Priorité haute pour être vu */
+            background: white;
+            padding: 10px 0; 
+            font-weight: bold; 
+            border: 2px solid black;
+            border-radius: 10px;
         }
 
-        /* Le visualiseur 3D qui prend tout l'écran */
         model-viewer {
             width: 100vw; height: 100vh;
-            --poster-color: transparent;
+        }
+
+        /* LE BOUTON NOIR - On le descend pour qu'il soit cliquable */
+        #ar-button {
+            background-color: #000; 
+            color: white; 
+            border-radius: 50px;
+            padding: 20px 40px; 
+            border: 2px solid white; 
+            font-weight: bold;
+            font-size: 18px;
+            position: absolute;
+            bottom: 100px; /* On le remonte un peu du bord du bas */
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            z-index: 3000; /* On le met AU-DESSUS de tout */
         }
 
         .ui-overlay {
-            position: fixed; bottom: 30px; left: 0; width: 100%;
-            display: flex; flex-direction: column; align-items: center; gap: 15px; z-index: 1000;
+            position: fixed; bottom: 20px; left: 0; width: 100%;
+            display: flex; justify-content: center; z-index: 1000;
         }
 
         .btn-retour {
             background: white; color: black; border: 2px solid black;
-            padding: 12px 25px; border-radius: 50px; font-weight: bold;
-            text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-
-        /* Style du bouton de Réalité Augmentée pour le selfie */
-        #ar-button {
-            background-color: #000; color: white; border-radius: 10px;
-            padding: 15px 25px; border: none; font-weight: bold;
+            padding: 10px 20px; border-radius: 50px; font-weight: bold;
+            text-decoration: none;
         }
     </style>
 </head>
 <body>
 
-    <div id="instructions">📸 Préparez votre plus beau sourire avec le Coq !</div>
+    <div id="instructions">📸 Préparez votre plus beau sourire !</div>
 
     <model-viewer 
         src="https://1drv.ms/u/c/615ab6ade2b52829/IQDGUZeHt9iSToeeONUV8rHLAYkkpkK0Iby0yOcen_aEFoI?download=1" 
@@ -48,9 +66,7 @@
         ar-modes="webxr scene-viewer quick-look" 
         camera-controls 
         auto-rotate 
-        shadow-intensity="1"
-        exposure="1.2"
-        alt="Le Coq de Pierre Paulus en 3D">
+        shadow-intensity="1">
         
         <button slot="ar-button" id="ar-button">
             🤳 LANCER LE SELFIE 3D
@@ -59,7 +75,7 @@
     </model-viewer>
 
     <div class="ui-overlay">
-        <a href="index.html" class="btn-retour">⬅ Revenir à la Carte</a>
+        <a href="index.html" class="btn-retour">⬅ Retour</a>
     </div>
 
 </body>
