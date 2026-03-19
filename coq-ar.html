@@ -12,7 +12,6 @@
             width: 100vw; height: 100vh;
         }
 
-        /* LE BOUTON NOIR DE SELFIE - Placé au milieu pour ne pas gêner le retour */
         #ar-button {
             background-color: #000; 
             color: white; 
@@ -22,7 +21,7 @@
             font-weight: bold;
             font-size: 20px;
             position: absolute;
-            top: 50%; /* On le met pile au milieu de l'écran */
+            top: 50%; 
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 3000;
@@ -31,7 +30,7 @@
 
         .ui-overlay {
             position: fixed; 
-            bottom: 40px; /* Le bouton retour reste bien en bas */
+            bottom: 40px; 
             left: 0; 
             width: 100%;
             display: flex; 
@@ -54,7 +53,7 @@
 <body>
 
     <model-viewer 
-        src="https://1drv.ms/u/c/615ab6ade2b52829/IQDGUZeHt9iSToeeONUV8rHLAYkkpkK0Iby0yOcen_aEFoI?download=1" 
+        src="coq paulus.glb" 
         ar 
         ar-modes="webxr scene-viewer quick-look" 
         camera-controls 
