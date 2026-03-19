@@ -25,7 +25,7 @@
 </head>
 <body style="margin: 0; overflow: hidden;">
 
-    <div id="instructions">Sourire de Pierre Paulus ! 📸</div>
+    <div id="instructions">Le Coq de Pierre Paulus en 3D ! 📸</div>
 
     <div class="ui-overlay">
         <a href="index.html" class="btn-retour">⬅ Revenir à la Carte</a>
@@ -34,15 +34,15 @@
     <a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false;' vr-mode-ui="enabled: false">
         
         <a-assets>
-            <img id="coq-img" src="IMG_4536.jpg">
+            <a-asset-item id="coq-3d" src="https://1drv.ms/u/c/615ab6ade2b52829/IQDGUZeHt9iSToeeONUV8rHLAYkkpkK0Iby0yOcen_aEFoI?download=1"></a-asset-item>
         </a-assets>
 
         <a-entity camera>
-            <a-plane src="#coq-img" 
-                     position="0 0 -0.1" 
-                     width="0.12" height="0.16" 
-                     material="transparent: true; opacity: 0.4; shader: flat; side: double;">
-            </a-plane>
+            <a-entity gltf-model="#coq-3d" 
+                      position="0 0 -0.5" 
+                      scale="0.5 0.5 0.5"
+                      rotation="0 180 0">
+            </a-entity>
         </a-entity>
 
     </a-scene>
