@@ -1,45 +1,68 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <title>MUE.SÉUM - Selfie 3D</title>
+    <title>MUE.SÉUM - Selfie AR</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
+
     <style>
         body { margin: 0; background-color: #97f097; font-family: sans-serif; overflow: hidden; }
-        model-viewer { width: 100vw; height: 100vh; }
         
+        /* Ton bouton de lancement personnalisé */
         #ar-button {
             background-color: #000; color: white; border-radius: 50px;
-            padding: 25px 50px; border: 3px solid white; font-weight: bold;
-            font-size: 20px; position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%); z-index: 3000;
+            padding: 20px 40px; border: 3px solid white; font-weight: bold;
+            font-size: 18px; position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); z-index: 9999;
             box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            cursor: pointer;
+            display: block; /* Sera masqué quand on clique */
         }
 
         .ui-overlay { position: fixed; bottom: 40px; left: 0; width: 100%; display: flex; justify-content: center; z-index: 1000; }
         .btn-retour { background: white; color: black; border: 2px solid black; padding: 15px 30px; border-radius: 50px; font-weight: bold; text-decoration: none; font-size: 16px; }
     </style>
 </head>
+
 <body>
 
-    <model-viewer 
-        src="Scene-v1.glb" 
-        ar 
-        ar-modes="webxr scene-viewer quick-look" 
-        camera-controls 
-        auto-rotate 
-        shadow-intensity="1">
-        
-        <button slot="ar-button" id="ar-button">
-            🤳 LANCER LE SELFIE 3D
-        </button>
+    <button id="ar-button" onclick="demarrerAR()">
+        🤳 LANCER L'EXPÉRIENCE
+    </button>
 
-    </model-viewer>
+    <a-scene 
+        embedded 
+        arjs="sourceType: webcam; debugUIEnabled: false;" 
+        vr-mode-ui="enabled: false">
+        
+        <a-assets>
+            <img id="coq" src="IMG_4536.jpg">
+        </a-assets>
+
+        <a-image 
+            src="#coq" 
+            position="0 1.6 -3" 
+            scale="2.5 2.5 2.5"
+            look-at="[camera]">
+        </a-image>
+        
+        <a-entity camera></a-entity>
+    </a-scene>
 
     <div class="ui-overlay">
         <a href="index.html" class="btn-retour">⬅ Revenir à la Carte</a>
     </div>
+
+    <script>
+        function demarrerAR() {
+            // On cache le bouton au clic pour voir la caméra
+            document.getElementById('ar-button').style.display = 'none';
+        }
+    </script>
 
 </body>
 </html>
