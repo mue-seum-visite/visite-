@@ -2,26 +2,21 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<title>Coq AR</title>
+<title>Coq AR - Quick Look</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://ajax.googleapis.com/ajax/libs/model-viewer/v3.5.0/model-viewer.min.js" type="module"></script>
-<style>
-body { margin:0; padding:0; overflow:hidden; background:#000; }
-model-viewer { width:100vw; height:100vh; }
-</style>
 </head>
-<body>
+<body style="margin:0;background:#000;">
 
 <model-viewer
-id="coq"
 src="Incredible%20Crift-Amberis.glb"
 ar
-ar-modes="quick-look webxr"
-camera-controls
-auto-rotate
-shadow-intensity="1"
-exposure="1.0"
-environment-intensity="0.8">
+ar-modes="quick-look"
+camera-controls>
+
+<button slot="ar-button" style="position:absolute; bottom:20px; left:50%; transform:translateX(-50%); padding:12px 24px; background:#fff; color:#000; border:none; border-radius:8px; font-size:16px;">
+Voir en Réalité Augmentée
+</button>
 </model-viewer>
 
 </body>
