@@ -2,20 +2,31 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<title>Coq AR - Quick Look</title>
+<title>Coq en Réalité Augmentée</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://ajax.googleapis.com/ajax/libs/model-viewer/v3.5.0/model-viewer.min.js" type="module"></script>
+<style>
+body { margin:0; padding:0; overflow:hidden; background:#000; }
+model-viewer { width:100vw; height:100vh; }
+</style>
 </head>
-<body style="margin:0;background:#000;">
+<body>
 
 <model-viewer
 src="Incredible%20Crift-Amberis.glb"
 ar
 ar-modes="quick-look"
-camera-controls>
+camera-controls
+shadow-intensity="1"
+exposure="1.0"
+alt="Coq de Liège en AR">
 
-<button slot="ar-button" style="position:absolute; bottom:20px; left:50%; transform:translateX(-50%); padding:12px 24px; background:#fff; color:#000; border:none; border-radius:8px; font-size:16px;">
-Voir en Réalité Augmentée
+<!-- Bouton personnalisé plus visible -->
+<button slot="ar-button"
+style="position:absolute; bottom:30px; left:50%; transform:translateX(-50%);
+padding:15px 30px; background:#fff; color:#000; border:none;
+border-radius:12px; font-size:18px; font-weight:bold;">
+Voir le Coq en Réalité Augmentée
 </button>
 </model-viewer>
 
