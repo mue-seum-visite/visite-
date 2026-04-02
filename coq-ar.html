@@ -2,46 +2,27 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<title>Coq de Liège - Réalité Augmentée</title>
+<title>Coq AR</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://ajax.googleapis.com/ajax/libs/model-viewer/v3.5.0/model-viewer.min.js" type="module"></script>
 <style>
-body { margin:0; overflow:hidden; background:#111; }
+body { margin:0; padding:0; overflow:hidden; background:#000; }
 model-viewer { width:100vw; height:100vh; }
 </style>
 </head>
 <body>
 
-<model-viewer id="coq"
+<model-viewer
+id="coq"
 src="Incredible%20Crift-Amberis.glb"
 ar
-ar-modes="webxr scene-viewer quick-look"
+ar-modes="quick-look webxr"
 camera-controls
 auto-rotate
-shadow-intensity="1.5"
-exposure="0.8"
-style="background-color: rgba(0,0,0,0.8);">
+shadow-intensity="1"
+exposure="1.0"
+environment-intensity="0.8">
 </model-viewer>
-
-<script type="module">
-const modelViewer = document.getElementById('coq');
-
-modelViewer.addEventListener('load', async () => {
-console.log("Modèle chargé - AR prête");
-
-// Tentative d'appliquer la texture rouge
-const texture = await modelViewer.createTexture('IMG_4536.jpg');
-
-const materials = modelViewer.model.materials;
-materials.forEach(material => {
-if (material.pbrMetallicRoughness) {
-material.pbrMetallicRoughness.baseColorTexture.setTexture(texture);
-}
-});
-
-console.log("✅ Texture rouge appliquée");
-});
-</script>
 
 </body>
 </html>
