@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<title>Coq de Liège - 3D avec couleurs originales</title>
+<title>Coq de Liège - 3D</title>
 <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
 <style>
 body { margin: 0; overflow: hidden; background: #111; }
@@ -10,27 +10,28 @@ body { margin: 0; overflow: hidden; background: #111; }
 </head>
 <body>
 
-<a-scene background="color: #222222">
+<a-scene background="color: #1a1a1a" fog="type: linear; color: #1a1a1a; near: 5; far: 20">
 
-<!-- Assets -->
 <a-assets>
-<!-- Ton modèle 3D -->
 <a-asset-item id="le-coq" src="Incredible%20Crift-Amberis.glb"></a-asset-item>
-
-<!-- Ton image originale du coq rouge (CHANGE SEULEMENT SI LE NOM EST DIFFÉRENT) -->
 <img id="texture-coq" src="IMG_4536.jpg" crossorigin="anonymous">
 </a-assets>
 
-<!-- Le coq 3D -->
+<!-- Le coq -->
 <a-entity
+id="coq"
 gltf-model="#le-coq"
-position="0 0.8 -4"
-scale="2.8 2.8 2.8"
-rotation="0 35 0"
+position="0 1 -3.5"
+scale="3 3 3"
+rotation="0 180 0" <!-- Rotation pour qu'il soit face à toi et debout -->
 custom-texture>
 </a-entity>
 
-<!-- Caméra avec contrôles -->
+<!-- Lumière plus forte -->
+<a-light type="ambient" intensity="0.8"></a-light>
+<a-light type="directional" position="5 10 5" intensity="1.2" cast-shadow="true"></a-light>
+
+<!-- Caméra -->
 <a-entity
 camera
 position="0 2 6"
@@ -40,7 +41,6 @@ wasd-controls>
 
 </a-scene>
 
-<!-- Script pour appliquer la texture rouge -->
 <script>
 AFRAME.registerComponent('custom-texture', {
 init: function () {
@@ -53,27 +53,28 @@ return;
 
 const img = document.getElementById('texture-coq');
 if (!img) {
-console.error("Image texture introuvable ! Vérifie que IMG_4536.jpg existe bien.");
+console.error("Image IMG_4536.jpg introuvable !");
 return;
 }
 
-const texture = new THREE.TextureLoader().load(img.src, function(tex) {
+const texture = new THREE.TextureLoader().load(img.src, (tex) => {
 tex.flipY = false;
 tex.needsUpdate = true;
+console.log("Texture chargée avec succès");
 });
 
 mesh.traverse((node) => {
 if (node.isMesh && node.material) {
 node.material = new THREE.MeshStandardMaterial({
 map: texture,
-roughness: 0.75,
-metalness: 0.05,
+roughness: 0.8,
+metalness: 0.1,
 side: THREE.DoubleSide
 });
 }
 });
 
-console.log("✅ Texture rouge du coq appliquée avec succès !");
+console.log("✅ Texture rouge du coq appliquée !");
 });
 }
 });
