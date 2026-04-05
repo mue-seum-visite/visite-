@@ -2,45 +2,47 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Etape 3 - Allée de la Sambre</title>
+    <title>Liège 1920 - Immersion Finale</title>
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
   </head>
 
   <body style="margin: 0; overflow: hidden;">
-    <div id="ui" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 100; color: white; text-align: center; font-family: sans-serif; background: rgba(0,0,0,0.7); padding: 15px; border-radius: 10px; width: 80%;">
-      Regardez autour de vous... <br> <b>Touchez l'écran pour ouvrir la porte du temps</b>
+    
+    <div id="instruction" style="position: fixed; top: 10px; left: 10px; z-index: 10; color: white; background: rgba(0,0,0,0.6); padding: 12px; font-family: sans-serif; border-radius: 8px;">
+      Cliquez sur l'écran pour voir 1920
     </div>
 
-    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
+    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: false">
+      
       <a-assets>
-        <video id="vision" src="vision1920.mp4" loop="true" crossorigin="anonymous" playsinline webkit-playsinline></video>
+        <video id="v1920" 
+               src="vision1920.mp4.mov" 
+               preload="auto" 
+               loop="true" 
+               muted="true" 
+               playsinline 
+               webkit-playsinline 
+               crossorigin="anonymous">
+        </video>
       </a-assets>
 
       <a-video 
-        id="video-screen"
-        src="#vision" 
+        src="#v1920" 
         position="0 1.6 -3" 
-        width="4" height="2.25"
-        visible="false">
+        width="4.5" 
+        height="2.5">
       </a-video>
       
       <a-entity camera></a-entity>
     </a-scene>
 
     <script>
-      // Gestion du démarrage
-      document.body.addEventListener('click', function () {
-        var v = document.querySelector('#vision');
-        var screen = document.querySelector('#video-screen');
-        var ui = document.getElementById('ui');
-        
-        v.play(); // Lance la vidéo
-        screen.setAttribute('visible', 'true'); // Rend la vidéo visible
-        ui.innerHTML = "Étape 3 : Le quai en 1920<br><small>Bougez pour comparer avec aujourd'hui</small>";
-        
-        // Disparition du message après 5 secondes
-        setTimeout(() => { ui.style.display = 'none'; }, 5000);
+      // Indispensable pour lancer la vidéo sur mobile
+      window.addEventListener('click', function () {
+        var video = document.querySelector('#v1920');
+        video.play();
+        document.getElementById('instruction').style.display = 'none';
       });
     </script>
   </body>
