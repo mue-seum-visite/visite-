@@ -2,43 +2,26 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Liège 1920 - Expérience Totale</title>
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
   </head>
-
   <body style="margin: 0; overflow: hidden;">
-    
-    <video id="v1920" 
-           src="vision1920.mp4.mov" 
-           preload="auto" 
-           loop="true" 
-           muted="true" 
-           playsinline 
-           webkit-playsinline 
-           crossorigin="anonymous"
-           style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; z-index: -1;">
-    </video>
+    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
+      <a-assets>
+        <video id="v1920" src="vision1920.mp4.mov" preload="auto" loop="true" muted="true" playsinline webkit-playsinline crossorigin="anonymous"></video>
+      </a-assets>
 
-    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: false">
+      <a-video 
+        src="#v1920" 
+        position="0 2.5 -4" 
+        width="5" height="2.8"
+        opacity="0.6">
+      </a-video>
+      
       <a-entity camera></a-entity>
     </a-scene>
-
     <script>
-      // Ce script force le lancement de la vidéo dès que l'utilisateur interagit avec la page
-      // C'est indispensable sur iPhone pour sortir l'écran noir
-      window.addEventListener('load', function () {
-        var video = document.querySelector('#v1920');
-        
-        // On essaie de lancer la vidéo directement
-        video.play().catch(function(error) {
-          // Si le navigateur bloque, on attend un clic
-          console.log("Lecture automatique bloquée, attente d'un clic de l'utilisateur.");
-          window.addEventListener('click', function () {
-            video.play();
-          }, { once: true });
-        });
-      });
+      window.addEventListener('click', function () { document.querySelector('#v1920').play(); });
     </script>
   </body>
 </html>
