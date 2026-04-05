@@ -2,26 +2,72 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <title>Paulus Étape 3 - Immersion Totale</title>
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
   </head>
+
   <body style="margin: 0; overflow: hidden;">
-    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
+    
+    <div id="instruction" style="position: fixed; top: 10px; left: 10px; z-index: 10; color: white; background: rgba(0,0,0,0.6); padding: 12px; font-family: sans-serif; border-radius: 8px;">
+      Scannez la borne 3 et touchez l'écran
+    </div>
+
+    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: false">
+      
       <a-assets>
-        <video id="v1920" src="vision1920.mp4.mov" preload="auto" loop="true" muted="true" playsinline webkit-playsinline crossorigin="anonymous"></video>
+        <video id="v1920" 
+               src="vision1920.mp4.mov" 
+               preload="auto" 
+               loop="true" 
+               muted="true" 
+               playsinline 
+               webkit-playsinline 
+               crossorigin="anonymous">
+        </video>
       </a-assets>
 
-      <a-video 
-        src="#v1920" 
-        position="0 2.5 -4" 
-        width="5" height="2.8"
-        opacity="0.6">
-      </a-video>
+      <a-marker type="barcode" value="3">
+        <a-entity id="trigger-marker" position="0 0 0"></a-entity>
+      </a-marker>
       
       <a-entity camera></a-entity>
     </a-scene>
+
+    <video id="overlay-v1920" 
+           src="vision1920.mp4.mov" 
+           loop="true" 
+           muted="true" 
+           playsinline 
+           webkit-playsinline 
+           style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; z-index: -1; transition: opacity 0.5s;">
+    </video>
+
     <script>
-      window.addEventListener('click', function () { document.querySelector('#v1920').play(); });
+      const video = document.querySelector('#v1920');
+      const overlayVideo = document.querySelector('#overlay-v1920');
+      const marker = document.querySelector('#trigger-marker');
+      const instruction = document.getElementById('instruction');
+
+      // Déclenchement au clic pour le son/image sur mobile
+      window.addEventListener('click', function () {
+        video.play();
+        overlayVideo.play();
+        instruction.style.display = 'none';
+      });
+
+      // Gérer l'affichage au scan du marqueur 3
+      marker.parentNode.addEventListener('markerFound', () => {
+        // Au scan, on affiche la vidéo en plein écran transparent
+        overlayVideo.style.opacity = '0.6'; // 60% d'opacité (assez transparent)
+        overlayVideo.style.zIndex = '5'; // On passe la vidéo DEVANT la caméra
+      });
+
+      marker.parentNode.addEventListener('markerLost', () => {
+        // Quand on perd le marqueur, la vidéo redevient invisible
+        overlayVideo.style.opacity = '0';
+        overlayVideo.style.zIndex = '-1'; // On repasse la vidéo DERRIÈRE la caméra
+      });
     </script>
   </body>
 </html>
