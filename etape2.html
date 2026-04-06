@@ -24,16 +24,22 @@
            playsinline 
            webkit-playsinline 
            crossorigin="anonymous"
-           style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; opacity: 0; z-index: 5; pointer-events: none; transition: opacity 2s ease-in;">
+           style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: contain; opacity: 0; z-index: 5; pointer-events: none; transition: opacity 2s ease-in;">
     </video>
 
     <script>
       const v2 = document.querySelector('#vid-etape2');
       const inst2 = document.getElementById('instruction');
 
+      // Déclenchement au clic sur l'écran
       document.body.addEventListener('click', function () {
-        v2.play().catch(e => console.log("Erreur:", e));
-        v2.style.opacity = '0.65'; // Même réglage de transparence que l'étape 3
+        // On tente de jouer la vidéo
+        v2.play().catch(e => console.log("Erreur lecture :", e));
+        
+        // On applique la transparence magique (0.65)
+        v2.style.opacity = '0.65';
+        
+        // On fait disparaître le bouton doucement
         inst2.style.opacity = '0';
         setTimeout(() => { inst2.style.display = 'none'; }, 2000);
       });
