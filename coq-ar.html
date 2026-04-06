@@ -18,12 +18,7 @@
     </a-scene>
 
     <video id="overlay-video" 
-           src="" 
-           loop="true" 
-           muted="true" 
-           playsinline 
-           webkit-playsinline 
-           crossorigin="anonymous"
+           loop="true" muted="true" playsinline webkit-playsinline crossorigin="anonymous"
            style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; opacity: 0; z-index: 5; pointer-events: none; transition: opacity 2s ease-in;">
     </video>
 
@@ -32,29 +27,24 @@
       const instruction = document.getElementById('instruction');
       const btnText = document.getElementById('btn-text');
 
-      // ANALYSE DE L'ÉTAPE (Vient du clic sur la carte)
+      // Détection de l'étape via l'URL
       const urlParams = new URLSearchParams(window.location.search);
       const etape = urlParams.get('etape');
 
-      // CONFIGURATION SELON L'ÉTAPE
+      // Configuration auto selon l'étape choisie dans l'index
       if (etape === '2') {
-          // Correction selon ta photo GitHub : .mp4 (et pas .mp4.mov)
-          video.src = "gravelles1920.mp4"; 
-          btnText.innerText = "VOIR LES GRAVELLES 1920";
+          video.src = "gravelles1920.mp4";
+          btnText.innerText = "RÉVÉLER LES GRAVELLES (1920)";
       } else {
-          // L'étape 3 garde son nom original
-          video.src = "vision1920.mp4.mov"; 
-          btnText.innerText = "VOIR LA SAMBRE 1920";
+          video.src = "vision1920.mp4.mov";
+          btnText.innerText = "RÉVÉLER LA SAMBRE (1920)";
       }
 
-      // LANCEMENT AU CLIC
       document.body.addEventListener('click', function () {
-        if (video.src) {
-            video.play();
-            video.style.opacity = '0.65';
-            instruction.style.opacity = '0';
-            setTimeout(() => { instruction.style.display = 'none'; }, 2000);
-        }
+        video.play();
+        video.style.opacity = '0.65';
+        instruction.style.opacity = '0';
+        setTimeout(() => { instruction.style.display = 'none'; }, 2000);
       });
     </script>
   </body>
