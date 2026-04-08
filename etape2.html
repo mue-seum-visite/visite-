@@ -1,69 +1,55 @@
 <!DOCTYPE html>
-<html lang="fr">
-<head>
+<html>
+  <head>
     <meta charset="utf-8">
-    <title>Étape 3 - Rue des Gravelles</title>
+    <title>Paulus Étape 3 - Rue des Gravelles 1920</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
     <style>
-        body { margin: 0; overflow: hidden; background-color: black; }
-        
-        /* Bouton de retour vers la CARTE */
-        .btn-retour {
-            position: fixed; top: 20px; left: 20px; z-index: 100;
-            background: rgba(0,0,0,0.6); color: white; padding: 10px 15px;
-            border-radius: 20px; text-decoration: none; border: 1px solid white;
-            font-family: sans-serif; font-size: 14px;
-        }
-
-        #btn-play {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            z-index: 50; background: #3498db; color: white; padding: 20px;
-            border-radius: 50px; font-weight: bold; border: none; cursor: pointer;
-        }
-
-        /* La Vidéo en Plein Écran Total comme avant */
-        #vid-fond {
-            position: fixed; 
-            top: 0; left: 0; 
-            width: 100vw; 
-            height: 100vh;
-            object-fit: cover; /* Remplit tout l'écran */
-            opacity: 0; 
-            z-index: 5;
-            transition: opacity 1s;
-        }
+      /* Style pour le bouton retour */
+      .btn-retour {
+          position: fixed; top: 20px; left: 20px; z-index: 100;
+          background: rgba(0,0,0,0.8); color: white; padding: 10px 15px;
+          border-radius: 20px; text-decoration: none; border: 1px solid white;
+          font-family: sans-serif; font-size: 14px;
+      }
     </style>
-</head>
-<body>
+  </head>
 
+  <body style="margin: 0; overflow: hidden; background-color: black;">
+    
     <a href="index.html?map=true" class="btn-retour">← Retour à la carte</a>
-
-    <button id="btn-play">DÉCOUVRIR LES GRAVELLES</button>
-
-    <video id="vid-fond" 
-           src="gravelles1920.mp4" 
-           loop="true" 
-           playsinline 
-           webkit-playsinline 
-           muted>
-    </video>
+    
+    <div id="instruction" style="position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 10; color: white; background: rgba(0,0,0,0.8); padding: 15px 30px; font-family: sans-serif; border-radius: 50px; text-align: center; width: 70%; border: 2px solid white; cursor: pointer;">
+      <strong>RÉVÉLER LES GRAVELLES 1920</strong>
+    </div>
 
     <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: false">
-        <a-entity camera></a-entity>
+      <a-entity camera></a-entity>
     </a-scene>
 
-    <script>
-        const video = document.getElementById('vid-fond');
-        const btn = document.getElementById('btn-play');
+    <video id="vid-etape2" 
+           src="gravelles1920.mp4" 
+           loop="true" 
+           muted="true" 
+           playsinline 
+           webkit-playsinline 
+           crossorigin="anonymous"
+           style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: fill; opacity: 0; z-index: 5; pointer-events: none; transition: opacity 2s ease-in;">
+    </video>
 
-        btn.addEventListener('click', function() {
-            btn.style.display = 'none';
-            video.play();
-            // Opacité à 0.85 pour que le personnage soit bien "opaque" et visible
-            video.style.opacity = "0.85"; 
-        });
+    <script>
+      const v2 = document.querySelector('#vid-etape2');
+      const inst2 = document.getElementById('instruction');
+
+      // Déclenchement au clic sur l'écran
+      document.body.addEventListener('click', function () {
+        v2.play().catch(e => console.log("Erreur lecture:", e));
+        v2.style.opacity = '0.75'; // On monte un peu l'opacité pour mieux voir le perso
+        inst2.style.opacity = '0';
+        setTimeout(() => { inst2.style.display = 'none'; }, 2000);
+      });
     </script>
-</body>
+  </body>
 </html>
