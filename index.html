@@ -14,21 +14,13 @@
         header h1 { font-size: 32px; letter-spacing: 5px; font-weight: 900; margin: 0; text-transform: uppercase; color: #fff; }
         .subtitle { font-size: 14px; color: #97f097; margin-top: 10px; font-style: italic; letter-spacing: 1px; }
 
-        .search-container { padding: 15px 20px; background: #000; position: sticky; top: 0; z-index: 3000; }
-        .search-bar { background: #1c1c1e; border-radius: 20px; padding: 12px 20px; color: #fff; border: 1px solid #333; width: 100%; box-sizing: border-box; font-size: 15px; outline: none; }
-        
-        .rando-card { background: #1c1c1e; border-radius: 28px; overflow: hidden; margin: 10px 20px 40px; border: 1px solid #333; }
+        .rando-card { background: #1c1c1e; border-radius: 28px; overflow: hidden; margin: 20px; border: 1px solid #333; }
         .brand-image { width: 100%; height: 200px; background: url('share-card.jpg') center center / cover no-repeat; border-bottom: 2px solid #333; }
-        
-        .old-map-preview { 
-            width: 90%; height: 180px; margin: 15px auto; border-radius: 15px;
-            background: url('carte-ancienne-chatelet.jpg') center center / cover no-repeat; 
-            border: 1px solid #444; 
-        }
+        .old-map-preview { width: 90%; height: 160px; margin: 15px auto; border-radius: 15px; background: url('carte-ancienne-chatelet.jpg') center center / cover no-repeat; border: 1px solid #444; }
         
         .rando-info { padding: 25px; text-align: center; }
-        .rando-title { font-size: 1.5em; font-weight: 300; margin-bottom: 10px; color: #fff; letter-spacing: 1px; line-height: 1.3; }
-        .rando-highlight { color: #97f097; font-weight: 800; text-transform: uppercase; display: block; margin-top: 5px; }
+        .rando-title { font-size: 1.5em; font-weight: 300; margin-bottom: 10px; color: #fff; line-height: 1.3; }
+        .rando-highlight { color: #97f097; font-weight: 800; text-transform: uppercase; display: block; }
         
         .btn-demarrer { width: 100%; background: #97f097; color: #000; padding: 22px; border-radius: 20px; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; font-size: 1.1em; margin-bottom: 15px; }
         .btn-google { width: 100%; background: transparent; color: #97f097; padding: 15px; border-radius: 20px; border: 1px solid #97f097; font-weight: bold; cursor: pointer; }
@@ -36,11 +28,12 @@
         #transition-voyage { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 4000; display: none; background: #000; }
         #vortex-map { position: absolute; width: 100%; height: 100%; background: url('carte-ancienne-chatelet.jpg') center center / cover no-repeat; opacity: 0; }
 
-        #map { height: 100vh; width: 100vw; display: none; background: #1a1a1a; position: fixed; top: 0; left: 0; }
-        #btn-quitter-carte { position: fixed; top: 25px; right: 20px; z-index: 5000; background: rgba(0,0,0,0.85); color: white; border: 1px solid #97f097; padding: 12px 20px; border-radius: 50px; font-weight: bold; display: none; cursor: pointer; }
+        /* LA CARTE EST MAINTENANT CLAIRE POUR LA LISIBILITÉ */
+        #map { height: 100vh; width: 100vw; display: none; background: #fff; position: fixed; top: 0; left: 0; }
+        #btn-quitter-carte { position: fixed; top: 25px; right: 20px; z-index: 5000; background: rgba(255,255,255,0.9); color: #000; border: 2px solid #000; padding: 12px 20px; border-radius: 50px; font-weight: bold; display: none; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
 
-        .label-etape { background: #97f097; border: 2px solid #000; border-radius: 5px; color: #000; font-weight: bold; padding: 2px 6px; font-size: 12px; }
-        .btn-action { background: #97f097; color: black; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: bold; margin-top: 10px; cursor: pointer; }
+        .label-etape { background: #000; border: 2px solid #97f097; border-radius: 50%; color: #97f097; font-weight: bold; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+        .btn-action { background: #000; color: #97f097; border: 1px solid #97f097; padding: 14px; border-radius: 12px; width: 100%; font-weight: bold; margin-top: 10px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -48,7 +41,7 @@
     <div id="ui-explorer">
         <header>
             <h1>MUE.SÉUM</h1>
-            <div class="subtitle">"Le Portail du Temps : L'Art s'éveille"</div>
+            <div class="subtitle">"Là où la suie devient lumière"</div>
         </header>
         <div class="rando-card">
             <div class="brand-image"></div>
@@ -62,7 +55,7 @@
     </div>
 
     <div id="transition-voyage"><div id="vortex-map"></div></div>
-    <button id="btn-quitter-carte" onclick="location.reload()">✕ FERMER LE PORTAIL</button>
+    <button id="btn-quitter-carte" onclick="location.reload()">✕ QUITTER</button>
     <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -82,33 +75,29 @@
             explorer.style.opacity = '0';
             setTimeout(() => {
                 vortex.style.opacity = '1';
-                vortex.style.transition = "transform 3.5s ease-in, opacity 1s";
+                vortex.style.transition = "transform 3s ease-in, opacity 1s";
                 vortex.style.transform = "scale(3)";
                 setTimeout(() => {
                     document.getElementById('map').style.display = 'block';
                     document.getElementById('btn-quitter-carte').style.display = 'block';
                     initMap();
                     trans.style.display = 'none';
-                }, 3000);
+                }, 2800);
             }, 100);
         }
 
         function initMap() {
             if (map) return;
-            // CHANGEMENT ICI : Utilisation de CARTO VOID ou POSITRON DARK pour plus de clarté
+            // CARTE NORMALE (Rues claires, noms bien visibles)
             map = L.map('map', { zoomControl: false }).setView([50.407, 4.522], 16);
             
-            // On utilise le style "Voyager Labels Under" qui permet de voir les rues beaucoup plus clairement
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png', {
-                attribution: '© CartoDB',
-                className: 'map-brightness' // On pourra ajuster via CSS si besoin
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
             }).addTo(map);
 
-            // Pour garder l'esprit sombre mais lisible, on applique un filtre CSS léger sur la carte
-            document.querySelector('.leaflet-tile-container').style.filter = "brightness(0.7) contrast(1.2) saturate(0.5) invert(0.9) hue-rotate(180deg)";
-
+            // TRACÉ BLEU (Plus épais pour être bien vu sur carte claire)
             var trace = [[50.404741, 4.523157], [50.405149, 4.524318], [50.406281, 4.526237], [50.406527, 4.525638], [50.40675, 4.524963], [50.407117, 4.523852], [50.40651, 4.523013], [50.406253, 4.522654], [50.406561, 4.522122], [50.406818, 4.521565], [50.408204, 4.523373], [50.408706, 4.522609], [50.408878, 4.521914], [50.40911, 4.521411], [50.409005, 4.520713], [50.408489, 4.520219], [50.407981, 4.519698], [50.407497, 4.518906], [50.407638, 4.518756], [50.406828, 4.519497], [50.406623, 4.519893], [50.406276, 4.52026], [50.405674, 4.521287], [50.405391, 4.52133], [50.404547, 4.521566], [50.404603, 4.522819], [50.404492, 4.523032]];
-            L.polyline(trace, {color: '#3498db', weight: 6, opacity: 0.8}).addTo(map);
+            L.polyline(trace, {color: '#007AFF', weight: 6, opacity: 0.8}).addTo(map);
 
             var pts = [
                 { latlng: [50.4044627, 4.5230877], t: "I. L'Éveil du Coq", file: "coq-ar.html" },
@@ -120,14 +109,18 @@
 
             pts.forEach((pt, i) => {
                 let m = L.circleMarker(pt.latlng, {radius: 12, color: '#000', fillColor: '#97f097', fillOpacity: 1}).addTo(map);
-                m.bindPopup(`<div style="color:black; text-align:center;"><b>${pt.t}</b><br><button class="btn-action" onclick="window.location.href='${pt.file}'">RÉVÉLER L'ART</button></div>`);
-                L.marker(pt.latlng, { icon: L.divIcon({ className: 'label-etape', html: (i+1), iconSize: [20, 20] }) }).addTo(map);
+                m.bindPopup(`<div style="color:black; text-align:center; font-family:sans-serif;"><b>${pt.t}</b><br><button class="btn-action" onclick="window.location.href='${pt.file}'">DÉCOUVRIR L'ART</button></div>`);
+                L.marker(pt.latlng, { icon: L.divIcon({ className: 'label-etape', html: (i+1), iconSize: [24, 24], iconAnchor: [12, 12] }) }).addTo(map);
             });
 
+            // GPS UTILISATEUR
             map.locate({setView: false, watch: true});
             map.on('locationfound', e => {
-                if(!window.userMarker) window.userMarker = L.circleMarker(e.latlng, {radius: 8, color: '#fff', weight: 3, fillColor: '#3498db', fillOpacity: 1}).addTo(map);
-                else window.userMarker.setLatLng(e.latlng);
+                if(!window.userMarker) {
+                    window.userMarker = L.circleMarker(e.latlng, {radius: 9, color: '#fff', weight: 3, fillColor: '#007AFF', fillOpacity: 1}).addTo(map);
+                } else {
+                    window.userMarker.setLatLng(e.latlng);
+                }
             });
         }
     </script>
