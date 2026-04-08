@@ -81,16 +81,16 @@
 
 <body>
 
-    <a href="index.html" class="btn-retour">← CARTE</a>
+    <a href="index.html?map=true" class="btn-retour">← RETOUR CARTE</a>
     
     <button id="btn-start">ÉCOUTER PIERRE PAULUS</button>
 
     <video id="vid-paulus" 
-           src="paulus_intro.mp4" 
-           loop="true" 
-           muted="true"
-           playsinline 
-           webkit-playsinline>
+            src="paulus_intro.mp4" 
+            loop="true" 
+            muted="true"
+            playsinline 
+            webkit-playsinline>
     </video>
 
     <div id="subtitles-container">
@@ -129,7 +129,6 @@
                     lineIndex++;
                 }, 500);
             } else {
-                // Fin du texte : on efface tout
                 clearInterval(textInterval);
                 setTimeout(() => {
                     video.style.opacity = "0"; 
@@ -145,11 +144,11 @@
         btn.addEventListener('click', function() {
             btn.style.display = 'none';
             video.play();
-            video.style.opacity = "0.8"; // Buste semi-transparent
+            // MODIFICATION ICI : Opacité à 0.6 pour voir à travers
+            video.style.opacity = "0.6"; 
             subContainer.style.display = 'block';
             
             showNextLine();
-            // Change de phrase toutes les 6 secondes
             textInterval = setInterval(showNextLine, 6000);
         });
     </script>
