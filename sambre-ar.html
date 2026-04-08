@@ -7,28 +7,41 @@
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
     <style>
-        body { margin: 0; overflow: hidden; background-color: black; font-family: sans-serif; }
+        body { margin: 0; overflow: hidden; background-color: black; font-family: -apple-system, sans-serif; }
+        
+        /* Style des boutons du haut */
+        .top-nav {
+            position: fixed; top: 20px; width: 100%; display: flex; 
+            justify-content: space-between; padding: 0 20px; box-sizing: border-box; z-index: 100;
+        }
+
+        .btn-ui {
+            background: rgba(0,0,0,0.6); color: white; padding: 10px 15px;
+            border-radius: 20px; text-decoration: none; border: 1px solid white;
+            font-size: 12px; font-weight: bold; cursor: pointer;
+        }
+
+        .btn-partage { background: #97f097; color: black; border: none; }
+
         #btn-play {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             z-index: 30; background: #97f097; color: black; padding: 20px 30px;
             border-radius: 50px; font-weight: bold; border: none; font-size: 1.2em;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
+
         #vid-sambre {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             object-fit: cover; opacity: 0; z-index: 5; transition: opacity 2s;
-        }
-        .btn-retour {
-            position: fixed; top: 20px; left: 20px; z-index: 100;
-            background: rgba(0,0,0,0.5); color: white; padding: 10px;
-            border-radius: 10px; text-decoration: none; border: 1px solid white;
-            font-size: 12px;
         }
     </style>
 </head>
 <body>
 
-    <a href="index.html?map=true" class="btn-retour">← RETOUR CARTE</a>
+    <div class="top-nav">
+        <a href="index.html?map=true" class="btn-ui">← CARTE</a>
+        <button onclick="partager()" class="btn-ui btn-partage">📤 PARTAGER</button>
+    </div>
 
     <button id="btn-play">DÉCOUVRIR LA SAMBRE EN 1920</button>
 
@@ -51,9 +64,20 @@
         btn.addEventListener('click', function() {
             btn.style.display = 'none';
             video.play();
-            // Opacité à 0.6 pour l'effet de superposition
-            video.style.opacity = "0.6"; 
+            video.style.opacity = "0.6"; // L'effet transparent pour la faille temporelle
         });
+
+        function partager() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'MUE.SÉUM - Pierre Paulus',
+                    text: "Une faille temporelle s'est ouverte au détour d'une rue à Châtelet... J'ai croisé l'ombre de Pierre Paulus et revécu la ferveur du Pays Noir. L'aventure vous attend ici.",
+                    url: window.location.href
+                });
+            } else {
+                alert("Utilisez le navigateur Safari ou Chrome pour partager cette expérience !");
+            }
+        }
     </script>
 </body>
 </html>
