@@ -7,11 +7,9 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
     <style>
-        /* BASE & SCROLLING */
         body { margin:0; padding:0; background: #000; color: white; font-family: -apple-system, sans-serif; min-height: 100vh; overflow-x: hidden; }
         #ui-explorer { padding-bottom: 60px; transition: opacity 0.8s ease; }
         
-        /* HEADER STYLE */
         header { background: #000; padding: 40px 20px 10px; text-align: center; }
         header h1 { font-size: 32px; letter-spacing: 5px; font-weight: 900; margin: 0; text-transform: uppercase; color: #fff; }
         .subtitle { font-size: 14px; color: #8e8e93; margin-top: 10px; font-style: italic; letter-spacing: 1px; }
@@ -19,22 +17,31 @@
         .search-container { padding: 15px 20px; background: #000; position: sticky; top: 0; z-index: 3000; }
         .search-bar { background: #1c1c1e; border-radius: 20px; padding: 12px 20px; color: #fff; border: 1px solid #333; width: 100%; box-sizing: border-box; font-size: 15px; outline: none; }
         
-        /* CARTE & CARD */
         .rando-card { background: #1c1c1e; border-radius: 28px; overflow: hidden; margin: 10px 20px 40px; border: 1px solid #333; }
-        .brand-image { width: 100%; height: 160px; background: url('share-card.jpg') center center / cover no-repeat; border-bottom: 1px solid #333; }
-        .old-map-preview { width: 100%; height: 220px; background: url('carte-ancienne-chatelet.jpg') center center / cover no-repeat; border-bottom: 1px solid #333; }
+        
+        /* IMAGE DE MARQUE - MISE EN AVANT */
+        .brand-image { width: 100%; height: 200px; background: url('share-card.jpg') center center / cover no-repeat; border-bottom: 2px solid #333; }
+        
+        /* CARTE ANCIENNE - DESCENDUE ET AJUSTÉE */
+        .old-map-preview { 
+            width: 90%; 
+            height: 180px; 
+            margin: 15px auto; /* Centre la carte et crée l'espace avec l'image du haut */
+            border-radius: 15px;
+            background: url('carte-ancienne-chatelet.jpg') center center / cover no-repeat; 
+            border: 1px solid #444; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+        }
         
         .rando-info { padding: 25px; text-align: center; }
         .rando-title { font-size: 1.6em; font-weight: 800; margin-bottom: 5px; color: #97f097; text-transform: uppercase; }
         #distance-gps { color: #97f097; font-size: 13px; margin: 10px 0; font-weight: bold; }
 
-        /* BOUTONS */
         .btn-demarrer { width: 100%; background: #97f097; color: #000; padding: 22px; border-radius: 20px; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; font-size: 1.1em; margin-bottom: 15px; }
         .btn-google { width: 100%; background: transparent; color: #97f097; padding: 15px; border-radius: 20px; border: 1px solid #97f097; font-weight: bold; cursor: pointer; margin-bottom: 15px; }
         
         .accessibility-note { font-size: 10px; color: #666; line-height: 1.3; margin-top: 10px; }
 
-        /* TRANSITION & MAP */
         #transition-voyage { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 4000; display: none; background: #000; }
         #vortex-map { position: absolute; width: 100%; height: 100%; background: url('carte-ancienne-chatelet.jpg') center center / cover no-repeat; opacity: 0; }
 
@@ -43,7 +50,6 @@
 
         .label-etape { background: #97f097; border: 2px solid #000; border-radius: 5px; color: #000; font-weight: bold; padding: 2px 6px; font-size: 12px; }
         .btn-action { background: #97f097; color: black; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: bold; margin-top: 10px; cursor: pointer; }
-        .coq-anim { width: 100%; border-radius: 12px; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -59,22 +65,19 @@
         </div>
 
         <div class="rando-card">
-            <div class="brand-image"></div>
-            <div class="old-map-preview"></div>
-            <div class="rando-info">
+            <div class="brand-image"></div> <div class="old-map-preview"></div> <div class="rando-info">
                 <p class="rando-title">Pierre Paulus</p>
                 <div id="distance-gps">Calcul de votre position...</div>
                 
                 <div style="margin: 15px 0;">
-                    <span style="color:#97f097; font-weight:bold; font-size:18px;">📏 ENVIRON 2,5 KM</span><br>
-                    <i style="font-size:13px;">"Un sentier d'histoire au rythme de vos pas."</i>
+                    <span style="color:#97f097; font-weight:bold; font-size:18px;">📏 CIRCUIT DE 2,5 KM</span>
                 </div>
 
                 <button class="btn-demarrer" onclick="lancerVoyage()">Démarrer la balade</button>
                 <button class="btn-google" onclick="allerAuDepart()">🗺️ Me guider vers le Maître</button>
 
                 <p class="accessibility-note">
-                    ♿ <b>Note accessibilité :</b> Le tracé historique peut s'avérer difficile en chaise roulante (trottoirs et pavés d'époque). Prudence conseillée.
+                    ♿ <b>Note accessibilité :</b> Le tracé historique peut s'avérer difficile en chaise roulante. Prudence conseillée.
                 </p>
             </div>
         </div>
@@ -87,9 +90,9 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         var map;
-        const latDep = 50.4044627; const lngDep = 4.5230877; // Hôtel de Ville
+        const latDep = 50.4044627; const lngDep = 4.5230877;
 
-        // --- CALCUL DISTANCE GPS ---
+        // GPS DISTANCE
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(pos => {
                 const R = 6371;
@@ -131,14 +134,12 @@
             map = L.map('map', { zoomControl: false }).setView([50.407, 4.522], 15);
             L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
 
-            // TON TRACÉ BLEU PRÉCIS
             var trace = [[50.404741, 4.523157], [50.405149, 4.524318], [50.406281, 4.526237], [50.406527, 4.525638], [50.40675, 4.524963], [50.407117, 4.523852], [50.40651, 4.523013], [50.406253, 4.522654], [50.406561, 4.522122], [50.406818, 4.521565], [50.408204, 4.523373], [50.408706, 4.522609], [50.408878, 4.521914], [50.40911, 4.521411], [50.409005, 4.520713], [50.408489, 4.520219], [50.407981, 4.519698], [50.407497, 4.518906], [50.407638, 4.518756], [50.406828, 4.519497], [50.406623, 4.519893], [50.406276, 4.52026], [50.405674, 4.521287], [50.405391, 4.52133], [50.404547, 4.521566], [50.404603, 4.522819], [50.404492, 4.523032]];
             L.polyline(trace, {color: '#3498db', weight: 5, opacity: 0.7}).addTo(map);
 
-            // TES 5 ÉTAPES AVEC TES COORDONNÉES
             var pts = [
-                { latlng: [50.4044627, 4.5230877], t: "1. Hôtel de Ville", desc: "Le Coq de la Liberté vous attend.", file: "coq-ar.html", isCoq: true },
-                { latlng: [50.4067226, 4.5250463], t: "2. Maison Natale", desc: "Découvrez là où tout a commencé.", file: "maison-ar.html" },
+                { latlng: [50.4044627, 4.5230877], t: "1. Hôtel de Ville", desc: "Le Coq de la Liberté.", file: "coq-ar.html" },
+                { latlng: [50.4067226, 4.5250463], t: "2. Maison Natale", desc: "Là où tout a commencé.", file: "maison-ar.html" },
                 { latlng: [50.4069696, 4.5217572], t: "3. Rue des Gravelles", desc: "La vie ouvrière en 1920.", file: "etape2.html" },
                 { latlng: [50.4082915, 4.5205504], t: "4. Allée de la Sambre", desc: "Le travail sur les quais.", file: "sambre-ar.html" },
                 { latlng: [50.4046263, 4.5221912], t: "5. Rue Goswin", desc: "L'usine et le mineur.", file: "etape4.html" }
@@ -146,18 +147,15 @@
 
             pts.forEach((pt, i) => {
                 let m = L.circleMarker(pt.latlng, {radius: 10, color: '#000', fillColor: '#97f097', fillOpacity: 1}).addTo(map);
-                let pop = `<div style="color:black; text-align:center;"><b>${pt.t}</b><br>${pt.desc}<br><button class="btn-action" onclick="window.location.href='${pt.file}'">✨ VOIR EN RA</button></div>`;
-                m.bindPopup(pop);
+                m.bindPopup(`<div style="color:black; text-align:center;"><b>${pt.t}</b><br><button class="btn-action" onclick="window.location.href='${pt.file}'">✨ VOIR EN RA</button></div>`);
                 L.marker(pt.latlng, { icon: L.divIcon({ className: 'label-etape', html: (i+1), iconSize: [20, 20] }) }).addTo(map);
             });
 
-            // GÉOLOCALISATION UTILISATEUR SUR CARTE
             map.locate({setView: false, watch: true});
             map.on('locationfound', e => {
                 if(!window.userMarker) window.userMarker = L.circleMarker(e.latlng, {radius: 6, color: '#fff', fillColor: '#3498db', fillOpacity: 1}).addTo(map);
                 else window.userMarker.setLatLng(e.latlng);
             });
-            setTimeout(() => { map.invalidateSize(); }, 200);
         }
     </script>
 </body>
