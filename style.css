@@ -1,10 +1,17 @@
-body { margin:0; padding:0; background: #000; color: white; font-family: -apple-system, sans-serif; min-height: 100vh; overflow-x: hidden; }
+/* --- BASE & STRUCTURE --- */
+body { 
+    margin:0; padding:0; background: #000; color: white; 
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+    min-height: 100vh; overflow-x: hidden; 
+}
+
 #ui-explorer { padding-bottom: 60px; transition: opacity 0.8s ease; }
 
 header { background: #000; padding: 40px 20px 10px; text-align: center; }
 header h1 { font-size: 32px; letter-spacing: 5px; font-weight: 900; margin: 0; text-transform: uppercase; }
 .subtitle { font-size: 14px; color: #97f097; margin-top: 10px; font-style: italic; }
 
+/* --- CARTE DE PRÉSENTATION (ACCUEIL) --- */
 .rando-card { background: #1c1c1e; border-radius: 28px; overflow: hidden; margin: 20px; border: 1px solid #333; }
 .brand-image { width: 100%; height: 200px; background: url('share-card.jpg') center center / cover no-repeat; border-bottom: 2px solid #333; }
 .old-map-preview { width: 90%; height: 160px; margin: 15px auto; border-radius: 15px; background: url('carte-ancienne-chatelet.jpg') center center / cover no-repeat; border: 1px solid #444; }
@@ -12,16 +19,54 @@ header h1 { font-size: 32px; letter-spacing: 5px; font-weight: 900; margin: 0; t
 .rando-info { padding: 25px; text-align: center; }
 .rando-title { font-size: 1.5em; font-weight: 300; margin-bottom: 10px; color: #fff; line-height: 1.3; }
 .rando-highlight { color: #97f097; font-weight: 800; text-transform: uppercase; display: block; }
-#distance-gps { color: #8e8e93; font-size: 12px; margin: 10px 0; }
+#distance-gps { color: #8e8e93; font-size: 12px; margin: 10px 0; letter-spacing: 1px; }
 
-.btn-demarrer { width: 100%; background: #97f097; color: #000; padding: 22px; border-radius: 20px; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; }
+/* --- BOUTONS --- */
+.btn-demarrer { width: 100%; background: #97f097; color: #000; padding: 22px; border-radius: 20px; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; font-size: 1.1em; transition: transform 0.2s; }
+.btn-demarrer:active { transform: scale(0.98); }
+
 .btn-google { width: 100%; background: transparent; color: #97f097; padding: 15px; border-radius: 20px; border: 1px solid #97f097; font-weight: bold; margin-top: 10px; cursor: pointer; }
 
+/* --- TRANSITION VORTEX --- */
 #transition-voyage { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 4000; display: none; background: #000; }
 #vortex-map { position: absolute; width: 100%; height: 100%; background: url('carte-ancienne-chatelet.jpg') center center / cover no-repeat; opacity: 0; }
 
+/* --- INTERFACE CARTE --- */
 #map { height: 100vh; width: 100vw; display: none; background: #fff; position: fixed; top: 0; left: 0; }
-#btn-quitter-carte { position: fixed; top: 25px; right: 20px; z-index: 5000; background: rgba(255,255,255,0.9); color: #000; border: 2px solid #000; padding: 12px 20px; border-radius: 50px; font-weight: bold; display: none; }
+#btn-quitter-carte { position: fixed; top: 25px; right: 20px; z-index: 5000; background: rgba(255,255,255,0.9); color: #000; border: 2px solid #000; padding: 12px 20px; border-radius: 50px; font-weight: bold; display: none; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
 
-.label-etape { background: #000; border: 2px solid #97f097; border-radius: 50%; color: #97f097; font-weight: bold; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; }
+/* --- MARQUEURS ÉTAPES --- */
+.label-etape { background: #000; border: 2px solid #97f097; border-radius: 50%; color: #97f097; font-weight: bold; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 14px; pointer-events: none; }
 .btn-action { background: #000; color: #97f097; border: 1px solid #97f097; padding: 12px; border-radius: 10px; width: 100%; font-weight: bold; margin-top: 8px; cursor: pointer; }
+
+/* --- NOUVEAU : BANDEAU POÉTIQUE (NAV) --- */
+#poetic-footer {
+    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px);
+    border: 1px solid #97f097; padding: 15px 25px; border-radius: 40px;
+    z-index: 4500; display: none; width: 85%; max-width: 400px; text-align: center;
+}
+#poetic-text {
+    color: #97f097; font-style: italic; font-size: 13px; margin: 0;
+    overflow: hidden; border-right: 2px solid #97f097; white-space: nowrap;
+    animation: typing 3s steps(30, end), blink-caret .75s step-end infinite;
+}
+
+/* --- NOUVEAU : INTERFACE AR (L'ENCADRÉ NOIR SYMPA) --- */
+.ar-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8); display: flex; flex-direction: column;
+    justify-content: center; align-items: center; z-index: 9999;
+    border: 15px solid rgba(151, 240, 151, 0.1); box-sizing: border-box;
+}
+
+.scanner-line {
+    width: 100%; height: 3px; background: #97f097;
+    position: absolute; box-shadow: 0 0 20px #97f097;
+    animation: scan 2.5s ease-in-out infinite;
+}
+
+/* --- ANIMATIONS KEYFRAMES --- */
+@keyframes typing { from { width: 0 } to { width: 100% } }
+@keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: #97f097; } }
+@keyframes scan { 0% { top: 5%; } 50% { top: 95%; } 100% { top: 5%; } }
