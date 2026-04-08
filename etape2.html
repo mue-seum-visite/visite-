@@ -1,83 +1,65 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="fr">
+<head>
     <meta charset="utf-8">
-    <title>Paulus Étape 2 - Rue des Gravelles 1920</title>
+    <title>Étape 3 - Rue des Gravelles</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
     <style>
+        body { margin: 0; overflow: hidden; background-color: black; }
+        
+        /* Bouton Retour vers la carte (avec le signal ?map=true) */
         .btn-retour {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 100;
-            background: rgba(0,0,0,0.5);
-            color: white;
-            padding: 10px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-size: 12px;
-            border: 1px solid white;
-            font-family: sans-serif;
+            position: fixed; top: 20px; left: 20px; z-index: 100;
+            background: rgba(0,0,0,0.6); color: white; padding: 10px 15px;
+            border-radius: 20px; text-decoration: none; border: 1px solid white;
+            font-family: sans-serif; font-size: 14px;
         }
 
-        /* Style pour le personnage centré ou décalé selon tes besoins */
-        #personnage-anim {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            height: 70vh; /* Ajuste la taille ici */
-            z-index: 6; /* Juste au-dessus de la vidéo (z-index 5) */
-            opacity: 0;
-            transition: opacity 2s ease-in;
+        #btn-play {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 50; background: #3498db; color: white; padding: 20px;
+            border-radius: 50px; font-weight: bold; border: none; cursor: pointer;
+        }
+
+        /* La Vidéo (Fond / Rue) */
+        #vid-fond {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            object-fit: cover; opacity: 0; z-index: 5; /* Derrière le personnage */
+            transition: opacity 1.5s;
+        }
+
+        /* Le Personnage (S'il est dans une image séparée) */
+        #personnage {
+            position: fixed; bottom: 0; right: 0; width: 80%; 
+            z-index: 10; /* DEVANT la vidéo */
             pointer-events: none;
+            display: none;
         }
     </style>
-  </head>
+</head>
+<body>
 
-  <body style="margin: 0; overflow: hidden; background-color: black;">
-    
-    <a href="index.html?map=true" class="btn-retour">← RETOUR CARTE</a>
+    <a href="index.html?map=true" class="btn-retour">← Retour à la carte</a>
 
-    <div id="instruction" style="position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 10; color: white; background: rgba(0,0,0,0.8); padding: 15px 30px; font-family: sans-serif; border-radius: 50px; text-align: center; width: 70%; border: 2px solid white; cursor: pointer;">
-      <strong>RÉVÉLER LES GRAVELLES 1920</strong>
-    </div>
+    <button id="btn-play">DÉCOUVRIR LES GRAVELLES</button>
 
-    <img id="personnage-anim" src="personnage.png" alt="">
+    <video id="vid-fond" src="gravelles1920.mp4" loop="true" playsinline webkit-playsinline muted></video>
 
     <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: false">
-      <a-entity camera></a-entity>
+        <a-entity camera></a-entity>
     </a-scene>
 
-    <video id="vid-etape2" 
-           src="gravelles1920.mp4" 
-           loop="true" 
-           muted="true" 
-           playsinline 
-           webkit-playsinline 
-           crossorigin="anonymous"
-           style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; opacity: 0; z-index: 5; pointer-events: none; transition: opacity 2s ease-in;">
-    </video>
-
     <script>
-      const v2 = document.querySelector('#vid-etape2');
-      const inst2 = document.getElementById('instruction');
-      const perso = document.getElementById('personnage-anim');
+        const video = document.getElementById('vid-fond');
+        const btn = document.getElementById('btn-play');
 
-      // Déclenchement au clic
-      document.body.addEventListener('click', function () {
-        v2.play().catch(e => console.log("Erreur lecture:", e));
-        v2.style.opacity = '0.65'; // Transparence pour voir la rue
-        
-        // On fait apparaître le personnage en même temps
-        if(perso) {
-            perso.style.opacity = '1';
-        }
-
-        inst2.style.opacity = '0';
-        setTimeout(() => { inst2.style.display = 'none'; }, 2000);
-      });
+        btn.addEventListener('click', function() {
+            btn.style.display = 'none';
+            video.play();
+            video.style.opacity = "0.7"; // Transparence pour voir la rue actuelle derrière
+        });
     </script>
-  </body>
+</body>
 </html>
