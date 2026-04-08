@@ -12,11 +12,24 @@
         #ui-explorer { height: 100%; overflow-y: auto; transition: opacity 0.8s ease; }
         .search-container { padding: 20px 15px 10px; background: #000; position: sticky; top: 0; z-index: 3000; }
         .search-bar { background: #1c1c1e; border-radius: 12px; padding: 12px 15px; color: #8e8e93; border: 1px solid #333; }
+        
         .rando-card { background: #1c1c1e; border-radius: 24px; overflow: hidden; margin: 10px 15px 25px; border: 1px solid #333; }
         .rando-image { width: 100%; height: 220px; background: url('unnamed (1).jpg') center center / cover no-repeat; }
-        .rando-info { padding: 20px; }
-        .rando-title { font-size: 1.3em; font-weight: 700; margin: 0; }
-        .btn-demarrer { width: 100%; background: #97f097; color: #000; padding: 16px; border-radius: 14px; font-weight: 800; border: none; cursor: pointer; text-transform: uppercase; }
+        
+        .rando-info { padding: 20px; text-align: center; }
+        .rando-title { font-size: 1.4em; font-weight: 700; margin-bottom: 15px; }
+
+        /* BOUTON ITINÉRAIRE */
+        .btn-itineraire { 
+            display: block; background: transparent; color: #3498db; padding: 12px; 
+            border-radius: 12px; font-weight: 600; border: 1px solid #3498db; 
+            text-decoration: none; font-size: 0.85em; margin-bottom: 15px;
+            transition: background 0.3s;
+        }
+        .btn-itineraire:active { background: rgba(52, 152, 219, 0.1); }
+
+        /* BOUTON DÉMARRER */
+        .btn-demarrer { width: 100%; background: #97f097; color: #000; padding: 18px; border-radius: 14px; font-weight: 800; border: none; cursor: pointer; text-transform: uppercase; font-size: 1.1em; }
 
         /* TRANSITION VOYAGE DANS LE TEMPS */
         #transition-voyage {
@@ -48,22 +61,11 @@
             color: #000; font-weight: bold; padding: 2px 5px; font-size: 12px;
         }
 
-        .coq-anim {
-            animation: coqVivant 4s infinite alternate ease-in-out;
-            border-radius: 12px; width: 100%; margin-top: 10px;
-        }
-        @keyframes coqVivant {
-            0% { transform: scale(1); filter: saturate(1); }
-            100% { transform: scale(1.05); filter: saturate(1.3); }
-        }
-        .btn-selfie {
-            background: #97f097; color: black; border: none; padding: 10px; 
-            border-radius: 8px; width: 100%; font-weight: bold; margin-top: 10px; cursor: pointer;
-        }
-        .btn-video {
-            background: #3498db; color: white; border: none; padding: 10px; 
-            border-radius: 8px; width: 100%; font-weight: bold; margin-top: 10px; cursor: pointer;
-        }
+        .coq-anim { animation: coqVivant 4s infinite alternate ease-in-out; border-radius: 12px; width: 100%; margin-top: 10px; }
+        @keyframes coqVivant { 0% { transform: scale(1); filter: saturate(1); } 100% { transform: scale(1.05); filter: saturate(1.3); } }
+        
+        .btn-selfie { background: #97f097; color: black; border: none; padding: 10px; border-radius: 8px; width: 100%; font-weight: bold; margin-top: 10px; cursor: pointer; }
+        .btn-video { background: #3498db; color: white; border: none; padding: 10px; border-radius: 8px; width: 100%; font-weight: bold; margin-top: 10px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -74,6 +76,11 @@
             <div class="rando-image"></div>
             <div class="rando-info">
                 <p class="rando-title">Circuit Pierre Paulus</p>
+                
+                <a href="https://www.google.com/maps/dir/?api=1&destination=50.4044627,4.5230877" target="_blank" class="btn-itineraire">
+                    📍 CALCULER L'ITINÉRAIRE JUSQU'AU DÉPART
+                </a>
+
                 <button class="btn-demarrer" onclick="lancerVoyage()">Démarrer la balade</button>
             </div>
         </div>
@@ -107,17 +114,10 @@
         }
 
         function revenirMenu() {
-            // Cacher la carte et le bouton
             document.getElementById('map').style.display = 'none';
             document.getElementById('btn-quitter-carte').style.display = 'none';
-            
-            // Réafficher le catalogue
             document.getElementById('ui-explorer').style.display = 'block';
-            setTimeout(() => {
-                document.getElementById('ui-explorer').style.opacity = '1';
-            }, 50);
-
-            // Nettoyer l'URL
+            setTimeout(() => { document.getElementById('ui-explorer').style.opacity = '1'; }, 50);
             window.history.replaceState({}, document.title, window.location.pathname);
         }
 
@@ -126,6 +126,7 @@
                 map = L.map('map').setView([50.407, 4.522], 15);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
+                // Tracé du parcours
                 var tracéCoord = [[50.404741, 4.523157], [50.405149, 4.524318], [50.406281, 4.526237], [50.406527, 4.525638], [50.40675, 4.524963], [50.407117, 4.523852], [50.40651, 4.523013], [50.406253, 4.522654], [50.406561, 4.522122], [50.406818, 4.521565], [50.408204, 4.523373], [50.408706, 4.522609], [50.408878, 4.521914], [50.40911, 4.521411], [50.409005, 4.520713], [50.408489, 4.520219], [50.407981, 4.519698], [50.407497, 4.518906], [50.407638, 4.518756], [50.406828, 4.519497], [50.406623, 4.519893], [50.406276, 4.52026], [50.405674, 4.521287], [50.405391, 4.52133], [50.404547, 4.521566], [50.404603, 4.522819], [50.404492, 4.523032]];
                 L.polyline(tracéCoord, {color: '#3498db', weight: 6, opacity: 0.8}).addTo(map);
 
@@ -139,7 +140,6 @@
 
                 pointsCulturels.forEach((pt, index) => {
                     let content = `<div style="color:black; text-align:center; font-family: sans-serif; padding: 5px;"><b>${pt.titre}</b><br>`;
-                    
                     if(pt.isCoq) {
                         content += `<img src="${pt.img}" class="coq-anim">`;
                         content += `<button class="btn-selfie" onclick="window.location.href='coq-ar.html'">📸 Mode Selfie RA</button>`;
@@ -176,7 +176,7 @@
             setTimeout(() => { map.invalidateSize(); }, 200);
         }
 
-        // Détection automatique si on revient d'une animation
+        // Système de retour automatique depuis les animations AR
         window.addEventListener('load', function() {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('map') === 'true') {
