@@ -9,7 +9,7 @@
     <style>
         body { margin: 0; overflow: hidden; background-color: black; }
         
-        /* Bouton Retour vers la carte (avec le signal ?map=true) */
+        /* Bouton de retour vers la CARTE */
         .btn-retour {
             position: fixed; top: 20px; left: 20px; z-index: 100;
             background: rgba(0,0,0,0.6); color: white; padding: 10px 15px;
@@ -23,19 +23,16 @@
             border-radius: 50px; font-weight: bold; border: none; cursor: pointer;
         }
 
-        /* La Vidéo (Fond / Rue) */
+        /* La Vidéo en Plein Écran Total comme avant */
         #vid-fond {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            object-fit: cover; opacity: 0; z-index: 5; /* Derrière le personnage */
-            transition: opacity 1.5s;
-        }
-
-        /* Le Personnage (S'il est dans une image séparée) */
-        #personnage {
-            position: fixed; bottom: 0; right: 0; width: 80%; 
-            z-index: 10; /* DEVANT la vidéo */
-            pointer-events: none;
-            display: none;
+            position: fixed; 
+            top: 0; left: 0; 
+            width: 100vw; 
+            height: 100vh;
+            object-fit: cover; /* Remplit tout l'écran */
+            opacity: 0; 
+            z-index: 5;
+            transition: opacity 1s;
         }
     </style>
 </head>
@@ -45,7 +42,13 @@
 
     <button id="btn-play">DÉCOUVRIR LES GRAVELLES</button>
 
-    <video id="vid-fond" src="gravelles1920.mp4" loop="true" playsinline webkit-playsinline muted></video>
+    <video id="vid-fond" 
+           src="gravelles1920.mp4" 
+           loop="true" 
+           playsinline 
+           webkit-playsinline 
+           muted>
+    </video>
 
     <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: false">
         <a-entity camera></a-entity>
@@ -58,7 +61,8 @@
         btn.addEventListener('click', function() {
             btn.style.display = 'none';
             video.play();
-            video.style.opacity = "0.7"; // Transparence pour voir la rue actuelle derrière
+            // Opacité à 0.85 pour que le personnage soit bien "opaque" et visible
+            video.style.opacity = "0.85"; 
         });
     </script>
 </body>
