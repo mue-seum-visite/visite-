@@ -4,7 +4,9 @@
     <title>MUE.SÉUM - Châtelet</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -12,25 +14,38 @@
     <div id="ui-explorer">
         <header>
             <h1>MUE.SÉUM</h1>
-            <div class="subtitle">"Là où la suie devient lumière"</div>
+            <div class="subtitle">"Le Portail du Temps : L'Art s'éveille"</div>
         </header>
+
         <div class="rando-card">
             <div class="brand-image"></div>
             <div class="old-map-preview"></div>
+            
             <div class="rando-info">
                 <p class="rando-title">L'horizon de fer & <span class="rando-highlight">L'âme de Paulus</span></p>
-                <div id="distance-gps">L'histoire attend vos pas...</div>
+                <div id="distance-gps">Calcul de votre position...</div>
+                
                 <button class="btn-demarrer" onclick="lancerVoyage()">Ouvrir la porte du temps</button>
                 <button class="btn-google" onclick="allerAuDepart()">Rejoindre le Maître</button>
             </div>
         </div>
     </div>
 
-    <div id="transition-voyage"><div id="vortex-map"></div></div>
-    <button id="btn-quitter-carte" onclick="location.reload()">✕ QUITTER</button>
+    <div id="transition-voyage">
+        <div id="vortex-map"></div>
+    </div>
+
+    <button id="btn-quitter-carte" onclick="quitterLaCarte()">✕ QUITTER</button>
+
     <div id="map"></div>
 
+    <div id="poetic-footer">
+        <p id="poetic-text">Le voyage commence au premier regard...</p>
+    </div>
+
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
     <script src="app.js"></script>
+
 </body>
 </html>
