@@ -12,6 +12,7 @@
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             z-index: 30; background: #97f097; color: black; padding: 20px 30px;
             border-radius: 50px; font-weight: bold; border: none; font-size: 1.2em;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
         #vid-sambre {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
@@ -33,6 +34,7 @@
     <video id="vid-sambre" 
            src="vision1920.mp4.mov" 
            loop="true" 
+           muted
            playsinline 
            webkit-playsinline>
     </video>
@@ -48,7 +50,10 @@
         btn.addEventListener('click', function() {
             btn.style.display = 'none';
             video.play();
-            video.style.opacity = "1";
+            // RÉGLAGE DE LA TRANSPARENCE ICI
+            // 0.6 = on voit bien à travers (effet fantôme)
+            // 1.0 = la vidéo cache tout
+            video.style.opacity = "0.6"; 
         });
     </script>
 </body>
