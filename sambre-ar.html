@@ -4,12 +4,18 @@
     <meta charset="utf-8">
     <title>MUE.SÉUM - Étape 4 : La Sambre 1920</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <meta property="og:title" content="MUE.SÉUM - L'âme du Pays Noir" />
+    <meta property="og:description" content="Une faille temporelle s'est ouverte à Châtelet... J'ai croisé l'ombre de Pierre Paulus et revécu la ferveur du Pays Noir. Rejoignez l'aventure !" />
+    <meta property="og:image" content="https://mue-seum-visite.github.io/visite-/unnamed.jpg" />
+    <meta property="og:url" content="https://mue-seum-visite.github.io/visite-/sambre-ar.html" />
+    <meta property="og:type" content="website" />
+
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
     <style>
         body { margin: 0; overflow: hidden; background-color: black; font-family: -apple-system, sans-serif; }
         
-        /* Style des boutons du haut */
         .top-nav {
             position: fixed; top: 20px; width: 100%; display: flex; 
             justify-content: space-between; padding: 0 20px; box-sizing: border-box; z-index: 100;
@@ -18,9 +24,10 @@
         .btn-ui {
             background: rgba(0,0,0,0.6); color: white; padding: 10px 15px;
             border-radius: 20px; text-decoration: none; border: 1px solid white;
-            font-size: 12px; font-weight: bold; cursor: pointer;
+            font-size: 11px; font-weight: bold; cursor: pointer; text-transform: uppercase;
         }
 
+        /* Le bouton de partage mis en avant */
         .btn-partage { background: #97f097; color: black; border: none; }
 
         #btn-play {
@@ -40,7 +47,7 @@
 
     <div class="top-nav">
         <a href="index.html?map=true" class="btn-ui">← CARTE</a>
-        <button onclick="partager()" class="btn-ui btn-partage">📤 PARTAGER</button>
+        <button onclick="partager()" class="btn-ui btn-partage">📤 PARTAGE MON AVENTURE</button>
     </div>
 
     <button id="btn-play">DÉCOUVRIR LA SAMBRE EN 1920</button>
@@ -64,7 +71,7 @@
         btn.addEventListener('click', function() {
             btn.style.display = 'none';
             video.play();
-            video.style.opacity = "0.6"; // L'effet transparent pour la faille temporelle
+            video.style.opacity = "0.6"; 
         });
 
         function partager() {
@@ -75,7 +82,7 @@
                     url: window.location.href
                 });
             } else {
-                alert("Utilisez le navigateur Safari ou Chrome pour partager cette expérience !");
+                alert("Utilisez Safari ou Chrome pour partager votre aventure !");
             }
         }
     </script>
