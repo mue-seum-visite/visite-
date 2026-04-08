@@ -7,7 +7,7 @@
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
     <style>
-        body { margin: 0; overflow: hidden; background-color: black; }
+        body { margin: 0; overflow: hidden; background-color: black; font-family: sans-serif; }
         #btn-play {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             z-index: 30; background: #97f097; color: black; padding: 20px 30px;
@@ -21,13 +21,14 @@
         .btn-retour {
             position: fixed; top: 20px; left: 20px; z-index: 100;
             background: rgba(0,0,0,0.5); color: white; padding: 10px;
-            border-radius: 20px; text-decoration: none; border: 1px solid white;
+            border-radius: 10px; text-decoration: none; border: 1px solid white;
+            font-size: 12px;
         }
     </style>
 </head>
 <body>
 
-    <a href="index.html" class="btn-retour">← Retour</a>
+    <a href="index.html?map=true" class="btn-retour">← RETOUR CARTE</a>
 
     <button id="btn-play">DÉCOUVRIR LA SAMBRE EN 1920</button>
 
@@ -50,9 +51,7 @@
         btn.addEventListener('click', function() {
             btn.style.display = 'none';
             video.play();
-            // RÉGLAGE DE LA TRANSPARENCE ICI
-            // 0.6 = on voit bien à travers (effet fantôme)
-            // 1.0 = la vidéo cache tout
+            // Opacité à 0.6 pour l'effet de superposition
             video.style.opacity = "0.6"; 
         });
     </script>
