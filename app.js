@@ -1,4 +1,4 @@
- var map;
+var map;
 const latDep = 50.4044627; const lngDep = 4.5230877;
 
 // --- 1. MÉMOIRE DE NAVIGATION ---
@@ -69,11 +69,11 @@ function initMap() {
     L.polyline(trace, {color: '#007AFF', weight: 6, opacity: 0.8}).addTo(map);
 
     var pts = [
-        { latlng: [50.4044627, 4.5230877], t: "I. L'Éveil du Coq", file: "coq-ar.html", mode: "ar" },
-        { latlng: [50.4067226, 4.5250463], t: "II. Les Racines du Maître", file: null, mode: "info" },
-        { latlng: [50.4069696, 4.5217572], t: "III. Murmures de 1910", file: "etape2.html", mode: "ar" },
-        { latlng: [50.4082915, 4.5205504], t: "IV. La Sambre de l'Âge d'Or", file: "sambre-ar.html", mode: "ar" },
-        { latlng: [50.4046263, 4.5221912], t: "V. Le Souffle du Fer", file: "etape4.html", mode: "ar" }
+        { latlng: [50.4044627, 4.5230877], t: "I. L'Éveil du Coq", phrase: "Le bronze s'éveille sous vos yeux...", file: "coq-ar.html", mode: "ar" },
+        { latlng: [50.4067226, 4.5250463], t: "II. Les Racines du Maître", phrase: "Ici, Pierre Paulus a ouvert les yeux sur le monde...", file: null, mode: "info" },
+        { latlng: [50.4069696, 4.5217572], t: "III. Murmures de 1910", phrase: "Âge d'Or", file: "etape2.html", mode: "ar" },
+        { latlng: [50.4082915, 4.5205504], t: "IV. La Sambre de l'Âge d'Or", phrase: "L'eau reflète la puissance de l'industrie naissante...", file: "sambre-ar.html", mode: "ar" },
+        { latlng: [50.4046263, 4.5221912], t: "V. Le Souffle du Fer", phrase: "Le métal bat au cœur de la ville...", file: "etape4.html", mode: "ar" }
     ];
 
     pts.forEach((pt, i) => {
@@ -82,6 +82,12 @@ function initMap() {
         }).addTo(map);
 
         m.on('click', function() {
+            // MISE À JOUR DU TEXTE DANS LE RECTANGLE NOIR
+            const txt = document.getElementById('poetic-text');
+            if(txt) {
+                txt.innerText = pt.phrase;
+            }
+
             map.flyTo(pt.latlng, 19, { animate: true, duration: 1.2 });
 
             if (pt.mode === "ar") {
