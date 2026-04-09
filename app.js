@@ -1,4 +1,4 @@
-var map;
+ var map;
 const latDep = 50.4044627; const lngDep = 4.5230877;
 
 // --- 1. MÉMOIRE DE NAVIGATION ---
@@ -71,8 +71,8 @@ function initMap() {
     var pts = [
         { latlng: [50.4044627, 4.5230877], t: "I. L'Éveil du Coq", file: "coq-ar.html", mode: "ar" },
         { latlng: [50.4067226, 4.5250463], t: "II. Les Racines du Maître", file: null, mode: "info" },
-        { latlng: [50.4069696, 4.5217572], t: "III. Murmures d'Ouvriers", file: "etape2.html", mode: "ar" },
-        { latlng: [50.4082915, 4.5205504], t: "IV. Le Miroir de Sambre", file: "sambre-ar.html", mode: "ar" },
+        { latlng: [50.4069696, 4.5217572], t: "III. Murmures de 1910", file: "etape2.html", mode: "ar" },
+        { latlng: [50.4082915, 4.5205504], t: "IV. La Sambre de l'Âge d'Or", file: "sambre-ar.html", mode: "ar" },
         { latlng: [50.4046263, 4.5221912], t: "V. Le Souffle du Fer", file: "etape4.html", mode: "ar" }
     ];
 
@@ -85,10 +85,8 @@ function initMap() {
             map.flyTo(pt.latlng, 19, { animate: true, duration: 1.2 });
 
             if (pt.mode === "ar") {
-                // Direction l'animation pour les étapes AR
                 setTimeout(() => { window.location.href = pt.file; }, 1300);
             } else {
-                // Simplement la phrase poétique pour l'étape II
                 m.bindPopup(`<div style="color:black; text-align:center; padding:8px;">
                     <b style="font-size:16px;">${pt.t}</b><br><br>
                     <p style="font-size:14px; line-height:1.5; margin:0;">C'est ici que Pierre Paulus a ouvert les yeux sur le monde. Dans la poésie de ces rues, une vocation est née, transformant pour toujours la suie en lumière.</p>
