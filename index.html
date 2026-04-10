@@ -9,13 +9,14 @@
     <link rel="stylesheet" href="style.css" />
 
     <style>
-        /* Style précis pour l'image de marque */
+        /* Correction pour que l'image ne soit plus coupée et soit à la bonne taille (vignette) */
         .brand-header-main {
-            width: 100%;
-            height: 250px;
-            background: url('share-card.jpg') center center / cover no-repeat;
-            border-bottom: 3px solid #97f097;
-            margin-top: 20px; /* Espace après le slogan */
+            width: 90%;            /* Largeur d'étiquette */
+            max-width: 400px;      /* Pas trop grande */
+            height: 200px;         /* Hauteur fixe pour le centrage */
+            margin: 10px auto;     /* Centrée avec espace */
+            background: url('share-card.jpg') center center / contain no-repeat; /* JAMAIS coupée */
+            border-radius: 15px;   /* Bords arrondis comme sur tes captures */
         }
     </style>
 </head>
@@ -25,9 +26,9 @@
         <header>
             <h1>MUE.SÉUM</h1>
             <div class="subtitle">"Le Portail du Temps : L'Art s'éveille"</div>
-            
-            <div class="brand-header-main"></div>
         </header>
+
+        <div class="brand-header-main"></div>
 
         <div class="rando-card">
             <div class="brand-image"></div>
@@ -48,8 +49,7 @@
                 <button class="btn-google" onclick="allerAuDepart()">Rejoindre le Maître:Itinéraire vers le départ</button>
             </div>
         </div>
-
-        </div>
+    </div>
 
     <div id="transition-voyage">
         <div id="vortex-map"></div>
@@ -84,7 +84,6 @@
                         const parser = new DOMParser();
                         const doc = parser.parseFromString(html, 'text/html');
                         
-                        // ASPIRATION DES INFOS DEPUIS LES AUTRES INDEX
                         const titre = doc.querySelector('.rando-title')?.innerHTML || `Parcours ${i}`;
                         const brandDiv = doc.querySelector('.brand-image');
                         const photoStyle = brandDiv ? brandDiv.getAttribute('style') : "background-image: url('photo2.jpg')";
@@ -110,7 +109,7 @@
                         `;
                         container.appendChild(card);
                     })
-                    .catch(() => { /* Pas d'index suivant trouvé */ });
+                    .catch(() => { });
             }
         });
     </script>
