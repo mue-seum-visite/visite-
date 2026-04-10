@@ -4,10 +4,12 @@
     <title>MUE.SÉUM - Châtelet</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="style.css" />
+
     <style>
-        /* Style pour l'image de marque */
+        /* Style précis pour l'image de marque */
         .brand-header-main {
             width: 100%;
             height: 250px;
@@ -30,23 +32,36 @@
         <div class="rando-card">
             <div class="brand-image"></div>
             <div class="old-map-preview"></div>
+            
             <div class="rando-info">
                 <p class="rando-title">L'horizon de fer & <span class="rando-highlight">L'âme de Paulus</span></p>
+                
                 <p style="color: #97f097; font-weight: bold; margin: 5px 0; font-size: 0.9em;">📍 Itinéraire d'environ 2,5 km</p>
+                
                 <div id="distance-gps">Calcul de votre position...</div>
+                
                 <p style="font-size: 0.75em; color: #aaa; font-style: italic; margin: 10px 0; line-height: 1.2; border-top: 1px solid #333; padding-top: 8px;">
                     * Ce voyage emprunte des sentiers escarpés, là où les marches du passé ne permettent pas encore le passage des roues.
                 </p>
+                
                 <button class="btn-demarrer" onclick="lancerVoyage()">Ouvrir la porte du temps</button>
                 <button class="btn-google" onclick="allerAuDepart()">Rejoindre le Maître:Itinéraire vers le départ</button>
             </div>
         </div>
+
+        </div>
+
+    <div id="transition-voyage">
+        <div id="vortex-map"></div>
     </div>
 
-    <div id="transition-voyage"><div id="vortex-map"></div></div>
     <button id="btn-quitter-carte" onclick="quitterLaCarte()">✕ QUITTER</button>
+
     <div id="map"></div>
-    <div id="poetic-footer"><p id="poetic-text">Le voyage commence au premier regard...</p></div>
+
+    <div id="poetic-footer">
+        <p id="poetic-text">Le voyage commence au premier regard...</p>
+    </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="app.js?v=1.1"></script>
@@ -69,7 +84,7 @@
                         const parser = new DOMParser();
                         const doc = parser.parseFromString(html, 'text/html');
                         
-                        // ASPIRATION DES INFOS
+                        // ASPIRATION DES INFOS DEPUIS LES AUTRES INDEX
                         const titre = doc.querySelector('.rando-title')?.innerHTML || `Parcours ${i}`;
                         const brandDiv = doc.querySelector('.brand-image');
                         const photoStyle = brandDiv ? brandDiv.getAttribute('style') : "background-image: url('photo2.jpg')";
@@ -95,7 +110,7 @@
                         `;
                         container.appendChild(card);
                     })
-                    .catch(() => { /* Index suivant inexistant */ });
+                    .catch(() => { /* Pas d'index suivant trouvé */ });
             }
         });
     </script>
