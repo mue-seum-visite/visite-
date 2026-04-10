@@ -8,10 +8,15 @@
     <link rel="stylesheet" href="style.css" />
     <style>
         .brand-image {
-            background-size: cover;
+            /* "contain" permet de voir TOUTE la photo sans la couper */
+            background-size: contain; 
             background-position: center;
             background-repeat: no-repeat;
-            min-height: 200px;
+            /* On augmente la hauteur à 300px pour laisser de la place à la photo entière */
+            min-height: 300px; 
+            /* On met un fond noir/sombre pour combler les bords si la photo est étroite */
+            background-color: #1a1a1a; 
+            border-bottom: 1px solid #333;
         }
     </style>
 </head>
