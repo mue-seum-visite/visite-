@@ -7,6 +7,15 @@
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="style.css" />
+    <style>
+        /* Sécurité pour forcer l'affichage de l'image si elle fait de la résistance */
+        .brand-image {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 200px; /* S'assure que la zone n'est pas écrasée */
+        }
+    </style>
 </head>
 <body>
 
