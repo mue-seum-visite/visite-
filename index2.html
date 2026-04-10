@@ -7,13 +7,13 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="style.css" />
     <style>
-        /* Ce style garantit que la tour est entière dans la vignette de l'accueil */
+        /* Ce style force l'image de la Tour à être entière */
         .brand-image {
-            background-color: #1a1a1a !important;
-            background-size: contain !important;
+            background-color: #000 !important;   /* Fond noir pour combler les bords */
+            background-size: contain !important;  /* La photo n'est JAMAIS coupée */
             background-position: center !important;
             background-repeat: no-repeat !important;
-            min-height: 350px !important;
+            min-height: 250px;                   /* Hauteur plus équilibrée pour l'accueil */
             width: 100%;
             display: block;
         }
@@ -48,9 +48,7 @@
     </div>
 
     <div id="transition-voyage"><div id="vortex-map"></div></div>
-    
     <button id="btn-quitter-carte" onclick="window.location.href='index.html'">✕ RETOUR AU MENU</button>
-    
     <div id="map"></div>
     <div id="poetic-footer"><p id="poetic-text">L'eau murmure les secrets de la tour...</p></div>
 
