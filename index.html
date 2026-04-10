@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -36,7 +35,7 @@
                 <button class="btn-google" onclick="allerAuDepart()">Rejoindre le Maître:Itinéraire vers le départ</button>
             </div>
         </div>
-    </div>
+        </div>
 
     <div id="transition-voyage">
         <div id="vortex-map"></div>
@@ -51,8 +50,38 @@
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    
     <script src="app.js?v=1.1"></script>
+
+    <script>
+        window.addEventListener('load', () => {
+            const container = document.querySelector('#ui-explorer');
+            const maxParcours = 10; // Il cherchera jusqu'à 10 parcours
+
+            for (let i = 2; i <= maxParcours; i++) {
+                const urlTest = `index${i}.html`;
+
+                fetch(urlTest, { method: 'HEAD' })
+                    .then(response => {
+                        if (response.ok) {
+                            const card = document.createElement('div');
+                            card.className = 'rando-card';
+                            card.style.marginTop = "25px";
+                            card.innerHTML = `
+                                <div class="brand-image" style="background-image: url('images/vignette${i}.jpg'); background-color: #222;"></div>
+                                <div class="rando-info">
+                                    <p class="rando-title">Portail n°${i} & <span class="rando-highlight">Nouvelle Exploration</span></p>
+                                    <p style="color: #aaa; margin: 5px 0; font-size: 0.8em;">Parcours supplémentaire détecté</p>
+                                    <button class="btn-demarrer" onclick="window.location.href='${urlTest}'">Ouvrir la porte du temps</button>
+                                    <button class="btn-google" onclick="window.location.href='${urlTest}'">Détails de l'itinéraire</button>
+                                </div>
+                            `;
+                            container.appendChild(card);
+                        }
+                    })
+                    .catch(() => { /* On ignore si le fichier n'existe pas */ });
+            }
+        });
+    </script>
 
 </body>
 </html>
