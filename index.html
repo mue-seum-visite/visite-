@@ -29,7 +29,7 @@
                 <button class="btn-google" onclick="allerAuDepart()">Rejoindre le Maître:Itinéraire vers le départ</button>
             </div>
         </div>
-        </div>
+    </div>
 
     <div id="transition-voyage"><div id="vortex-map"></div></div>
     <button id="btn-quitter-carte" onclick="quitterLaCarte()">✕ QUITTER</button>
@@ -37,7 +37,9 @@
     <div id="poetic-footer"><p id="poetic-text">Le voyage commence au premier regard...</p></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
     <script src="app.js?v=1.1"></script>
+    <script src="app2.js"></script>
 
     <script>
         window.addEventListener('load', () => {
@@ -58,12 +60,9 @@
                         
                         // ASPIRATION DES INFOS
                         const titre = doc.querySelector('.rando-title')?.innerHTML || `Parcours ${i}`;
-                        
-                        // CORRECTION PHOTO : On récupère l'URL proprement
                         const brandDiv = doc.querySelector('.brand-image');
                         const photoStyle = brandDiv ? brandDiv.getAttribute('style') : "background-image: url('photo2.jpg')";
 
-                        // CORRECTION TEXTES : On cible précisément les paragraphes
                         const randoInfo = doc.querySelector('.rando-info');
                         const distance = randoInfo?.querySelector('p:nth-of-type(1)')?.innerHTML || "";
                         const textePoetique = randoInfo?.querySelector('p:last-of-type')?.innerHTML || "";
@@ -79,8 +78,8 @@
                                 <p style="font-size: 0.75em; color: #aaa; font-style: italic; margin: 10px 0; border-top: 1px solid #333; padding-top: 8px;">
                                     ${textePoetique}
                                 </p>
-                                <button class="btn-demarrer" onclick="window.location.href='${urlTest}'">Ouvrir la porte du temps</button>
-                                <button class="btn-google" onclick="window.location.href='${urlTest}'">Itinéraire</button>
+                                <button class="btn-demarrer" onclick="lancerVoyage${i}()">Ouvrir la porte du temps</button>
+                                <button class="btn-google" onclick="allerAuDepart${i}()">Itinéraire</button>
                             </div>
                         `;
                         container.appendChild(card);
