@@ -2,8 +2,9 @@
 const departPontDeLoup = [50.417276, 4.543625];
 let map2;
 
-// 1. OUVRE GOOGLE MAPS POUR ALLER AU DÉPART
+// 1. OUVRE GOOGLE MAPS POUR ALLER AU DÉPART (CORRIGÉ)
 function allerAuDepart2() {
+    // Correction de l'URL Google Maps
     const url = `https://www.google.com/maps/dir/?api=1&destination=${departPontDeLoup[0]},${departPontDeLoup[1]}`;
     window.open(url, '_blank');
 }
@@ -15,7 +16,6 @@ function scriptDistance2() {
             const userLat = position.coords.latitude;
             const userLon = position.coords.longitude;
             
-            // Formule de Haversine pour calculer la distance
             const R = 6371; 
             const dLat = (userLat - departPontDeLoup[0]) * Math.PI / 180;
             const dLon = (userLon - departPontDeLoup[1]) * Math.PI / 180;
@@ -34,32 +34,43 @@ function scriptDistance2() {
     }
 }
 
-// 3. LANCEMENT DU VOYAGE (OUVERTURE DE LA CARTE)
+// 3. LANCEMENT DU VOYAGE AVEC LA VIDÉO (CORRIGÉ)
 function lancerVoyage2() {
-    document.getElementById('transition-voyage').style.display = 'flex';
+    const transition = document.getElementById('transition-voyage');
+    const video = document.getElementById('video-vortex');
     
+    // On affiche l'écran noir et on lance la vidéo
+    transition.style.display = 'flex';
+    if (video) {
+        video.play();
+    }
+    
+    // On attend 4 secondes (pour laisser le temps à la vidéo de jouer)
     setTimeout(() => {
-        document.getElementById('transition-voyage').style.display = 'none';
+        transition.style.display = 'none';
         document.getElementById('ui-explorer').style.display = 'none';
-        document.getElementById('map').style.visibility = 'visible';
+        
+        // On affiche la carte
+        const mapDiv = document.getElementById('map');
+        mapDiv.style.display = 'block';
+        mapDiv.style.visibility = 'visible';
+        
         document.getElementById('btn-quitter-carte').style.display = 'block';
         document.getElementById('poetic-footer').style.display = 'block';
 
         initMap2();
-    }, 1500);
+    }, 4000); // 4000ms = 4 secondes d'immersion vidéo
 }
 
 function initMap2() {
-    if (map2) return; // Évite de recréer la carte si elle existe déjà
+    if (map2) return;
 
-    // On centre la carte sur le départ
     map2 = L.map('map').setView(departPontDeLoup, 17);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap'
     }).addTo(map2);
 
-    // TRACÉ GPX (Points extraits de ton fichier)
     const tracePoints = [
         [50.417269, 4.543662],
         [50.417471, 4.543954],
@@ -69,14 +80,14 @@ function initMap2() {
         [50.418246, 4.543846]
     ];
 
-    // On dessine le trait bleu du parcours
     L.polyline(tracePoints, {color: '#8cb6d1', weight: 6, opacity: 0.8}).addTo(map2);
     
-    // MARQUEUR DE DÉPART (LA TOUR)
     L.marker(departPontDeLoup).addTo(map2)
         .bindPopup("<b>La Tour de Pont-de-Loup</b><br>Le voyage commence ici.")
         .openPopup();
+
+    // Petit rafraîchissement pour être sûr que la carte s'affiche sur mobile
+    setTimeout(() => { map2.invalidateSize(); }, 200);
 }
 
-// Active le calcul de distance dès l'ouverture
 scriptDistance2();
