@@ -2,7 +2,7 @@
 const departPontDeLoup = [50.417276, 4.543625];
 let map2;
 
-// 1. OUVRE GOOGLE MAPS (Lien corrigé pour mobile)
+// 1. OUVRE GOOGLE MAPS
 function allerAuDepart2() {
     const url = `https://www.google.com/maps/dir/?api=1&destination=${departPontDeLoup[0]},${departPontDeLoup[1]}`;
     window.open(url, '_blank');
@@ -30,19 +30,17 @@ function scriptDistance2() {
     }
 }
 
-// 3. LANCEMENT DU VOYAGE (Version optimisée anti-conflit)
+// 3. LANCEMENT DU VOYAGE (Transition Vidéo)
 function lancerVoyage2() {
     let trans = document.getElementById('transition-voyage');
     let video = document.getElementById('video-vortex');
     const explorer = document.getElementById('ui-explorer');
 
-    // SÉCURITÉ : Nettoyage immédiat pour éviter les interférences avec app.js
     if (explorer) {
         explorer.style.transition = "opacity 0.5s";
         explorer.style.opacity = '0';
     }
     
-    // Si la zone de transition n'existe pas du tout (cas rare), on la crée
     if (!trans) {
         trans = document.createElement('div');
         trans.id = 'transition-voyage';
@@ -50,48 +48,33 @@ function lancerVoyage2() {
         document.body.appendChild(trans);
     }
 
-    // SÉCURITÉ VIDÉO : Si on vient de l'index principal, on injecte la vidéo de force
     if (!video || video.id === "vortex-map") { 
-        console.log("Préparation du portail Pont-de-Loup...");
         trans.innerHTML = `<video id="video-vortex" playsinline muted autoplay loop style="width: 100%; height: 100%; object-fit: cover;">
                              <source src="tour-ancienne.mp4" type="video/mp4">
                            </video>`;
         video = document.getElementById('video-vortex');
     }
 
-    // DÉMARRAGE VISUEL
     trans.style.display = 'flex';
-    
     if (video) {
-        video.currentTime = 0; // On repart du début
-        video.play().catch(err => console.log("Erreur lecture vidéo:", err));
+        video.currentTime = 0;
+        video.play().catch(err => console.log("Erreur vidéo:", err));
     }
 
-    // TRANSITION VERS LA CARTE APRÈS 4 SECONDES
     setTimeout(() => {
         if (explorer) explorer.style.display = 'none';
-        
         const mapDiv = document.getElementById('map');
-        if (mapDiv) {
-            mapDiv.style.display = 'block';
-            mapDiv.style.visibility = 'visible';
-        }
+        if (mapDiv) mapDiv.style.display = 'block';
         
-        const btnQuitter = document.getElementById('btn-quitter-carte');
-        if (btnQuitter) btnQuitter.style.display = 'block';
-        
-        const footer = document.getElementById('poetic-footer');
-        if (footer) footer.style.display = 'block';
+        document.getElementById('btn-quitter-carte').style.display = 'block';
+        document.getElementById('poetic-footer').style.display = 'block';
 
-        // LANCEMENT DE LA CARTE 2
         initMap2(); 
-        
-        // On masque la vidéo proprement
         trans.style.display = 'none';
     }, 4000); 
 }
 
-// 4. INITIALISATION CARTE PONT-DE-LOUP
+// 4. INITIALISATION CARTE (CORRIGÉE AVEC LES 3 POINTS)
 function initMap2() {
     if (map2) return;
     map2 = L.map('map', { zoomControl: false }).setView(departPontDeLoup, 17);
@@ -101,14 +84,48 @@ function initMap2() {
         [50.417269, 4.543662], [50.417471, 4.543954], [50.417655, 4.543911],
         [50.417976, 4.543862], [50.418168, 4.543653], [50.418246, 4.543846]
     ];
-    
     L.polyline(tracePoints, {color: '#8cb6d1', weight: 6, opacity: 0.9}).addTo(map2);
+
+    // --- ICI SONT TES 3 POINTS D'ANIMATION ---
+    const pts2 = [
+        { latlng: [50.417946, 4.543844], phrase: "L'histoire s'éveille sous vos pas...", file: "etape_pdl_1.html" },
+        { latlng: [50.418151, 4.543544], phrase: "Une lueur du passé surgit...", file: "etape_pdl_2.html" },
+        { latlng: [50.418301, 4.543802], phrase: "Le temps retrouve ses couleurs...", file: "etape_pdl_3.html" }
+    ];
+
+    pts2.forEach((pt, i) => {
+        // Le cercle bleu ciel
+        let m = L.circleMarker(pt.latlng, {
+            radius: 18, color: '#fff', weight: 2, fillColor: '#8cb6d1', fillOpacity: 1
+        }).addTo(map2);
+
+        // L'action au clic
+        m.on('click', function() {
+            const txt = document.getElementById('poetic-text');
+            if(txt) { txt.innerText = pt.phrase; }
+            map2.flyTo(pt.latlng, 19, { animate: true, duration: 1.2 });
+            setTimeout(() => { window.location.href = pt.file; }, 1500);
+        });
+
+        // Le chiffre 1, 2, 3
+        L.marker(pt.latlng, { 
+            icon: L.divIcon({ className: 'label-etape', html: (i+1), iconSize: [24, 24], iconAnchor: [12, 12] }),
+            interactive: false 
+        }).addTo(map2);
+    });
     
-    L.marker(departPontDeLoup).addTo(map2)
-        .bindPopup("<b style='color:#000'>La Tour de Pont-de-Loup</b><br>Le voyage commence ici.");
+    L.marker(departPontDeLoup).addTo(map2).bindPopup("<b>La Tour de Pont-de-Loup</b>");
+
+    map2.locate({setView: false, watch: true});
+    map2.on('locationfound', e => {
+        if(!window.userMarker2) {
+            window.userMarker2 = L.circleMarker(e.latlng, {radius: 9, color: '#fff', weight: 3, fillColor: '#007AFF', fillOpacity: 1}).addTo(map2);
+        } else {
+            window.userMarker2.setLatLng(e.latlng);
+        }
+    });
 
     setTimeout(() => { map2.invalidateSize(); }, 300);
 }
 
-// Lancement automatique du calcul de distance
 scriptDistance2();
