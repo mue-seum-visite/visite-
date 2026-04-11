@@ -1,27 +1,36 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <title>MUE.SÉUM - Le Circuit des Mémoires</title>
+    <title>MUE.SÉUM - Pont-de-Loup</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="style2.css" />
 
     <style>
-        /* Protection de l'image pour qu'elle soit toujours entière */
+        /* RÉGLAGE TOUR : On force le "contain" pour ne JAMAIS couper le haut ou le bas */
         .brand-image {
             background-color: #000 !important;
-            min-height: 250px !important;
+            min-height: 280px !important;
             width: 100% !important;
             display: block !important;
-            background-size: contain !important;
+            background-size: contain !important; /* LA TOUR SERA ENTIÈRE ICI */
+            background-repeat: no-repeat !important;
+            background-position: center center !important;
         }
-        /* Assure que le bouton est toujours cliquable par-dessus les autres couches */
-        .btn-demarrer {
-            position: relative;
-            z-index: 10;
+
+        /* FORCE LA VIDÉO : On s'assure qu'elle prend bien toute la place */
+        #transition-voyage {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: #000;
+            z-index: 10000; /* Priorité absolue */
+            display: none; /* Activé par le JS */
+            justify-content: center;
+            align-items: center;
         }
+    </video>
     </style>
 </head>
 <body>
@@ -33,17 +42,15 @@
         </header>
 
         <div class="rando-card">
-            <div class="brand-image" style="background-image: url('photo2.jpg'); background-position: center; background-repeat: no-repeat;"></div>
+            <div class="brand-image" style="background-image: url('photo2.jpg');"></div>
             
             <div class="rando-info">
                 <p class="rando-title">Le Circuit des Mémoires & <span class="rando-highlight" style="color: #8cb6d1;">Pont-de-Loup</span></p>
-                
-                <p style="color: #8cb6d1; font-weight: bold; margin: 5px 0; font-size: 0.9em;">📍 Itinéraire d'environ 0,4 km</p>
-                
+                <p style="color: #8cb6d1; font-weight: bold; margin: 5px 0;">📍 Itinéraire d'environ 0,4 km</p>
                 <div id="distance-gps">Calcul de votre position...</div>
                 
-                <p style="font-size: 0.75em; color: #aaa; font-style: italic; margin: 10px 0; line-height: 1.2; border-top: 1px solid #333; padding-top: 8px;">
-                    * Ici, le temps s'écoule avec douceur : ce sentier a été pensé pour que chaque roue et chaque pas, même fragile, puisse voyager sans obstacle.
+                <p style="font-size: 0.75em; color: #aaa; font-style: italic; margin: 10px 0; border-top: 1px solid #333; padding-top: 8px;">
+                    * Ici, le temps s'écoule avec douceur... voyage sans obstacle.
                 </p>
 
                 <button class="btn-demarrer" onclick="lancerVoyage2()">Ouvrir la porte du temps</button>
@@ -52,22 +59,17 @@
         </div>
     </div>
 
-    <div id="transition-voyage" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; background: #000; justify-content: center; align-items: center;">
-        <video id="video-vortex" playsinline muted autoplay preload="auto" style="width: 100%; height: 100%; object-fit: cover;">
+    <div id="transition-voyage">
+        <video id="video-vortex" playsinline muted preload="auto" style="width: 100%; height: 100%; object-fit: cover;">
             <source src="tour-ancienne.mp4" type="video/mp4">
         </video>
     </div>
 
     <button id="btn-quitter-carte" onclick="window.location.href='index.html'">✕ RETOUR AU MENU</button>
-    
     <div id="map"></div>
-
-    <div id="poetic-footer">
-        <p id="poetic-text">L'eau murmure les secrets de la tour...</p>
-    </div>
+    <div id="poetic-footer"><p id="poetic-text">L'eau murmure les secrets de la tour...</p></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="app2.js"></script>
-
 </body>
 </html>
