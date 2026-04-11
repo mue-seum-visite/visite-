@@ -30,33 +30,35 @@ function scriptDistance2() {
     }
 }
 
-// 3. LANCEMENT DU VOYAGE (La fonction intelligente qui crée la vidéo si besoin)
+// 3. LANCEMENT DU VOYAGE (Version ultra-fiable)
 function lancerVoyage2() {
     let transition = document.getElementById('transition-voyage');
     let video = document.getElementById('video-vortex');
     const ui = document.getElementById('ui-explorer');
 
-    // SÉCURITÉ : Si on vient de l'index principal, le vortex n'existe pas, on le crée
-    if (!video || video.id === "vortex-map") { 
-        // On crée un nouvel écran noir spécifique pour Pont-de-Loup
+    // SÉCURITÉ : Si on est sur l'index principal et que les éléments n'existent pas
+    if (!video) {
         transition = document.createElement('div');
-        transition.style = "position:fixed; top:0; left:0; width:100%; height:100%; z-index:9999; background:#000; display:flex; justify-content:center; align-items:center;";
+        transition.id = 'transition-voyage';
+        transition.style = "position:fixed; top:0; left:0; width:100%; height:100%; z-index:10000; background:#000; display:flex; justify-content:center; align-items:center;";
         
         video = document.createElement('video');
+        video.id = 'video-vortex';
         video.src = 'tour-ancienne.mp4';
         video.muted = true;
         video.playsInline = true;
-        video.autoplay = true;
         video.style = "width:100%; height:100%; object-fit:cover;";
         
         transition.appendChild(video);
         document.body.appendChild(transition);
     }
 
-    // On affiche et on joue
+    // On affiche et on force la lecture
     transition.style.display = 'flex';
-    video.play().catch(e => console.log("Lecture auto assistée"));
+    video.currentTime = 0; // On repart du début
+    video.play().catch(e => console.log("Lecture forcée"));
 
+    // Basculement sur la carte
     setTimeout(() => {
         transition.style.display = 'none';
         if (ui) ui.style.display = 'none';
