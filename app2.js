@@ -2,9 +2,9 @@
 const departPontDeLoup = [50.417276, 4.543625];
 let map2;
 
-// 1. OUVRE GOOGLE MAPS POUR ALLER AU DÉPART (CORRIGÉ)
+// 1. OUVRE GOOGLE MAPS POUR ALLER AU DÉPART (URL NETTOYÉE)
 function allerAuDepart2() {
-    // Correction de l'URL Google Maps
+    // J'ai enlevé le "1{" qui bloquait l'adresse
     const url = `https://www.google.com/maps/dir/?api=1&destination=${departPontDeLoup[0]},${departPontDeLoup[1]}`;
     window.open(url, '_blank');
 }
@@ -34,23 +34,20 @@ function scriptDistance2() {
     }
 }
 
-// 3. LANCEMENT DU VOYAGE AVEC LA VIDÉO (CORRIGÉ)
+// 3. LANCEMENT DU VOYAGE AVEC LA VIDÉO
 function lancerVoyage2() {
     const transition = document.getElementById('transition-voyage');
     const video = document.getElementById('video-vortex');
     
-    // On affiche l'écran noir et on lance la vidéo
     transition.style.display = 'flex';
     if (video) {
         video.play();
     }
     
-    // On attend 4 secondes (pour laisser le temps à la vidéo de jouer)
     setTimeout(() => {
         transition.style.display = 'none';
         document.getElementById('ui-explorer').style.display = 'none';
         
-        // On affiche la carte
         const mapDiv = document.getElementById('map');
         mapDiv.style.display = 'block';
         mapDiv.style.visibility = 'visible';
@@ -59,7 +56,7 @@ function lancerVoyage2() {
         document.getElementById('poetic-footer').style.display = 'block';
 
         initMap2();
-    }, 4000); // 4000ms = 4 secondes d'immersion vidéo
+    }, 4000); 
 }
 
 function initMap2() {
@@ -86,7 +83,6 @@ function initMap2() {
         .bindPopup("<b>La Tour de Pont-de-Loup</b><br>Le voyage commence ici.")
         .openPopup();
 
-    // Petit rafraîchissement pour être sûr que la carte s'affiche sur mobile
     setTimeout(() => { map2.invalidateSize(); }, 200);
 }
 
