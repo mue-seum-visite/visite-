@@ -1,156 +1,312 @@
-<!DOCTYPE html>
+.<!DOCTYPE html>
+
 <html lang="fr">
+
 <head>
+
     <meta charset="utf-8">
+
     <title>MUE.SÉUM - Étape 1 : L'Accueil de Paulus</title>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+
     
+
     <style>
+
         body { margin: 0; overflow: hidden; background-color: black; font-family: sans-serif; }
+
         
+
         /* Fenêtre de texte style cinéma */
+
         #subtitles-container {
+
             position: fixed;
+
             bottom: 40px;
+
             left: 50%;
+
             transform: translateX(-50%);
+
             width: 85%;
+
             background: rgba(0, 0, 0, 0.8);
+
             border-radius: 15px;
+
             padding: 20px;
+
             z-index: 20;
+
             display: none;
+
             border: 1px solid #97f097;
+
             transition: opacity 1s;
+
         }
+
+
 
         #text-display {
+
             color: white;
+
             font-family: 'Georgia', serif;
+
             font-size: 1.1em;
+
             line-height: 1.4;
+
             text-align: center;
+
             font-style: italic;
+
         }
+
+
 
         /* Bouton central */
+
         #btn-start {
+
             position: fixed;
+
             top: 50%;
+
             left: 50%;
+
             transform: translate(-50%, -50%);
+
             z-index: 30;
+
             background: #97f097;
+
             color: black;
+
             padding: 20px 30px;
+
             border-radius: 50px;
+
             font-weight: bold;
+
             border: none;
+
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+
         }
+
+
 
         #vid-paulus {
+
             position: fixed;
+
             top: 0;
+
             left: 0;
+
             width: 100vw;
+
             height: 100vh;
+
             object-fit: cover;
+
             opacity: 0;
+
             z-index: 5;
+
             transition: opacity 2s;
+
         }
 
+
+
         .btn-retour {
+
             position: fixed;
+
             top: 20px;
+
             left: 20px;
+
             z-index: 100;
+
             background: rgba(0,0,0,0.5);
+
             color: white;
+
             padding: 10px;
+
             border-radius: 10px;
+
             text-decoration: none;
+
             font-size: 12px;
+
             border: 1px solid white;
+
         }
+
     </style>
+
 </head>
+
+
 
 <body>
 
+
+
     <a href="index.html?map=true" class="btn-retour">← RETOUR CARTE</a>
+
     
+
     <button id="btn-start">ÉCOUTER PIERRE PAULUS</button>
 
+
+
     <video id="vid-paulus" 
+
             src="paulus_intro.mp4" 
+
             loop="true" 
+
             muted="true"
+
             playsinline 
+
             webkit-playsinline>
+
     </video>
 
+
+
     <div id="subtitles-container">
+
         <div id="text-display"></div>
+
     </div>
 
+
+
     <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: false">
+
         <a-entity camera></a-entity>
+
     </a-scene>
 
+
+
     <script>
+
         const video = document.getElementById('vid-paulus');
+
         const btn = document.getElementById('btn-start');
+
         const subContainer = document.getElementById('subtitles-container');
+
         const textDisplay = document.getElementById('text-display');
 
+
+
         const message = [
+
             "Bienvenue chez moi, à Châtelet...",
+
             "Vous marchez dans mes pas, là où mon regard s'est posé pour la première fois.",
+
             "On m'appelle le peintre du Pays Noir, pour la sueur des hommes et le cri des usines.",
+
             "Mais sachez qu'au-delà des ombres, mon pinceau a aussi fait naître le Coq Hardi.",
+
             "Ce symbole de fierté qui nous unit tous...",
+
             "Durant ce parcours, voyez la lumière derrière la suie.",
+
             "Laissez-moi vous guider à travers mes souvenirs."
+
         ];
 
+
+
         let lineIndex = 0;
+
         let textInterval;
 
+
+
         function showNextLine() {
+
             if (lineIndex < message.length) {
+
                 textDisplay.style.opacity = 0;
+
                 setTimeout(() => {
+
                     textDisplay.innerHTML = message[lineIndex];
+
                     textDisplay.style.opacity = 1;
+
                     lineIndex++;
+
                 }, 500);
+
             } else {
+
                 clearInterval(textInterval);
+
                 setTimeout(() => {
+
                     video.style.opacity = "0"; 
+
                     subContainer.style.opacity = "0";
+
                     setTimeout(() => {
+
                         video.pause();
+
                         subContainer.style.display = 'none';
+
                     }, 2000);
+
                 }, 4000);
+
             }
+
         }
 
+
+
         btn.addEventListener('click', function() {
+
             btn.style.display = 'none';
+
             video.play();
+
             // MODIFICATION ICI : Opacité à 0.6 pour voir à travers
+
             video.style.opacity = "0.6"; 
+
             subContainer.style.display = 'block';
+
             
+
             showNextLine();
+
             textInterval = setInterval(showNextLine, 6000);
+
         });
+
     </script>
+
 </body>
+
 </html>
+
