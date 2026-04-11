@@ -1,0 +1,111 @@
+/* --- BASE & STRUCTURE (Spécifique Pont-de-Loup) --- */
+body { 
+    margin:0; padding:0; background: #000; color: white; 
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+    min-height: 100vh; overflow-x: hidden; 
+}
+
+#ui-explorer { padding-bottom: 60px; transition: opacity 0.8s ease; }
+
+header { background: #000; padding: 40px 20px 10px; text-align: center; }
+header h1 { font-size: 32px; letter-spacing: 5px; font-weight: 900; margin: 0; text-transform: uppercase; }
+.subtitle { font-size: 14px; color: #8cb6d1; margin-top: 10px; font-style: italic; }
+
+/* --- CARTE DE PRÉSENTATION --- */
+.rando-card { background: #1c1c1e; border-radius: 28px; overflow: hidden; margin: 20px; border: 1px solid #333; }
+
+/* On garde ton réglage précieux pour l'image de la Tour */
+.brand-image { 
+    width: 100%; 
+    min-height: 250px !important; 
+    background-color: #000 !important; 
+    background-position: center center; 
+    background-repeat: no-repeat; 
+    border-bottom: 2px solid #333; 
+    background-size: contain !important; /* Pour ne pas couper la tour */
+}
+
+.rando-info { padding: 25px; text-align: center; }
+.rando-title { font-size: 1.5em; font-weight: 300; margin-bottom: 10px; color: #fff; line-height: 1.3; }
+.rando-highlight { color: #8cb6d1; font-weight: 800; text-transform: uppercase; display: block; }
+#distance-gps { color: #8e8e93; font-size: 12px; margin: 10px 0; letter-spacing: 1px; }
+
+/* --- BOUTONS (Adaptés en bleu) --- */
+.btn-demarrer { 
+    width: 100%; 
+    background: linear-gradient(135deg, #4a6679 0%, #2c3e50 100%); 
+    color: #fff; 
+    padding: 22px; 
+    border-radius: 20px; 
+    font-weight: 900; 
+    border: none; 
+    cursor: pointer; 
+    text-transform: uppercase; 
+    font-size: 1.1em; 
+    transition: transform 0.2s; 
+}
+.btn-demarrer:active { transform: scale(0.98); }
+
+.btn-google { 
+    width: 100%; 
+    background: transparent; 
+    color: #8cb6d1; 
+    padding: 15px; 
+    border-radius: 20px; 
+    border: 1px solid #8cb6d1; 
+    font-weight: bold; 
+    margin-top: 10px; 
+    cursor: pointer; 
+}
+
+/* --- TRANSITION VIDÉO D'IMMERSION --- */
+#transition-voyage { 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    z-index: 9999; 
+    display: none; 
+    background: #000; 
+}
+
+#video-vortex { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; /* La vidéo remplit l'écran du GSM */
+}
+
+/* --- INTERFACE CARTE --- */
+#map { height: 100vh; width: 100vw; display: none; background: #fff; position: fixed; top: 0; left: 0; }
+#btn-quitter-carte { 
+    position: fixed; 
+    top: 25px; 
+    right: 20px; 
+    z-index: 5000; 
+    background: rgba(255,255,255,0.9); 
+    color: #000; 
+    border: 2px solid #000; 
+    padding: 12px 20px; 
+    border-radius: 50px; 
+    font-weight: bold; 
+    display: none; 
+    cursor: pointer; 
+}
+
+/* --- BANDEAU POÉTIQUE --- */
+#poetic-footer {
+    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px);
+    border: 1px solid #8cb6d1; padding: 15px 25px; border-radius: 40px;
+    z-index: 4500; display: none; width: 85%; max-width: 400px; text-align: center;
+}
+#poetic-text {
+    color: #8cb6d1; font-style: italic; font-size: 13px; margin: 0;
+    overflow: hidden; border-right: 2px solid #8cb6d1; white-space: nowrap;
+    animation: typing 3s steps(30, end), blink-caret .75s step-end infinite;
+}
+
+/* --- ANIMATIONS --- */
+@keyframes typing { from { width: 0 } to { width: 100% } }
+@keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: #8cb6d1; } }
