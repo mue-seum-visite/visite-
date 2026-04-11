@@ -4,7 +4,6 @@ let map2;
 
 // 1. OUVRE GOOGLE MAPS POUR ALLER AU DÉPART (URL NETTOYÉE)
 function allerAuDepart2() {
-    // J'ai enlevé le "1{" qui bloquait l'adresse
     const url = `https://www.google.com/maps/dir/?api=1&destination=${departPontDeLoup[0]},${departPontDeLoup[1]}`;
     window.open(url, '_blank');
 }
@@ -34,14 +33,18 @@ function scriptDistance2() {
     }
 }
 
-// 3. LANCEMENT DU VOYAGE AVEC LA VIDÉO
+// 3. LANCEMENT DU VOYAGE AVEC LA VIDÉO (MODIFIÉ POUR ÉVITER L'ÉCRAN NOIR)
 function lancerVoyage2() {
     const transition = document.getElementById('transition-voyage');
     const video = document.getElementById('video-vortex');
     
     transition.style.display = 'flex';
+    
     if (video) {
-        video.play();
+        video.load(); // Force le chargement du fichier mp4 immédiatement
+        video.play().catch(error => {
+            console.log("Lecture auto bloquée, tentative de relance...");
+        });
     }
     
     setTimeout(() => {
@@ -69,21 +72,3 @@ function initMap2() {
     }).addTo(map2);
 
     const tracePoints = [
-        [50.417269, 4.543662],
-        [50.417471, 4.543954],
-        [50.417655, 4.543911],
-        [50.417976, 4.543862],
-        [50.418168, 4.543653],
-        [50.418246, 4.543846]
-    ];
-
-    L.polyline(tracePoints, {color: '#8cb6d1', weight: 6, opacity: 0.8}).addTo(map2);
-    
-    L.marker(departPontDeLoup).addTo(map2)
-        .bindPopup("<b>La Tour de Pont-de-Loup</b><br>Le voyage commence ici.")
-        .openPopup();
-
-    setTimeout(() => { map2.invalidateSize(); }, 200);
-}
-
-scriptDistance2();
