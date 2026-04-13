@@ -10,7 +10,6 @@
     <style>
         body { margin: 0; overflow: hidden; background-color: black; font-family: sans-serif; }
         
-        /* Fenêtre de texte - Style PDL */
         #subtitles-container {
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
             width: 85%; background: rgba(0, 0, 0, 0.8); border-radius: 15px;
@@ -23,7 +22,6 @@
             line-height: 1.4; text-align: center; font-style: italic;
         }
 
-        /* Bouton d'activation */
         #btn-start {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             z-index: 100; background: #8cb6d1; color: black; padding: 20px 30px;
@@ -51,16 +49,16 @@
 
     <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: false">
         <a-assets>
-            <a-asset-item id="louis3D" src="https://vazgriz.github.io/vazgriz/models/knight.glb"></a-asset-item>
+            <a-asset-item id="louis3D" src="https://raw.githubusercontent.com/google/model-viewer/master/packages/shared-assets/models/DamagedHelmet.glb"></a-asset-item>
         </a-assets>
 
         <a-entity id="cavalier"
                   gltf-model="#louis3D" 
-                  scale="1.2 1.2 1.2" 
-                  position="0 0.5 -4" 
-                  rotation="0 40 0"
+                  scale="1.5 1.5 1.5" 
+                  position="0 1.2 -3" 
+                  rotation="0 0 0"
                   visible="false"
-                  animation="property: rotation; to: 0 400 0; loop: true; dur: 25000; easing: linear">
+                  animation="property: rotation; to: 0 360 0; loop: true; dur: 15000; easing: linear">
         </a-entity>
 
         <a-entity camera></a-entity>
@@ -98,10 +96,12 @@
         btn.addEventListener('click', function() {
             btn.style.display = 'none';
             subContainer.style.display = 'block';
-            cavalier.setAttribute('visible', 'true'); // Le chevalier apparaît !
+            
+            // Apparition du modèle
+            cavalier.setAttribute('visible', 'true'); 
             
             showNextLine();
-            setInterval(showNextLine, 8000);
+            setInterval(showNextLine, 8500);
         });
     </script>
 </body>
