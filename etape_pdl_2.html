@@ -48,14 +48,15 @@
     </div>
 
     <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: false">
+        
         <a-assets>
-            <a-asset-item id="louis3D" src="https://raw.githubusercontent.com/google/model-viewer/master/packages/shared-assets/models/DamagedHelmet.glb"></a-asset-item>
+            <a-asset-item id="test3D" src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Astronaut/glTF-Binary/Astronaut.glb"></a-asset-item>
         </a-assets>
 
         <a-entity id="cavalier"
-                  gltf-model="#louis3D" 
-                  scale="1.5 1.5 1.5" 
-                  position="0 1.2 -3" 
+                  gltf-model="#test3D" 
+                  scale="0.5 0.5 0.5" 
+                  position="0 0 -3" 
                   rotation="0 0 0"
                   visible="false"
                   animation="property: rotation; to: 0 360 0; loop: true; dur: 15000; easing: linear">
@@ -97,7 +98,7 @@
             btn.style.display = 'none';
             subContainer.style.display = 'block';
             
-            // Apparition du modèle
+            // L'astronaute apparaît !
             cavalier.setAttribute('visible', 'true'); 
             
             showNextLine();
