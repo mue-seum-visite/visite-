@@ -2,87 +2,61 @@
 <html lang="fr">
 <head>
     <meta charset="utf-8">
-    <title>Pont-de-Loup - Étape 2 : L'Empereur</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <title>Pont-de-Loup - Étape 2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     
     <style>
-        body { margin: 0; overflow: hidden; background-color: black; font-family: sans-serif; }
-        
+        body { margin: 0; font-family: sans-serif; background: #000; }
+        model-viewer {
+            width: 100vw; height: 100vh; background-color: #222;
+        }
         #subtitles-container {
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
             width: 85%; background: rgba(0, 0, 0, 0.8); border-radius: 15px;
-            padding: 20px; z-index: 20; display: none; border: 1px solid #8cb6d1;
-            transition: opacity 1s;
+            padding: 20px; z-index: 20; border: 1px solid #8cb6d1; text-align: center;
         }
-
-        #text-display {
-            color: white; font-family: 'Georgia', serif; font-size: 0.95em;
-            line-height: 1.4; text-align: center; font-style: italic;
-        }
-
-        #btn-start {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            z-index: 100; background: #8cb6d1; color: black; padding: 20px 30px;
-            border-radius: 50px; font-weight: bold; border: none; cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5); text-transform: uppercase;
-        }
-
+        #text-display { color: white; font-style: italic; transition: opacity 0.5s; }
         .btn-retour {
             position: fixed; top: 20px; left: 20px; z-index: 100;
             background: rgba(0,0,0,0.5); color: white; padding: 10px;
-            border-radius: 10px; text-decoration: none; font-size: 12px; border: 1px solid white;
+            border-radius: 10px; text-decoration: none; font-size: 12px;
         }
     </style>
 </head>
-
 <body>
 
     <a href="index.html?map=true" class="btn-retour">← RETOUR CARTE</a>
 
-    <button id="btn-start">VOIR L'EMPEREUR</button>
-
-    <div id="subtitles-container">
-        <div id="text-display">Initialisation...</div>
-    </div>
-
-    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: false">
+    <model-viewer 
+        src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Astronaut/glTF-Binary/Astronaut.glb" 
+        ar ar-modes="webxr scene-viewer quick-look" 
+        camera-controls 
+        auto-rotate 
+        shadow-intensity="1">
         
-        <a-assets>
-            <a-asset-item id="test3D" src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Astronaut/glTF-Binary/Astronaut.glb"></a-asset-item>
-        </a-assets>
+        <button slot="ar-button" style="background-color: white; border-radius: 4px; border: none; position: absolute; top: 20px; right: 20px; padding: 10px;">
+            👋 ACTIVER LA RÉALITÉ AUGMENTÉE
+        </button>
 
-        <a-entity id="cavalier"
-                  gltf-model="#test3D" 
-                  scale="0.5 0.5 0.5" 
-                  position="0 0 -3" 
-                  rotation="0 0 0"
-                  visible="false"
-                  animation="property: rotation; to: 0 360 0; loop: true; dur: 15000; easing: linear">
-        </a-entity>
-
-        <a-entity camera></a-entity>
-    </a-scene>
+        <div id="subtitles-container">
+            <div id="text-display">Chargement de l'histoire...</div>
+        </div>
+    </model-viewer>
 
     <script>
         const textDisplay = document.getElementById('text-display');
-        const btn = document.getElementById('btn-start');
-        const subContainer = document.getElementById('subtitles-container');
-        const cavalier = document.getElementById('cavalier');
-
         const message = [
             "Le village de Pont-de-Loup est riche d’un passé prestigieux, autrefois domaine de Louis le Pieux, fils de Charlemagne.",
-            "De cette époque subsiste la tour classée de l’ancienne église Saint-Anaclet, personnage méconnu aussi appelé Clet.",
-            "Élu troisième pape de la Chrétienté après saint Pierre, il mourut en martyr à la fin du premier siècle.",
-            "Les vestiges de l'église, de style roman, se dressent au milieu du cimetière d’honneur des combattants.",
-            "Le site conserve les tombes des héros des deux guerres mondiales, mais aussi de la révolution de 1830.",
-            "Au XVIe siècle, un vaisseau gothique remplaça la nef romane, avant d'être finalement démoli en 1861.",
-            "Classé depuis 1972, ce site abrite aussi une source miraculeuse réputée pour guérir la surdité."
+            "De cette époque subsiste la tour classée de l’ancienne église Saint-Anaclet.",
+            "Élu troisième pape de la Chrétienté après saint Pierre, il mourut en martyr.",
+            "Les vestiges de l'église se dressent au milieu du cimetière d’honneur.",
+            "Le site conserve les tombes des héros des deux guerres et de 1830.",
+            "Un vaisseau gothique remplaça la nef romane avant d'être démoli en 1861.",
+            "Ce site abrite aussi une source miraculeuse réputée pour guérir la surdité."
         ];
 
         let lineIndex = 0;
-
         function showNextLine() {
             if (lineIndex < message.length) {
                 textDisplay.style.opacity = 0;
@@ -93,17 +67,8 @@
                 }, 500);
             }
         }
-
-        btn.addEventListener('click', function() {
-            btn.style.display = 'none';
-            subContainer.style.display = 'block';
-            
-            // L'astronaute apparaît !
-            cavalier.setAttribute('visible', 'true'); 
-            
-            showNextLine();
-            setInterval(showNextLine, 8500);
-        });
+        setInterval(showNextLine, 8000);
+        showNextLine();
     </script>
 </body>
 </html>
