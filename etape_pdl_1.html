@@ -10,7 +10,6 @@
     <style>
         body { margin: 0; overflow: hidden; background-color: black; font-family: sans-serif; }
         
-        /* Fenêtre de texte style cinéma - COULEUR BLEU PDL */
         #subtitles-container {
             position: fixed;
             bottom: 40px;
@@ -22,7 +21,7 @@
             padding: 20px;
             z-index: 20;
             display: none;
-            border: 1px solid #8cb6d1; /* Bleu ciel */
+            border: 1px solid #8cb6d1;
             transition: opacity 1s;
         }
 
@@ -35,14 +34,13 @@
             font-style: italic;
         }
 
-        /* Bouton central - COULEUR BLEU PDL */
         #btn-start {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 30;
-            background: #8cb6d1; /* Bleu ciel */
+            background: #8cb6d1;
             color: black;
             padding: 20px 30px;
             border-radius: 50px;
@@ -52,7 +50,6 @@
             text-transform: uppercase;
         }
 
-        /* La vidéo du soldat animée */
         #vid-soldat {
             position: fixed;
             top: 0;
@@ -90,6 +87,7 @@
     <video id="vid-soldat" 
             src="video_pdl_1.mp4" 
             loop="true" 
+            muted
             playsinline 
             webkit-playsinline>
     </video>
@@ -111,12 +109,8 @@
         const subContainer = document.getElementById('subtitles-container');
         const textDisplay = document.getElementById('text-display');
 
-        // TON NOUVEAU TEXTE POUR PONT-DE-LOUP
         const message = [
             "Bonjour à toi, voyageur. Sois le bienvenu ici, au pied de notre vieille Tour.",
-            "Tu vois, le sang des hommes a cessé de couler...",
-            "Mais la Sambre, elle, continue son chemin, immuable.",
-            "Elle emporte avec elle nos souvenirs et nos peines.",
             "Si tu m'écoutes aujourd'hui, souviens-toi : la paix est un trésor...",
             "...qu'on ne réalise qu'une fois perdu.",
             "Ne laisse pas la haine construire le monde de demain."
@@ -140,7 +134,7 @@
                     subContainer.style.opacity = "0";
                     setTimeout(() => {
                         video.pause();
-                        audio.pause();
+                        if(audio) audio.pause();
                         subContainer.style.display = 'none';
                     }, 2000);
                 }, 5000);
@@ -150,16 +144,18 @@
         btn.addEventListener('click', function() {
             btn.style.display = 'none';
             
-            // Lancement vidéo + audio
+            // RALENTIR LA VIDÉO (0.7 = 70% de la vitesse)
+            // Cela rendra le clip plus long et les lèvres plus fluides
+            video.playbackRate = 0.7;
+
             video.play();
-            audio.play();
+            // On lance l'audio MP3 (qui lui reste à vitesse normale)
+            if(audio) audio.play();
             
-            // Effet fantôme : opacité à 0.7 pour voir la rue à travers le soldat
             video.style.opacity = "0.7"; 
             subContainer.style.display = 'block';
             
             showNextLine();
-            // On change de phrase toutes les 6 secondes
             textInterval = setInterval(showNextLine, 6000);
         });
     </script>
