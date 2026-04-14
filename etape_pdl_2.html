@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="utf-8">
-    <title>Pont-de-Loup - Étape 2 : Louis le Pieux</title>
+    <title>Pont-de-Loup - Étape 2 : L'Empereur</title>
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
     <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
@@ -10,39 +10,37 @@
     <style>
         body { margin: 0; overflow: hidden; font-family: sans-serif; }
         
-        /* Bouton Retour Carte */
+        /* Bouton Retour - Plus petit et tout en haut pour ne pas gêner */
         .btn-retour {
             position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 1000; /* Pour être au-dessus de tout */
-            background: rgba(140, 182, 209, 0.9); /* Couleur bleue PDL */
-            color: black;
-            padding: 12px 20px;
-            border-radius: 50px;
+            top: 10px;
+            left: 10px;
+            z-index: 9999;
+            background: rgba(0, 0, 0, 0.5); /* Plus discret */
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
             text-decoration: none;
-            font-weight: bold;
-            font-size: 14px;
-            border: 2px solid white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            font-size: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
         }
 
         #subtitles-container {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            width: 85%; background: rgba(0, 0, 0, 0.8); border-radius: 15px;
-            padding: 15px; z-index: 100; border: 1px solid #8cb6d1; text-align: center;
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 85%; background: rgba(0, 0, 0, 0.8); border-radius: 12px;
+            padding: 12px; z-index: 100; border: 1px solid #8cb6d1; text-align: center;
         }
 
-        #text-display { color: white; font-family: 'Georgia', serif; font-size: 0.9em; font-style: italic; line-height: 1.4; }
+        #text-display { color: white; font-family: 'Georgia', serif; font-size: 0.9em; font-style: italic; line-height: 1.3; }
     </style>
 </head>
 
 <body>
 
-    <a href="index.html?map=true" class="btn-retour">← RETOUR À LA CARTE</a>
+    <a href="index.html?map=true" class="btn-retour">← CARTE</a>
 
     <div id="subtitles-container">
-        <div id="text-display">Initialisation de la rencontre...</div>
+        <div id="text-display">Initialisation...</div>
     </div>
 
     <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: false">
@@ -53,9 +51,9 @@
 
         <a-image 
             src="#perso" 
-            position="0 0.5 -4" 
-            width="1.2" 
-            height="1.8"
+            position="0 0.4 -4" 
+            width="1.1" 
+            height="1.7"
             look-at="[camera]">
         </a-image>
 
@@ -66,12 +64,12 @@
         const textDisplay = document.getElementById('text-display');
         const phrases = [
             "Le village de Pont-de-Loup est riche d’un passé prestigieux, autrefois domaine de Louis le Pieux, fils de Charlemagne.",
-            "De cette époque subsiste la tour classée de l’ancienne église Saint-Anaclet, personnage méconnu aussi appelé Clet.",
-            "Élu troisième pape de la Chrétienté après saint Pierre, il mourut en martyr à la fin du premier siècle.",
-            "Les vestiges de l'église, de style roman, se dressent au milieu du cimetière d’honneur des combattants.",
-            "Le site conserve les tombes des héros des deux guerres mondiales, mais aussi de la révolution de 1830.",
-            "Au XVIe siècle, un vaisseau gothique remplaça la nef romane, avant d'être finalement démoli en 1861.",
-            "Classé depuis 1972, ce site abrite aussi une source miraculeuse réputée pour guérir la surdité."
+            "De cette époque subsiste la tour classée de l’ancienne église Saint-Anaclet.",
+            "Élu troisième pape de la Chrétienté après saint Pierre, il mourut en martyr.",
+            "Les vestiges de l'église se dressent au milieu du cimetière d’honneur.",
+            "Le site conserve les tombes des héros des deux guerres et de 1830.",
+            "Un vaisseau gothique remplaça la nef romane avant d'être finalement démoli en 1861.",
+            "Ce site abrite aussi une source miraculeuse réputée pour guérir la surdité."
         ];
 
         let index = 0;
