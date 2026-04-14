@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>Pont-de-Loup - Étape 3 : Le Secret de la Source</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    
+    <style>
+        body { margin: 0; overflow: hidden; background-color: black; font-family: sans-serif; }
+        
+        .btn-retour {
+            position: fixed; top: 20px; left: 20px; z-index: 100;
+            background: rgba(0,0,0,0.6); color: white; padding: 12px 18px;
+            border-radius: 10px; text-decoration: none; font-size: 14px;
+            font-weight: bold; border: 1px solid #8cb6d1;
+        }
+
+        #subtitles-container {
+            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+            width: 85%; background: rgba(0, 0, 0, 0.8); border-radius: 15px;
+            padding: 20px; z-index: 20; display: none; border: 1px solid #8cb6d1;
+        }
+
+        #text-display {
+            color: white; font-family: 'Georgia', serif; font-size: 1.1em;
+            line-height: 1.4; text-align: center; font-style: italic;
+        }
+
+        #btn-start {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 30; background: #8cb6d1; color: black; padding: 20px 30px;
+            border-radius: 50px; font-weight: bold; border: none; text-transform: uppercase;
+        }
+
+        #vid-final {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            object-fit: cover; opacity: 0; z-index: 5; transition: opacity 2s;
+        }
+    </style>
+</head>
+
+<body>
+
+    <a href="index2.html?map=true" class="btn-retour">← RETOUR CARTE</a>
+    
+    <button id="btn-start">DÉCOUVRIR LE SECRET</button>
+
+    <video id="vid-final" src="video_pdl_3.mp4" loop="true" muted playsinline webkit-playsinline></video>
+    <audio id="audio-final" src="audio_pdl_3.mp3"></audio>
+
+    <div id="subtitles-container">
+        <div id="text-display"></div>
+    </div>
+
+    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: false">
+        <a-entity camera></a-entity>
+    </a-scene>
+
+    <script>
+        const video = document.getElementById('vid-final');
+        const audio = document.getElementById('audio-final');
+        const btn = document.getElementById('btn-start');
+        const subContainer = document.getElementById('subtitles-container');
+        const textDisplay = document.getElementById('text-display');
+
+        // Tu peux changer les textes ici pour ton final
+        const message = [
+            "Te voici au terme de ton voyage à travers le temps.",
+            "Ici, l'eau et la pierre gardent la mémoire de Pont-de-Loup.",
+            "Repars avec ces histoires, elles sont désormais les tiennes.",
+            "À bientôt, voyageur du temps."
+        ];
+
+        let lineIndex = 0;
+        let textInterval;
+
+        function showNextLine() {
+            if (lineIndex < message.length) {
+                textDisplay.innerHTML = message[lineIndex];
+                subContainer.style.display = 'block';
+                lineIndex++;
+            } else {
+                clearInterval(textInterval);
+                setTimeout(() => {
+                    video.style.opacity = "0";
+                    subContainer.style.opacity = "0";
+                    setTimeout(() => { video.pause(); }, 2000);
+                }, 3000);
+            }
+        }
+
+        btn.addEventListener('click', function() {
+            btn.style.display = 'none';
+            video.play();
+            if(audio) audio.play();
+            video.style.opacity = "0.7"; 
+            showNextLine();
+            textInterval = setInterval(showNextLine, 5000);
+        });
+    </script>
+</body>
+</html>
