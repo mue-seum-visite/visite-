@@ -2,45 +2,37 @@
 <html lang="fr">
 <head>
     <meta charset="utf-8">
-    <title>Test AR Simple</title>
+    <title>Scan AR - Pont-de-Loup</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     <style>
-        body { margin: 0; overflow: hidden; background-color: #f0f0f0; }
-        model-viewer { width: 100vw; height: 100vh; }
-        
-        #ar-button {
-            background-color: #007bff;
-            color: white;
-            border-radius: 8px;
-            border: none;
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 15px 25px;
-            font-size: 16px;
-            font-weight: bold;
-            z-index: 100;
-        }
+        body { margin: 0; background-color: #000; }
+        model-viewer { width: 100vw; height: 100vh; display: none; } /* On cache l'aperçu */
     </style>
 </head>
 <body>
 
-    <model-viewer 
+    <model-viewer id="viewer"
         src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Astronaut/glTF-Binary/Astronaut.glb" 
         ar 
-        ar-modes="scene-viewer webxr quick-look" 
+        ar-modes="scene-viewer quick-look" 
         ar-placement="floor"
-        camera-controls 
-        auto-rotate 
-        shadow-intensity="1">
+        camera-controls>
         
-        <button slot="ar-button" id="ar-button">
-            ACTIVER LA RÉALITÉ AUGMENTÉE
-        </button>
-
+        <button slot="ar-button" id="ar-button" style="display:none;"></button>
     </model-viewer>
 
+    <script>
+        // Dès que le modèle est chargé, on force l'activation de la RA
+        const viewer = document.querySelector("#viewer");
+        const arButton = document.querySelector("#ar-button");
+
+        viewer.addEventListener('load', () => {
+            // On attend une demi-seconde et on lance le mode scan du sol
+            setTimeout(() => {
+                arButton.click();
+            }, 500);
+        });
+    </script>
 </body>
 </html>
