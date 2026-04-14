@@ -26,6 +26,11 @@
             justify-content: center;
             align-items: center;
         }
+
+        /* On cache la carte et le bouton quitter au démarrage par défaut */
+        #map, #btn-quitter-carte, #poetic-footer {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -61,11 +66,43 @@
         </video>
     </div>
 
-    <button id="btn-quitter-carte" onclick="window.location.href='index.html'">✕ RETOUR AU MENU</button>
+    <button id="btn-quitter-carte" onclick="window.location.href='index.html'">✕ QUITTER LE PARCOURS</button>
+    
     <div id="map"></div>
-    <div id="poetic-footer"><p id="poetic-text">L'eau murmure les secrets de la tour...</p></div>
+    
+    <div id="poetic-footer">
+        <p id="poetic-text">L'eau murmure les secrets de la tour...</p>
+    </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="app2.js"></script>
+
+    <script>
+        // --- LE SCRIPT DE LOGIQUE DE NAVIGATION ---
+        
+        window.onload = function() {
+            // On regarde si l'URL contient "?map=true"
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            if (urlParams.get('map') === 'true') {
+                // CAS A : On revient d'une étape RA -> On affiche directement la carte
+                document.getElementById('ui-explorer').style.display = 'none';
+                document.getElementById('map').style.display = 'block';
+                document.getElementById('btn-quitter-carte').style.display = 'block';
+                document.getElementById('poetic-footer').style.display = 'block';
+                
+                // On force Leaflet à recalculer la taille de la carte pour éviter les bugs d'affichage
+                if (typeof map !== 'undefined') {
+                    setTimeout(() => { map.invalidateSize(); }, 200);
+                }
+            } else {
+                // CAS B : On vient du menu principal -> On affiche le menu du parcours (UI Explorer)
+                document.getElementById('ui-explorer').style.display = 'block';
+                document.getElementById('map').style.display = 'none';
+                document.getElementById('btn-quitter-carte').style.display = 'none';
+                document.getElementById('poetic-footer').style.display = 'none';
+            }
+        };
+    </script>
 </body>
 </html>
