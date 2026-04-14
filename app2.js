@@ -1,6 +1,6 @@
 // CONFIGURATION DU PARCOURS PONT-DE-LOUP
 const departPontDeLoup = [50.417276, 4.543625];
-let map2;
+window.map2 = null; // On utilise window pour un accès global facile
 
 // 1. OUVRE GOOGLE MAPS
 function allerAuDepart2() {
@@ -41,20 +41,6 @@ function lancerVoyage2() {
         explorer.style.opacity = '0';
     }
     
-    if (!trans) {
-        trans = document.createElement('div');
-        trans.id = 'transition-voyage';
-        trans.style = "position:fixed; top:0; left:0; width:100%; height:100%; z-index:10000; background:#000; display:none; justify-content:center; align-items:center;";
-        document.body.appendChild(trans);
-    }
-
-    if (!video || video.id === "vortex-map") { 
-        trans.innerHTML = `<video id="video-vortex" playsinline muted autoplay loop style="width: 100%; height: 100%; object-fit: cover;">
-                             <source src="tour-ancienne.mp4" type="video/mp4">
-                           </video>`;
-        video = document.getElementById('video-vortex');
-    }
-
     trans.style.display = 'flex';
     if (video) {
         video.currentTime = 0;
@@ -63,9 +49,9 @@ function lancerVoyage2() {
 
     setTimeout(() => {
         if (explorer) explorer.style.display = 'none';
-        const mapDiv = document.getElementById('map');
-        if (mapDiv) mapDiv.style.display = 'block';
         
+        // Affichage des éléments de la carte
+        document.getElementById('map').style.display = 'block';
         document.getElementById('btn-quitter-carte').style.display = 'block';
         document.getElementById('poetic-footer').style.display = 'block';
 
@@ -74,19 +60,24 @@ function lancerVoyage2() {
     }, 4000); 
 }
 
-// 4. INITIALISATION CARTE (CORRIGÉE AVEC LES 3 POINTS)
+// 4. INITIALISATION CARTE
 function initMap2() {
-    if (map2) return;
-    map2 = L.map('map', { zoomControl: false }).setView(departPontDeLoup, 17);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map2);
+    if (window.map2) {
+        // Si la carte existe déjà, on force juste le rafraîchissement
+        window.map2.invalidateSize();
+        return;
+    }
+
+    // Création de la carte
+    window.map2 = L.map('map', { zoomControl: false }).setView(departPontDeLoup, 17);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(window.map2);
 
     const tracePoints = [
         [50.417269, 4.543662], [50.417471, 4.543954], [50.417655, 4.543911],
         [50.417976, 4.543862], [50.418168, 4.543653], [50.418246, 4.543846]
     ];
-    L.polyline(tracePoints, {color: '#8cb6d1', weight: 6, opacity: 0.9}).addTo(map2);
+    L.polyline(tracePoints, {color: '#8cb6d1', weight: 6, opacity: 0.9}).addTo(window.map2);
 
-    // --- ICI SONT TES 3 POINTS D'ANIMATION ---
     const pts2 = [
         { latlng: [50.417946, 4.543844], phrase: "L'histoire s'éveille sous vos pas...", file: "etape_pdl_1.html" },
         { latlng: [50.418151, 4.543544], phrase: "Une lueur du passé surgit...", file: "etape_pdl_2.html" },
@@ -94,38 +85,54 @@ function initMap2() {
     ];
 
     pts2.forEach((pt, i) => {
-        // Le cercle bleu ciel
         let m = L.circleMarker(pt.latlng, {
             radius: 18, color: '#fff', weight: 2, fillColor: '#8cb6d1', fillOpacity: 1
-        }).addTo(map2);
+        }).addTo(window.map2);
 
-        // L'action au clic
         m.on('click', function() {
             const txt = document.getElementById('poetic-text');
             if(txt) { txt.innerText = pt.phrase; }
-            map2.flyTo(pt.latlng, 19, { animate: true, duration: 1.2 });
+            window.map2.flyTo(pt.latlng, 19, { animate: true, duration: 1.2 });
             setTimeout(() => { window.location.href = pt.file; }, 1500);
         });
 
-        // Le chiffre 1, 2, 3
         L.marker(pt.latlng, { 
             icon: L.divIcon({ className: 'label-etape', html: (i+1), iconSize: [24, 24], iconAnchor: [12, 12] }),
             interactive: false 
-        }).addTo(map2);
+        }).addTo(window.map2);
     });
     
-    L.marker(departPontDeLoup).addTo(map2).bindPopup("<b>La Tour de Pont-de-Loup</b>");
+    L.marker(departPontDeLoup).addTo(window.map2).bindPopup("<b>La Tour de Pont-de-Loup</b>");
 
-    map2.locate({setView: false, watch: true});
-    map2.on('locationfound', e => {
+    window.map2.locate({setView: false, watch: true});
+    window.map2.on('locationfound', e => {
         if(!window.userMarker2) {
-            window.userMarker2 = L.circleMarker(e.latlng, {radius: 9, color: '#fff', weight: 3, fillColor: '#007AFF', fillOpacity: 1}).addTo(map2);
+            window.userMarker2 = L.circleMarker(e.latlng, {radius: 9, color: '#fff', weight: 3, fillColor: '#007AFF', fillOpacity: 1}).addTo(window.map2);
         } else {
             window.userMarker2.setLatLng(e.latlng);
         }
     });
 
-    setTimeout(() => { map2.invalidateSize(); }, 300);
+    // Correction écran blanc
+    setTimeout(() => { window.map2.invalidateSize(); }, 500);
 }
 
-scriptDistance2();
+// --- LOGIQUE DE DÉMARRAGE AUTOMATIQUE ---
+window.onload = function() {
+    scriptDistance2(); // Lance le calcul GPS
+
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('map') === 'true') {
+        // Cacher le menu
+        const explorer = document.getElementById('ui-explorer');
+        if (explorer) explorer.style.display = 'none';
+
+        // Afficher la carte et ses accessoires
+        document.getElementById('map').style.display = 'block';
+        document.getElementById('btn-quitter-carte').style.display = 'block';
+        document.getElementById('poetic-footer').style.display = 'block';
+
+        // Lancer la carte
+        initMap2();
+    }
+};
