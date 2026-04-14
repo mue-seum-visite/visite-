@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="style2.css" />
 
     <style>
-        /* On garde ton style précieux pour l'image */
+        /* Optimisation de l'affichage */
         .brand-image {
             width: 100% !important;
             height: 280px !important; 
@@ -27,9 +27,13 @@
             align-items: center;
         }
 
-        /* On cache la carte et le bouton quitter au démarrage par défaut */
+        /* On s'assure que tout est caché au départ sauf l'UI Explorer */
         #map, #btn-quitter-carte, #poetic-footer {
             display: none;
+        }
+
+        #ui-explorer {
+            display: block; /* Affiché par défaut si pas de paramètre map */
         }
     </style>
 </head>
@@ -78,31 +82,32 @@
     <script src="app2.js"></script>
 
     <script>
-        // --- LE SCRIPT DE LOGIQUE DE NAVIGATION ---
-        
-        window.onload = function() {
-            // On regarde si l'URL contient "?map=true"
+        window.addEventListener('load', function() {
             const urlParams = new URLSearchParams(window.location.search);
             
             if (urlParams.get('map') === 'true') {
-                // CAS A : On revient d'une étape RA -> On affiche directement la carte
+                console.log("Mode retour carte activé");
+                
+                // 1. Masquer le menu et montrer la carte
                 document.getElementById('ui-explorer').style.display = 'none';
                 document.getElementById('map').style.display = 'block';
                 document.getElementById('btn-quitter-carte').style.display = 'block';
                 document.getElementById('poetic-footer').style.display = 'block';
                 
-                // On force Leaflet à recalculer la taille de la carte pour éviter les bugs d'affichage
-                if (typeof map !== 'undefined') {
-                    setTimeout(() => { map.invalidateSize(); }, 200);
+                // 2. Initialiser la carte immédiatement
+                if (typeof initMap2 === 'function') {
+                    initMap2();
+                    
+                    // 3. Forcer le rafraîchissement pour éviter l'écran blanc
+                    setTimeout(() => {
+                        if (window.map2) {
+                            window.map2.invalidateSize();
+                            console.log("Rafraîchissement carte effectué");
+                        }
+                    }, 500);
                 }
-            } else {
-                // CAS B : On vient du menu principal -> On affiche le menu du parcours (UI Explorer)
-                document.getElementById('ui-explorer').style.display = 'block';
-                document.getElementById('map').style.display = 'none';
-                document.getElementById('btn-quitter-carte').style.display = 'none';
-                document.getElementById('poetic-footer').style.display = 'none';
             }
-        };
+        });
     </script>
 </body>
 </html>
