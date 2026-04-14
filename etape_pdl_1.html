@@ -80,7 +80,7 @@
 
 <body>
 
-    <a href="index.html?map=true" class="btn-retour">← RETOUR CARTE</a>
+    <a href="index2.html?map=true" class="btn-retour">← RETOUR CARTE</a>
     
     <button id="btn-start">ÉCOUTER LE SOLDAT</button>
 
@@ -112,7 +112,7 @@
         const message = [
             "Bonjour à toi, voyageur. Sois le bienvenu ici, au pied de notre vieille Tour.",
             "Si tu m'écoutes aujourd'hui, souviens-toi : la paix est un trésor...",
-            "...qu'on ne réalise qu'une fois perdu.",
+            "qu'on ne réalise qu'une fois perdu.",
             "Ne laisse pas la haine construire le monde de demain."
         ];
 
@@ -137,26 +137,25 @@
                         if(audio) audio.pause();
                         subContainer.style.display = 'none';
                     }, 2000);
-                }, 5000);
+                }, 3000); // Disparition un peu plus rapide à la fin
             }
         }
 
         btn.addEventListener('click', function() {
             btn.style.display = 'none';
             
-            // RALENTIR LA VIDÉO (0.7 = 70% de la vitesse)
-            // Cela rendra le clip plus long et les lèvres plus fluides
+            // On garde ta vitesse de vidéo à 70%
             video.playbackRate = 0.7;
 
             video.play();
-            // On lance l'audio MP3 (qui lui reste à vitesse normale)
             if(audio) audio.play();
             
             video.style.opacity = "0.7"; 
             subContainer.style.display = 'block';
             
             showNextLine();
-            textInterval = setInterval(showNextLine, 6000);
+            // VITESSE CHANGÉE ICI : 4000ms au lieu de 6000ms
+            textInterval = setInterval(showNextLine, 4000);
         });
     </script>
 </body>
