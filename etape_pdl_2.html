@@ -2,117 +2,45 @@
 <html lang="fr">
 <head>
     <meta charset="utf-8">
-    <title>Pont-de-Loup - Étape 2</title>
+    <title>Test AR Simple</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
-    
     <style>
-        body { margin: 0; background-color: #000; font-family: sans-serif; overflow: hidden; }
+        body { margin: 0; overflow: hidden; background-color: #f0f0f0; }
+        model-viewer { width: 100vw; height: 100vh; }
         
-        /* Conteneur 3D */
-        model-viewer {
-            width: 100vw;
-            height: 100vh;
-            --poster-color: transparent;
-        }
-
-        /* Le fameux bouton AR (Case AR) */
         #ar-button {
-            background-color: #8cb6d1;
-            border-radius: 50px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 8px;
             border: none;
             position: absolute;
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
             padding: 15px 25px;
-            color: black;
+            font-size: 16px;
             font-weight: bold;
             z-index: 100;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
-
-        /* Zone des sous-titres style PDL */
-        #subtitles-container {
-            position: fixed;
-            bottom: 50px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 85%;
-            background: rgba(0, 0, 0, 0.8);
-            border-radius: 15px;
-            padding: 15px;
-            z-index: 20;
-            border: 1px solid #8cb6d1;
-            text-align: center;
-        }
-
-        #text-display {
-            color: white;
-            font-family: 'Georgia', serif;
-            font-size: 0.9em;
-            font-style: italic;
-            transition: opacity 0.5s;
-        }
-
-        .btn-retour {
-            position: fixed; top: 20px; left: 20px; z-index: 110;
-            background: rgba(0,0,0,0.5); color: white; padding: 8px;
-            border-radius: 8px; text-decoration: none; font-size: 11px; border: 1px solid white;
         }
     </style>
 </head>
 <body>
 
-    <a href="index.html?map=true" class="btn-retour">← CARTE</a>
-
     <model-viewer 
         src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Astronaut/glTF-Binary/Astronaut.glb" 
         ar 
-        ar-modes="webxr scene-viewer quick-look" 
+        ar-modes="scene-viewer webxr quick-look" 
+        ar-placement="floor"
         camera-controls 
         auto-rotate 
-        shadow-intensity="1"
-        exposure="1">
+        shadow-intensity="1">
         
         <button slot="ar-button" id="ar-button">
-            🚀 VOIR EN RÉALITÉ AUGMENTÉE
+            ACTIVER LA RÉALITÉ AUGMENTÉE
         </button>
 
-        <div id="subtitles-container">
-            <div id="text-display">Chargement de l'histoire...</div>
-        </div>
     </model-viewer>
 
-    <script>
-        const textDisplay = document.getElementById('text-display');
-        
-        const message = [
-            "Le village de Pont-de-Loup est riche d’un passé prestigieux, autrefois domaine de Louis le Pieux, fils de Charlemagne.",
-            "De cette époque subsiste la tour classée de l’ancienne église Saint-Anaclet, personnage méconnu aussi appelé Clet.",
-            "Élu troisième pape de la Chrétienté après saint Pierre, il mourut en martyr à la fin du premier siècle.",
-            "Les vestiges de l'église, de style roman, se dressent au milieu du cimetière d’honneur des combattants.",
-            "Le site conserve les tombes des héros des deux guerres mondiales, mais aussi de la révolution de 1830.",
-            "Au XVIe siècle, un vaisseau gothique remplaça la nef romane, avant d'être finalement démoli en 1861.",
-            "Classé depuis 1972, ce site abrite aussi une source miraculeuse réputée pour guérir la surdité."
-        ];
-
-        let lineIndex = 0;
-
-        function showNextLine() {
-            if (lineIndex < message.length) {
-                textDisplay.style.opacity = 0;
-                setTimeout(() => {
-                    textDisplay.innerHTML = message[lineIndex];
-                    textDisplay.style.opacity = 1;
-                    lineIndex++;
-                }, 500);
-            }
-        }
-
-        // On lance le défilement du texte
-        setInterval(showNextLine, 8000);
-        showNextLine();
-    </script>
 </body>
 </html>
