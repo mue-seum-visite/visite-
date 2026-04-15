@@ -36,23 +36,31 @@ function lancerVoyage2() {
     const trans = document.getElementById('transition-voyage');
     const video = document.getElementById('video-vortex');
 
-    // On cache le menu avec un effet fondu
-    if (explorer) explorer.style.opacity = '0';
+    // On cache le menu
+    if (explorer) explorer.style.display = 'none';
 
-    // On affiche l'écran de transition et on lance la vidéo
+    // On affiche l'écran de transition
     if (trans) {
         trans.style.display = 'flex';
-        trans.style.zIndex = '9999'; // LIGNE AJOUTÉE : Force la vidéo au premier plan
+        trans.style.zIndex = '10000'; // Priorité maximale
+        trans.style.opacity = '1';
+
         if (video) {
+            video.muted = true; // Indispensable pour l'auto-play sur mobile
             video.currentTime = 0;
-            video.play();
+            
+            // On tente de jouer la vidéo avec une sécurité
+            let playPromise = video.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.log("Lecture auto bloquée, passage direct à la carte.");
+                });
+            }
         }
     }
 
-    // Après 4 secondes (durée de ton animation)
+    // Après 4 secondes
     setTimeout(() => {
-        if (explorer) explorer.style.display = 'none';
-        
         // On affiche la carte et les boutons
         document.getElementById('map').style.display = 'block';
         document.getElementById('btn-quitter-carte').style.display = 'block';
@@ -61,31 +69,30 @@ function lancerVoyage2() {
         // INITIALISATION DE LA CARTE
         initMap2();
 
-        // On cache la vidéo
-        if (trans) trans.style.display = 'none';
+        // On retire la transition
+        if (trans) {
+            trans.style.opacity = '0';
+            setTimeout(() => { trans.style.display = 'none'; }, 500);
+        }
     }, 4000); 
 }
 
 // 4. INITIALISATION CARTE
 function initMap2() {
-    // Si la carte existe déjà, on la rafraîchit simplement
     if (window.map2) {
         setTimeout(() => { window.map2.invalidateSize(); }, 100);
         return;
     }
 
-    // Sinon, on la crée
     window.map2 = L.map('map', { zoomControl: false }).setView(departPontDeLoup, 17);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(window.map2);
 
-    // Tracé du chemin bleu
     const tracePoints = [
         [50.417269, 4.543662], [50.417471, 4.543954], [50.417655, 4.543911],
         [50.417976, 4.543862], [50.418168, 4.543653], [50.418246, 4.543846]
     ];
     L.polyline(tracePoints, {color: '#8cb6d1', weight: 6, opacity: 0.9}).addTo(window.map2);
 
-    // Étapes
     const pts2 = [
         { latlng: [50.417946, 4.543844], phrase: "L'histoire s'éveille sous vos pas...", file: "etape_pdl_1.html" },
         { latlng: [50.418151, 4.543544], phrase: "Une lueur du passé surgit...", file: "etape_pdl_2.html" },
@@ -112,7 +119,6 @@ function initMap2() {
     
     L.marker(departPontDeLoup).addTo(window.map2).bindPopup("<b>La Tour de Pont-de-Loup</b>");
 
-    // GPS Utilisateur
     window.map2.locate({setView: false, watch: true});
     window.map2.on('locationfound', e => {
         if(!window.userMarker2) {
@@ -122,17 +128,14 @@ function initMap2() {
         }
     });
 
-    // Forcer le rendu pour éviter l'écran blanc
     setTimeout(() => { window.map2.invalidateSize(); }, 500);
 }
 
-// 5. GESTION DU CHARGEMENT (Démarrage ou Retour de RA)
+// 5. GESTION DU CHARGEMENT
 window.addEventListener('load', () => {
-    scriptDistance2(); // On commence à calculer la distance direct
-
+    scriptDistance2(); 
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('map') === 'true') {
-        // CAS RETOUR : On saute la vidéo et on montre la carte
         document.getElementById('ui-explorer').style.display = 'none';
         document.getElementById('map').style.display = 'block';
         document.getElementById('btn-quitter-carte').style.display = 'block';
