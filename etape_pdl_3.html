@@ -11,20 +11,27 @@
     <style>
         body { margin: 0; overflow: hidden; background-color: black; font-family: sans-serif; }
         
+        /* Bouton Retour : En haut à gauche */
         .btn-retour {
-            position: fixed; top: 20px; left: 20px; z-index: 100;
+            position: fixed; top: 25px; left: 20px; z-index: 100;
             background: rgba(0,0,0,0.6); color: white; padding: 12px 18px;
             border-radius: 10px; text-decoration: none; font-size: 14px;
             font-weight: bold; border: 1px solid #8cb6d1;
+            backdrop-filter: blur(4px);
         }
 
+        /* Languette de partage : Déplacée en BAS à droite */
         .btn-partage {
-            position: fixed; top: 20px; right: 0; z-index: 100;
-            background: #8cb6d1; color: #000; padding: 10px 20px;
-            border-radius: 20px 0 0 20px; text-decoration: none; 
+            position: fixed; bottom: 30px; right: 0; z-index: 100;
+            background: #8cb6d1; color: #000; padding: 12px 25px;
+            border-radius: 30px 0 0 30px; /* Arrondi seulement à gauche */
+            text-decoration: none; 
             font-size: 13px; font-weight: bold; border: none;
-            box-shadow: -2px 2px 10px rgba(0,0,0,0.5);
+            box-shadow: -2px 0 15px rgba(0,0,0,0.5);
+            transition: transform 0.3s;
         }
+        
+        .btn-partage:active { transform: scale(0.95); }
 
         #btn-start {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -44,7 +51,7 @@
 
     <a href="index2.html?map=true" class="btn-retour" onclick="stopMedias()">← RETOUR CARTE</a>
     
-    <button class="btn-partage" onclick="partagerParcours()">✦ PARTAGER MON VOYAGE</button>
+    <button class="btn-partage" id="ui-share" onclick="partagerParcours()">✦ PARTAGER MON VOYAGE</button>
     
     <button id="btn-start">DÉCOUVRIR LE SECRET</button>
 
@@ -60,7 +67,6 @@
         const audio = document.getElementById('audio-final');
         const btn = document.getElementById('btn-start');
 
-        // Lancement : Vidéo longue en boucle
         btn.addEventListener('click', function() {
             btn.style.display = 'none';
             video.play();
@@ -68,7 +74,6 @@
             video.style.opacity = "1";
         });
 
-        // Sécurité : Stopper tout quand on quitte
         function stopMedias() {
             video.pause();
             if(audio) audio.pause();
@@ -76,7 +81,8 @@
 
         function partagerParcours() {
             const textePoetique = "J'ai ouvert la porte du temps à Pont-de-Loup... Entre les pierres de l'ancienne tour et le murmure de la source, l'histoire s'est éveillée. Un voyage poétique signé MUE.SÉUM. ✨🏛️";
-            const urlSite = window.location.origin + window.location.pathname.replace('etape_pdl_3.html', 'index2.html');
+            // On s'assure de partager l'URL de l'accueil
+            const urlSite = window.location.href.split('etape_pdl_3')[0] + 'index2.html';
 
             if (navigator.share) {
                 navigator.share({
@@ -85,7 +91,7 @@
                     url: urlSite,
                 }).catch((error) => console.log('Erreur de partage', error));
             } else {
-                alert("Le texte poétique a été copié ! Partagez-le sur vos réseaux préférés.");
+                alert("Le texte poétique a été copié !");
                 navigator.clipboard.writeText(textePoetique + " " + urlSite);
             }
         }
