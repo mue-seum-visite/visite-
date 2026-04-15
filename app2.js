@@ -4,6 +4,7 @@ window.map2 = null;
 
 // 1. OUVRE GOOGLE MAPS
 function allerAuDepart2() {
+    // Correction du lien Google Maps
     const url = `https://www.google.com/maps/dir/?api=1&destination=${departPontDeLoup[0]},${departPontDeLoup[1]}`;
     window.open(url, '_blank');
 }
@@ -30,42 +31,41 @@ function scriptDistance2() {
     }
 }
 
-// 3. LANCEMENT DU VOYAGE (La vidéo tour-ancienne.mp4)
-// Note : Cette fonction est appelée par le bouton "Ouvrir la porte du temps" de ton HTML
+// 3. LANCEMENT DU VOYAGE (La vidéo du Vortex)
+// RENOMMÉ EN PorteDuTemps pour correspondre au bouton HTML
 function PorteDuTemps() {
     const explorer = document.getElementById('ui-explorer');
     const trans = document.getElementById('transition-voyage');
     const video = document.getElementById('video-vortex');
 
-    // On cache le menu
-    if (explorer) explorer.style.display = 'none';
+    // On cache le menu avec un effet fondu
+    if (explorer) explorer.style.opacity = '0';
 
     // On affiche l'écran de transition et on lance la vidéo
     if (trans) {
         trans.style.display = 'flex';
-        trans.style.opacity = '1';
+        trans.style.zIndex = '9999'; 
         if (video) {
             video.currentTime = 0;
-            video.play().catch(err => console.log("Erreur lecture :", err));
+            video.play().catch(e => console.log("Lancer la vidéo : ", e));
         }
     }
 
-    // Après 4.5 secondes (durée de ton animation dans le HTML)
+    // Après 4 secondes
     setTimeout(() => {
+        if (explorer) explorer.style.display = 'none';
+        
         // On affiche la carte et les boutons
         document.getElementById('map').style.display = 'block';
         document.getElementById('btn-quitter-carte').style.display = 'block';
         document.getElementById('poetic-footer').style.display = 'block';
 
-        // INITIALISATION DE LA CARTE (Tracé bleu)
+        // INITIALISATION DE LA CARTE
         initMap2();
 
-        // On cache la vidéo avec un petit fondu
-        if (trans) {
-            trans.style.opacity = '0';
-            setTimeout(() => { trans.style.display = 'none'; }, 800);
-        }
-    }, 4500); 
+        // On cache la vidéo
+        if (trans) trans.style.display = 'none';
+    }, 4000); 
 }
 
 // 4. INITIALISATION CARTE
@@ -78,14 +78,12 @@ function initMap2() {
     window.map2 = L.map('map', { zoomControl: false }).setView(departPontDeLoup, 17);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(window.map2);
 
-    // Tracé du chemin bleu
     const tracePoints = [
         [50.417269, 4.543662], [50.417471, 4.543954], [50.417655, 4.543911],
         [50.417976, 4.543862], [50.418168, 4.543653], [50.418246, 4.543846]
     ];
     L.polyline(tracePoints, {color: '#8cb6d1', weight: 6, opacity: 0.9}).addTo(window.map2);
 
-    // Étapes
     const pts2 = [
         { latlng: [50.417946, 4.543844], phrase: "L'histoire s'éveille sous vos pas...", file: "etape_pdl_1.html" },
         { latlng: [50.418151, 4.543544], phrase: "Une lueur du passé surgit...", file: "etape_pdl_2.html" },
@@ -126,7 +124,7 @@ function initMap2() {
 
 // 5. GESTION DU CHARGEMENT
 window.addEventListener('load', () => {
-    scriptDistance2();
+    scriptDistance2(); 
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('map') === 'true') {
         document.getElementById('ui-explorer').style.display = 'none';
