@@ -42,6 +42,7 @@ function lancerVoyage2() {
     // On affiche l'écran de transition et on lance la vidéo
     if (trans) {
         trans.style.display = 'flex';
+        trans.style.zIndex = '9999'; // LIGNE AJOUTÉE : Force la vidéo au premier plan
         if (video) {
             video.currentTime = 0;
             video.play();
