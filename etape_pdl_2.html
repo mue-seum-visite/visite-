@@ -21,7 +21,7 @@
             width: 85%; background: rgba(0, 0, 0, 0.8); border-radius: 15px;
             padding: 15px; z-index: 100; border: 1px solid #8cb6d1; text-align: center;
         }
-        #text-display { color: white; font-family: 'Georgia', serif; font-size: 1em; font-style: italic; }
+        #text-display { color: white; font-family: 'Georgia', serif; font-size: 1em; font-style: italic; transition: opacity 0.5s; }
     </style>
 </head>
 
@@ -38,11 +38,10 @@
         </a-assets>
 
         <a-entity id="louis-entity"
-            geometry="primitive: plane; width: 4; height: 4"
-            position="0 0.5 -4"
+            geometry="primitive: plane; width: 2.2; height: 2.2"
+            position="0 0 -5"
             material="shader: chromakey; src: #vid-empereur; color: 1 1 1; distance: 0.15"
-            class="video-ar-element"
-            look-at="[camera]">
+            class="video-ar-element">
         </a-entity>
 
         <a-entity camera></a-entity>
