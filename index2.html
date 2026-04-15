@@ -33,7 +33,7 @@
         }
 
         #ui-explorer {
-            display: block; /* Affiché par défaut si pas de paramètre map */
+            display: block; 
         }
     </style>
 </head>
@@ -65,8 +65,8 @@
     </div>
 
     <div id="transition-voyage">
-        <video id="video-vortex" playsinline muted autoplay loop preload="auto" style="width: 100%; height: 100%; object-fit: cover;">
-            <source src="tour-ancienne.mp4" type="video/mp4">
+        <video id="video-vortex" playsinline muted preload="auto" style="width: 100%; height: 100%; object-fit: cover;">
+            <source src="detour-ancienne.mp4" type="video/mp4">
         </video>
     </div>
 
@@ -82,28 +82,46 @@
     <script src="app2.js"></script>
 
     <script>
+        // Fonction pour gérer l'animation de transition
+        function lancerVoyage2() {
+            const transition = document.getElementById('transition-voyage');
+            const video = document.getElementById('video-vortex');
+            const ui = document.getElementById('ui-explorer');
+
+            ui.style.display = 'none';
+            transition.style.display = 'flex';
+            
+            video.play();
+
+            // Après 4 secondes (durée de ton animation), on affiche la carte
+            setTimeout(() => {
+                transition.style.opacity = '0';
+                setTimeout(() => {
+                    transition.style.display = 'none';
+                    document.getElementById('map').style.display = 'block';
+                    document.getElementById('btn-quitter-carte').style.display = 'block';
+                    document.getElementById('poetic-footer').style.display = 'block';
+                    
+                    if (typeof initMap2 === 'function') {
+                        initMap2();
+                        setTimeout(() => { window.map2.invalidateSize(); }, 200)
+                    }
+                }, 800);
+            }, 4000); 
+        }
+
         window.addEventListener('load', function() {
             const urlParams = new URLSearchParams(window.location.search);
-            
             if (urlParams.get('map') === 'true') {
-                console.log("Mode retour carte activé");
-                
-                // 1. Masquer le menu et montrer la carte
                 document.getElementById('ui-explorer').style.display = 'none';
                 document.getElementById('map').style.display = 'block';
                 document.getElementById('btn-quitter-carte').style.display = 'block';
                 document.getElementById('poetic-footer').style.display = 'block';
                 
-                // 2. Initialiser la carte immédiatement
                 if (typeof initMap2 === 'function') {
                     initMap2();
-                    
-                    // 3. Forcer le rafraîchissement pour éviter l'écran blanc
                     setTimeout(() => {
-                        if (window.map2) {
-                            window.map2.invalidateSize();
-                            console.log("Rafraîchissement carte effectué");
-                        }
+                        if (window.map2) { window.map2.invalidateSize(); }
                     }, 500);
                 }
             }
