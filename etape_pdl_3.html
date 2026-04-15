@@ -11,7 +11,6 @@
     <style>
         body { margin: 0; overflow: hidden; background-color: black; font-family: sans-serif; }
         
-        /* Bouton Retour : En haut à gauche */
         .btn-retour {
             position: fixed; top: 25px; left: 20px; z-index: 100;
             background: rgba(0,0,0,0.6); color: white; padding: 12px 18px;
@@ -20,18 +19,14 @@
             backdrop-filter: blur(4px);
         }
 
-        /* Languette de partage : Déplacée en BAS à droite */
         .btn-partage {
             position: fixed; bottom: 30px; right: 0; z-index: 100;
             background: #8cb6d1; color: #000; padding: 12px 25px;
-            border-radius: 30px 0 0 30px; /* Arrondi seulement à gauche */
+            border-radius: 30px 0 0 30px;
             text-decoration: none; 
             font-size: 13px; font-weight: bold; border: none;
             box-shadow: -2px 0 15px rgba(0,0,0,0.5);
-            transition: transform 0.3s;
         }
-        
-        .btn-partage:active { transform: scale(0.95); }
 
         #btn-start {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -41,7 +36,10 @@
 
         #vid-final {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            object-fit: cover; opacity: 0; z-index: 5; transition: opacity 2s;
+            object-fit: cover; 
+            opacity: 0; /* Géré par le JS au clic */
+            z-index: 5; 
+            transition: opacity 2s;
             mix-blend-mode: multiply;
         }
     </style>
@@ -69,9 +67,16 @@
 
         btn.addEventListener('click', function() {
             btn.style.display = 'none';
+            
+            // --- RÉGLAGES VITESSE ET OPACITÉ ---
+            video.playbackRate = 0.6; // Ralentit la vidéo à 60% de sa vitesse
+            video.style.opacity = "0.6"; // Opacité plus légère pour voir à travers
+            
             video.play();
-            if(audio) audio.play();
-            video.style.opacity = "1";
+            if(audio) {
+                audio.volume = 0.5; // Baisse un peu le son pour la douceur
+                audio.play();
+            }
         });
 
         function stopMedias() {
@@ -81,7 +86,6 @@
 
         function partagerParcours() {
             const textePoetique = "J'ai ouvert la porte du temps à Pont-de-Loup... Entre les pierres de l'ancienne tour et le murmure de la source, l'histoire s'est éveillée. Un voyage poétique signé MUE.SÉUM. ✨🏛️";
-            // On s'assure de partager l'URL de l'accueil
             const urlSite = window.location.href.split('etape_pdl_3')[0] + 'index2.html';
 
             if (navigator.share) {
