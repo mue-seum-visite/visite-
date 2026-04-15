@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="style2.css" />
 
     <style>
-        /* Optimisation de l'affichage */
         .brand-image {
             width: 100% !important;
             height: 280px !important; 
@@ -16,18 +15,20 @@
             border-bottom: 1px solid #333;
         }
 
+        /* Style de la transition forcé */
         #transition-voyage {
             position: fixed;
             top: 0; left: 0;
-            width: 100%; height: 100%;
+            width: 100vw; height: 100vh;
             background: #000;
-            z-index: 10000;
+            z-index: 99999; /* Au-dessus de tout */
             display: none; 
             justify-content: center;
             align-items: center;
+            opacity: 1;
+            transition: opacity 0.8s ease-out;
         }
 
-        /* On s'assure que tout est caché au départ sauf l'UI Explorer */
         #map, #btn-quitter-carte, #poetic-footer {
             display: none;
         }
@@ -55,17 +56,17 @@
                 <div id="distance-gps">Calcul de votre position...</div>
                 
                 <p style="font-size: 0.75em; color: #aaa; font-style: italic; margin: 10px 0; border-top: 1px solid #333; padding-top: 8px;">
-                    * Ici, le temps s'écoule avec douceur : ce sentier a été pensé pour que chaque roue et chaque pas puisse voyager sans obstacle.
+                    * Ici, le temps s'écoule avec douceur.
                 </p>
 
-                <button class="btn-demarrer" onclick="lancerVoyage2()">Ouvrir la porte du temps</button>
+                <button class="btn-demarrer" onclick="PorteDuTemps()">Ouvrir la porte du temps</button>
                 <button class="btn-google" onclick="allerAuDepart2()">Rejoindre la Tour : Itinéraire</button>
             </div>
         </div>
     </div>
 
     <div id="transition-voyage">
-        <video id="video-vortex" playsinline muted preload="auto" style="width: 100%; height: 100%; object-fit: cover;">
+        <video id="video-vortex" playsinline muted style="width: 100%; height: 100%; object-fit: cover;">
             <source src="detour-ancienne.mp4" type="video/mp4">
         </video>
     </div>
@@ -82,34 +83,52 @@
     <script src="app2.js"></script>
 
     <script>
-        // Fonction pour gérer l'animation de transition
-        function lancerVoyage2() {
+        function PorteDuTemps() {
             const transition = document.getElementById('transition-voyage');
             const video = document.getElementById('video-vortex');
             const ui = document.getElementById('ui-explorer');
 
+            // 1. On cache l'interface
             ui.style.display = 'none';
-            transition.style.display = 'flex';
             
-            video.play();
+            // 2. On affiche le conteneur de vidéo
+            transition.style.display = 'flex';
+            transition.style.opacity = '1';
+            
+            // 3. On lance la vidéo
+            video.currentTime = 0; // On repart du début
+            video.play().then(() => {
+                console.log("Vidéo lancée avec succès");
+            }).catch(e => {
+                console.error("Erreur lecture vidéo:", e);
+                // Si la vidéo bloque, on passe quand même à la carte après 1s
+                setTimeout(AfficherLaCarte, 1000);
+            });
 
-            // Après 4 secondes (durée de ton animation), on affiche la carte
-            setTimeout(() => {
-                transition.style.opacity = '0';
-                setTimeout(() => {
-                    transition.style.display = 'none';
-                    document.getElementById('map').style.display = 'block';
-                    document.getElementById('btn-quitter-carte').style.display = 'block';
-                    document.getElementById('poetic-footer').style.display = 'block';
-                    
-                    if (typeof initMap2 === 'function') {
-                        initMap2();
-                        setTimeout(() => { window.map2.invalidateSize(); }, 200)
-                    }
-                }, 800);
-            }, 4000); 
+            // 4. On prépare la transition vers la carte
+            // Ajuste le temps (4500ms) selon la durée exacte de ta vidéo
+            setTimeout(AfficherLaCarte, 4500); 
         }
 
+        function AfficherLaCarte() {
+            const transition = document.getElementById('transition-voyage');
+            transition.style.opacity = '0';
+            
+            setTimeout(() => {
+                transition.style.display = 'none';
+                document.getElementById('map').style.display = 'block';
+                document.getElementById('btn-quitter-carte').style.display = 'block';
+                document.getElementById('poetic-footer').style.display = 'block';
+                
+                // Initialisation de la carte (définie dans app2.js)
+                if (typeof initMap2 === 'function') {
+                    initMap2();
+                    setTimeout(() => { if(window.map2) window.map2.invalidateSize(); }, 300);
+                }
+            }, 800);
+        }
+
+        // Gestion du retour direct via URL
         window.addEventListener('load', function() {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('map') === 'true') {
@@ -117,12 +136,8 @@
                 document.getElementById('map').style.display = 'block';
                 document.getElementById('btn-quitter-carte').style.display = 'block';
                 document.getElementById('poetic-footer').style.display = 'block';
-                
                 if (typeof initMap2 === 'function') {
                     initMap2();
-                    setTimeout(() => {
-                        if (window.map2) { window.map2.invalidateSize(); }
-                    }, 500);
                 }
             }
         });
