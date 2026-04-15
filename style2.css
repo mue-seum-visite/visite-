@@ -22,7 +22,7 @@ header h1 { font-size: 32px; letter-spacing: 5px; font-weight: 900; margin: 0; t
     background-position: center center; 
     background-repeat: no-repeat; 
     border-bottom: 2px solid #333; 
-    background-size: contain; /* Ajusté pour ta photo de la Tour */
+    background-size: contain; 
 }
 
 /* Aperçu de la carte ancienne spécifique à Pont-de-Loup */
@@ -80,6 +80,13 @@ header h1 { font-size: 32px; letter-spacing: 5px; font-weight: 900; margin: 0; t
     color: #8cb6d1; font-style: italic; font-size: 13px; margin: 0;
     overflow: hidden; border-right: 2px solid #8cb6d1; white-space: nowrap;
     animation: typing 3s steps(30, end), blink-caret .75s step-end infinite;
+}
+
+/* --- INTERFACE RÉALITÉ AUGMENTÉE (SUPPRESSION FOND BLANC) --- */
+/* S'applique aux vidéos d'animation (soldat, empereur, source) */
+video[id^="vid-"] {
+    mix-blend-mode: multiply; /* Rend le blanc transparent */
+    filter: contrast(110%);   /* Améliore le rendu pour éviter l'aspect délavé */
 }
 
 /* --- ANIMATIONS KEYFRAMES --- */
