@@ -3,27 +3,17 @@
 <head>
     <meta charset="utf-8">
     <title>Pont-de-Loup - Étape 2 : L'Empereur</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-    <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
-    
-    <style>
+    <link rel="stylesheet" href="style2.css"> <style>
         body { margin: 0; overflow: hidden; font-family: sans-serif; }
         
-        /* Bouton Retour corrigé pour index2.html */
         .btn-retour {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            z-index: 9999;
-            background: rgba(0, 0, 0, 0.6);
-            color: white;
-            padding: 10px 15px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: bold;
-            border: 1px solid #8cb6d1;
+            position: fixed; top: 10px; left: 10px; z-index: 9999;
+            background: rgba(0, 0, 0, 0.6); color: white; padding: 10px 15px;
+            border-radius: 8px; text-decoration: none; font-size: 13px;
+            font-weight: bold; border: 1px solid #8cb6d1;
         }
 
         #subtitles-container {
@@ -33,13 +23,12 @@
         }
 
         #text-display { 
-            color: white; 
-            font-family: 'Georgia', serif; 
-            font-size: 1em; 
-            font-style: italic; 
-            line-height: 1.4;
-            transition: opacity 0.5s;
+            color: white; font-family: 'Georgia', serif; font-size: 1em; 
+            font-style: italic; line-height: 1.4; transition: opacity 0.5s;
         }
+
+        /* La vidéo est cachée techniquement mais utilisée par A-Frame */
+        #vid-empereur { display: none; }
     </style>
 </head>
 
@@ -48,22 +37,23 @@
     <a href="index2.html?map=true" class="btn-retour">← RETOUR CARTE</a>
 
     <div id="subtitles-container">
-        <div id="text-display">Initialisation de la rencontre...</div>
+        <div id="text-display">Initialisation...</div>
     </div>
 
     <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: false">
         
         <a-assets>
-            <img id="perso" src="louis.png">
+            <video id="vid-empereur" src="louis.mp4" autoplay loop="true" muted playsinline></video>
         </a-assets>
 
-        <a-image 
-            src="#perso" 
+        <a-video 
+            src="#vid-empereur" 
             position="0 0.4 -4" 
             width="1.1" 
             height="1.7"
+            class="video-ar-element"
             look-at="[camera]">
-        </a-image>
+        </a-video>
 
         <a-entity camera></a-entity>
     </a-scene>
@@ -83,7 +73,6 @@
         let index = 0;
         function showNext() {
             if (index < phrases.length) {
-                // Petit effet de fondu pour le changement de texte
                 textDisplay.style.opacity = 0;
                 setTimeout(() => {
                     textDisplay.innerHTML = phrases[index];
@@ -92,10 +81,14 @@
                 }, 500);
             }
         }
-        
-        // VITESSE CORRIGÉE : Changement toutes les 5 secondes (5000ms)
         setInterval(showNext, 5000);
         showNext();
+
+        // Forcer la lecture de la vidéo au premier clic (sécurité mobile)
+        document.body.addEventListener('click', function() {
+            const v = document.getElementById('vid-empereur');
+            v.play();
+        }, {once: true});
     </script>
 </body>
 </html>
