@@ -71,7 +71,7 @@
         </video>
     </div>
 
-    <button id="btn-quitter-carte" onclick="window.location.href='index.html'">✕ QUITTER LE PARCOURS</button>
+    <button id="btn-quitter-carte" onclick="quitterLeParcours2()">✕ QUITTER LE PARCOURS</button>
     
     <div id="map"></div>
     
@@ -106,7 +106,6 @@
             });
 
             // 4. On prépare la transition vers la carte
-            // Ajuste le temps (4500ms) selon la durée exacte de ta vidéo
             setTimeout(AfficherLaCarte, 4500); 
         }
 
