@@ -1,9 +1,10 @@
 var map;
 const latDep = 50.4044627; const lngDep = 4.5230877;
 
-// --- 1. MÉMOIRE DE NAVIGATION ---
+// --- 1. MÉMOIRE DE NAVIGATION (Unique au P1) ---
 window.onload = function() {
-    if (localStorage.getItem('carteOuverte') === 'true') {
+    // On utilise une clé spécifique 'carteOuverte_P1'
+    if (localStorage.getItem('carteOuverte_P1') === 'true') {
         document.getElementById('ui-explorer').style.display = 'none';
         document.getElementById('map').style.display = 'block';
         document.getElementById('btn-quitter-carte').style.display = 'block';
@@ -24,7 +25,7 @@ if (navigator.geolocation) {
 }
 
 function allerAuDepart() {
-    window.open(`https://www.google.com/maps?q=${latDep},${lngDep}`, '_blank');
+    window.open(`https://www.google.com/maps/dir/?api=1&destination=${latDep},${lngDep}`, '_blank');
 }
 
 // --- ANIMATION DE TRANSITION (VORTEX) ---
@@ -33,7 +34,9 @@ function lancerVoyage() {
     const vortex = document.getElementById('vortex-map');
     const explorer = document.getElementById('ui-explorer');
 
-    localStorage.setItem('carteOuverte', 'true');
+    // On marque cette carte précise comme ouverte
+    localStorage.setItem('carteOuverte_P1', 'true');
+    
     window.scrollTo(0,0);
     trans.style.display = 'block';
     explorer.style.opacity = '0';
@@ -55,8 +58,10 @@ function lancerVoyage() {
 }
 
 function quitterLaCarte() {
-    localStorage.removeItem('carteOuverte');
-    location.reload();
+    // On efface seulement la mémoire du Parcours 1
+    localStorage.removeItem('carteOuverte_P1');
+    // On redirige proprement vers l'index sans paramètres
+    window.location.replace('index.html');
 }
 
 // --- INITIALISATION DE LA CARTE ---
@@ -82,12 +87,8 @@ function initMap() {
         }).addTo(map);
 
         m.on('click', function() {
-            // MISE À JOUR DU TEXTE DANS LE RECTANGLE NOIR
             const txt = document.getElementById('poetic-text');
-            if(txt) {
-                txt.innerText = pt.phrase;
-            }
-
+            if(txt) { txt.innerText = pt.phrase; }
             map.flyTo(pt.latlng, 19, { animate: true, duration: 1.2 });
 
             if (pt.mode === "ar") {
@@ -95,7 +96,7 @@ function initMap() {
             } else {
                 m.bindPopup(`<div style="color:black; text-align:center; padding:8px;">
                     <b style="font-size:16px;">${pt.t}</b><br><br>
-                    <p style="font-size:14px; line-height:1.5; margin:0;">C'est ici que Pierre Paulus a ouvert les yeux sur le monde. Dans la poésie de ces rues, une vocation est née, transformant pour toujours la suie en lumière.</p>
+                    <p style="font-size:14px; line-height:1.5; margin:0;">C'est ici que Pierre Paulus a ouvert les yeux sur le monde.</p>
                 </div>`).openPopup();
             }
         });
