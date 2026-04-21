@@ -36,45 +36,42 @@ function lancerVoyage2() {
     const trans = document.getElementById('transition-voyage');
     const video = document.getElementById('video-vortex');
 
-    // On cache le menu
+    // MÉMOIRE : On note que la carte du parcours 2 est ouverte
+    localStorage.setItem('carteOuverte_P2', 'true');
+
     if (explorer) explorer.style.display = 'none';
 
-    // On affiche l'écran de transition
     if (trans) {
         trans.style.display = 'flex';
-        trans.style.zIndex = '10000'; // Priorité maximale
+        trans.style.zIndex = '10000';
         trans.style.opacity = '1';
 
         if (video) {
-            video.muted = true; // Indispensable pour l'auto-play sur mobile
+            video.muted = true;
             video.currentTime = 0;
-            
-            // On tente de jouer la vidéo avec une sécurité
             let playPromise = video.play();
             if (playPromise !== undefined) {
-                playPromise.catch(error => {
-                    console.log("Lecture auto bloquée, passage direct à la carte.");
-                });
+                playPromise.catch(error => { console.log("Lecture bloquée"); });
             }
         }
     }
 
-    // Après 4 secondes
     setTimeout(() => {
-        // On affiche la carte et les boutons
         document.getElementById('map').style.display = 'block';
         document.getElementById('btn-quitter-carte').style.display = 'block';
         document.getElementById('poetic-footer').style.display = 'block';
-
-        // INITIALISATION DE LA CARTE
         initMap2();
-
-        // On retire la transition
         if (trans) {
             trans.style.opacity = '0';
             setTimeout(() => { trans.style.display = 'none'; }, 500);
         }
     }, 4000); 
+}
+
+// --- NOUVELLE FONCTION POUR QUITTER PROPREMENT ---
+function quitterLeParcours2() {
+    localStorage.removeItem('carteOuverte_P2'); // On efface la mémoire du P2
+    window.location.replace('index.html'); // Retour forcé au menu principal
 }
 
 // 4. INITIALISATION CARTE
@@ -134,8 +131,9 @@ function initMap2() {
 // 5. GESTION DU CHARGEMENT
 window.addEventListener('load', () => {
     scriptDistance2(); 
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('map') === 'true') {
+    
+    // MÉMOIRE : On vérifie si la carte P2 doit être ouverte au rechargement
+    if (localStorage.getItem('carteOuverte_P2') === 'true') {
         document.getElementById('ui-explorer').style.display = 'none';
         document.getElementById('map').style.display = 'block';
         document.getElementById('btn-quitter-carte').style.display = 'block';
